@@ -13,6 +13,9 @@ import javax.swing.border.LineBorder;
 import java.awt.ComponentOrientation;
 import javax.swing.JComboBox;
 import java.awt.Dimension;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaPrincipalTienda extends JFrame {
 
@@ -25,8 +28,8 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel derecha;
 	private JPanel categorias;
 	private JPanel lista;
-	private JComboBox cBCat;
-	private JComboBox cbSubCat;
+	private JComboBox<String> cBCat;
+	private JComboBox<String> cbSubCat;
 
 	/**
 	 * Launch the application.
@@ -114,6 +117,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getCategorias() {
 		if (categorias == null) {
 			categorias = new JPanel();
+			categorias.setBackground(new Color(65, 105, 225));
 			categorias.add(getCBCat());
 			categorias.add(getCbSubCat());
 		}
@@ -122,19 +126,59 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getLista() {
 		if (lista == null) {
 			lista = new JPanel();
+			lista.setBackground(new Color(65, 105, 225));
 		}
 		return lista;
 	}
-	private JComboBox getCBCat() {
+	
+	private JComboBox<String> getCBCat() {
 		if (cBCat == null) {
-			cBCat = new JComboBox();
+			cBCat = new JComboBox<String>();
+			cBCat.setModel(new DefaultComboBoxModel<String>(new String[] {"Todos", "Electr\u00F3nica", "Papeler\u00EDa"}));
+			cBCat.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					 rellenaCombo2((String) cBCat.getSelectedItem());
+				}
+			});
+			
 		}
 		return cBCat;
 	}
-	private JComboBox getCbSubCat() {
+	private JComboBox<String> getCbSubCat() {
 		if (cbSubCat == null) {
-			cbSubCat = new JComboBox();
+			cbSubCat = new JComboBox<String>();
 		}
+		rellenaCombo2 ((String) cBCat.getSelectedItem());
 		return cbSubCat;
+	}
+	
+	private void rellenaCombo2(String seleccionEnCombo1) {
+		   // Se borran los valores previos
+		cbSubCat.removeAllItems();
+
+		   // Se rellena según la opción en combo1
+		   if (seleccionEnCombo1.equals("Todos")) {
+			   cbSubCat.addItem("Todos");
+			   cbSubCat.addItem("Fotografía");
+			   cbSubCat.addItem("Telefonía");
+			   cbSubCat.addItem("GPS");
+			   cbSubCat.addItem("TV");
+			   cbSubCat.addItem("Informática");
+			   cbSubCat.addItem("Archivadores");
+			   cbSubCat.addItem("Papel");
+			   cbSubCat.addItem("Cuadernos");
+		   } else if (seleccionEnCombo1.equals("Electr\u00F3nica")) {
+			   cbSubCat.addItem("Todos");
+			   cbSubCat.addItem("Fotografía");
+			   cbSubCat.addItem("Telefonía");
+			   cbSubCat.addItem("GPS");
+			   cbSubCat.addItem("TV");
+			   cbSubCat.addItem("Informática");
+		}else if (seleccionEnCombo1.equals("Papeler\u00EDa")) {
+				cbSubCat.addItem("Todos");
+			   cbSubCat.addItem("Archivadores");
+			   cbSubCat.addItem("Papel");
+			   cbSubCat.addItem("Cuadernos");
+		}
 	}
 }
