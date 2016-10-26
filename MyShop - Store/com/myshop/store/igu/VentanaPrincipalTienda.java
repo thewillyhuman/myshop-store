@@ -110,6 +110,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getDerecha() {
 		if (derecha == null) {
 			derecha = new JPanel();
+			derecha.setBackground(new Color(65, 105, 225));
 			derecha.setBounds(458, 11, 462, 476);
 		}
 		return derecha;
@@ -134,7 +135,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JComboBox<String> getCBCat() {
 		if (cBCat == null) {
 			cBCat = new JComboBox<String>();
-			cBCat.setModel(new DefaultComboBoxModel<String>(new String[] {"Todos", "Electr\u00F3nica", "Papeler\u00EDa"}));
+			cBCat.setModel(new DefaultComboBoxModel<String>(new String[] {"Todos", "Electrónica", "Papelería"}));
 			cBCat.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					 rellenaCombo2((String) cBCat.getSelectedItem());
@@ -167,14 +168,14 @@ public class VentanaPrincipalTienda extends JFrame {
 			   cbSubCat.addItem("Archivadores");
 			   cbSubCat.addItem("Papel");
 			   cbSubCat.addItem("Cuadernos");
-		   } else if (seleccionEnCombo1.equals("Electr\u00F3nica")) {
+		   } else if (seleccionEnCombo1.equals("Electrónica")) {
 			   cbSubCat.addItem("Todos");
 			   cbSubCat.addItem("Fotografía");
 			   cbSubCat.addItem("Telefonía");
 			   cbSubCat.addItem("GPS");
 			   cbSubCat.addItem("TV");
 			   cbSubCat.addItem("Informática");
-		}else if (seleccionEnCombo1.equals("Papeler\u00EDa")) {
+		}else if (seleccionEnCombo1.equals("Papelería")) {
 				cbSubCat.addItem("Todos");
 			   cbSubCat.addItem("Archivadores");
 			   cbSubCat.addItem("Papel");
