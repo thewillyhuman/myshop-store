@@ -11,25 +11,37 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
 import java.awt.ComponentOrientation;
-import javax.swing.JComboBox;
 import java.awt.Dimension;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
 
 public class VentanaPrincipalTienda extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5667224737301596895L;
 	private JPanel contentPane;
-	private JPanel inicio;
-	private JPanel direccion;
-	private JLabel lblUrl;
-	private JPanel contenido;
+	private JPanel tienda;
+	private JPanel direccionTienda;
+	private JLabel lblUrlTienda;
+	private JPanel contenidoTienda;
 	private JPanel izquierda;
 	private JPanel derecha;
 	private JPanel categorias;
 	private JPanel lista;
-	private JComboBox<String> cBCat;
-	private JComboBox<String> cbSubCat;
+	private JLabel lblAtras;
+	private JLabel lblCarrito;
+	private JLabel lblTotal;
+	private JTextField txtTotal;
+	private JButton btnVaciar;
+	private JButton btnContinuar;
+	private JPanel inicio;
+	private JPanel direccionInicio;
+	private JLabel lblUrlInicio;
+	private JPanel contenidoInicio;
 
 	/**
 	 * Launch the application.
@@ -53,54 +65,57 @@ public class VentanaPrincipalTienda extends JFrame {
 	public VentanaPrincipalTienda() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 940, 565);
+		setBounds(100, 100, 1073, 618);
 		contentPane = new JPanel();
 		contentPane.setBorder(new LineBorder(new Color(65, 105, 225), 2));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		contentPane.add(getInicio(), "name_307605263018239");
+		contentPane.add(getInicio(), "name_556038923677876");
+		contentPane.add(getTienda(), "name_307605263018239");
 	}
 
-	private JPanel getInicio() {
-		if (inicio == null) {
-			inicio = new JPanel();
-			inicio.setLayout(new BorderLayout(0, 0));
-			inicio.add(getDireccion(), BorderLayout.NORTH);
-			inicio.add(getContenido(), BorderLayout.CENTER);
+	private JPanel getTienda() {
+		if (tienda == null) {
+			tienda = new JPanel();
+			tienda.setLayout(new BorderLayout(0, 0));
+			tienda.add(getDireccionTienda(), BorderLayout.NORTH);
+			tienda.add(getContenidoTienda(), BorderLayout.CENTER);
 		}
-		return inicio;
+		return tienda;
 	}
-	private JPanel getDireccion() {
-		if (direccion == null) {
-			direccion = new JPanel();
-			direccion.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-			direccion.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-			direccion.add(getLblUrl());
+	private JPanel getDireccionTienda() {
+		if (direccionTienda == null) {
+			direccionTienda = new JPanel();
+			direccionTienda.setBackground(Color.WHITE);
+			direccionTienda.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+			direccionTienda.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			direccionTienda.add(getLblAtras());
+			direccionTienda.add(getLblUrlTienda());
 		}
-		return direccion;
+		return direccionTienda;
 	}
-	private JLabel getLblUrl() {
-		if (lblUrl == null) {
-			lblUrl = new JLabel("http://www.myshop.es");
-			lblUrl.setPreferredSize(new Dimension(920, 14));
-			lblUrl.setBackground(Color.WHITE);
+	private JLabel getLblUrlTienda() {
+		if (lblUrlTienda == null) {
+			lblUrlTienda = new JLabel("http://www.myshop.es/tienda");
+			lblUrlTienda.setPreferredSize(new Dimension(1011, 14));
+			lblUrlTienda.setBackground(Color.WHITE);
 		}
-		return lblUrl;
+		return lblUrlTienda;
 	}
-	private JPanel getContenido() {
-		if (contenido == null) {
-			contenido = new JPanel();
-			contenido.setBackground(new Color(65, 105, 225));
-			contenido.setLayout(null);
-			contenido.add(getIzquierda());
-			contenido.add(getDerecha());
+	private JPanel getContenidoTienda() {
+		if (contenidoTienda == null) {
+			contenidoTienda = new JPanel();
+			contenidoTienda.setBackground(new Color(65, 105, 225));
+			contenidoTienda.setLayout(null);
+			contenidoTienda.add(getIzquierda());
+			contenidoTienda.add(getDerecha());
 		}
-		return contenido;
+		return contenidoTienda;
 	}
 	private JPanel getIzquierda() {
 		if (izquierda == null) {
 			izquierda = new JPanel();
-			izquierda.setBounds(10, 11, 438, 476);
+			izquierda.setBounds(10, 11, 626, 539);
 			izquierda.setLayout(new BorderLayout(0, 0));
 			izquierda.add(getCategorias(), BorderLayout.NORTH);
 			izquierda.add(getLista(), BorderLayout.CENTER);
@@ -111,7 +126,13 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (derecha == null) {
 			derecha = new JPanel();
 			derecha.setBackground(new Color(65, 105, 225));
-			derecha.setBounds(458, 11, 462, 476);
+			derecha.setBounds(646, 11, 407, 539);
+			derecha.setLayout(null);
+			derecha.add(getLblCarrito());
+			derecha.add(getLblTotal());
+			derecha.add(getTxtTotal());
+			derecha.add(getBtnVaciar());
+			derecha.add(getBtnContinuar());
 		}
 		return derecha;
 	}
@@ -119,8 +140,6 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (categorias == null) {
 			categorias = new JPanel();
 			categorias.setBackground(new Color(65, 105, 225));
-			categorias.add(getCBCat());
-			categorias.add(getCbSubCat());
 		}
 		return categorias;
 	}
@@ -132,54 +151,88 @@ public class VentanaPrincipalTienda extends JFrame {
 		return lista;
 	}
 	
-	private JComboBox<String> getCBCat() {
-		if (cBCat == null) {
-			cBCat = new JComboBox<String>();
-			cBCat.setModel(new DefaultComboBoxModel<String>(new String[] {"Todos", "Electrónica", "Papelería"}));
-			cBCat.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					 rellenaCombo2((String) cBCat.getSelectedItem());
-				}
-			});
-			
+	private JLabel getLblAtras() {
+		if (lblAtras == null) {
+			lblAtras = new JLabel("");
+			lblAtras.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/img/fecha.jpg")));
 		}
-		return cBCat;
+		return lblAtras;
 	}
-	private JComboBox<String> getCbSubCat() {
-		if (cbSubCat == null) {
-			cbSubCat = new JComboBox<String>();
+	private JLabel getLblCarrito() {
+		if (lblCarrito == null) {
+			lblCarrito = new JLabel("Lista de la compra:");
+			lblCarrito.setFont(new Font("Tahoma", Font.BOLD, 11));
+			lblCarrito.setForeground(Color.WHITE);
+			lblCarrito.setBounds(10, 11, 153, 14);
 		}
-		rellenaCombo2 ((String) cBCat.getSelectedItem());
-		return cbSubCat;
+		return lblCarrito;
 	}
-	
-	private void rellenaCombo2(String seleccionEnCombo1) {
-		   // Se borran los valores previos
-		cbSubCat.removeAllItems();
-
-		   // Se rellena según la opción en combo1
-		   if (seleccionEnCombo1.equals("Todos")) {
-			   cbSubCat.addItem("Todos");
-			   cbSubCat.addItem("Fotografía");
-			   cbSubCat.addItem("Telefonía");
-			   cbSubCat.addItem("GPS");
-			   cbSubCat.addItem("TV");
-			   cbSubCat.addItem("Informática");
-			   cbSubCat.addItem("Archivadores");
-			   cbSubCat.addItem("Papel");
-			   cbSubCat.addItem("Cuadernos");
-		   } else if (seleccionEnCombo1.equals("Electrónica")) {
-			   cbSubCat.addItem("Todos");
-			   cbSubCat.addItem("Fotografía");
-			   cbSubCat.addItem("Telefonía");
-			   cbSubCat.addItem("GPS");
-			   cbSubCat.addItem("TV");
-			   cbSubCat.addItem("Informática");
-		}else if (seleccionEnCombo1.equals("Papelería")) {
-				cbSubCat.addItem("Todos");
-			   cbSubCat.addItem("Archivadores");
-			   cbSubCat.addItem("Papel");
-			   cbSubCat.addItem("Cuadernos");
+	private JLabel getLblTotal() {
+		if (lblTotal == null) {
+			lblTotal = new JLabel("Total:");
+			lblTotal.setForeground(Color.WHITE);
+			lblTotal.setFont(new Font("Tahoma", Font.BOLD, 11));
+			lblTotal.setBounds(183, 430, 51, 20);
 		}
+		return lblTotal;
+	}
+	private JTextField getTxtTotal() {
+		if (txtTotal == null) {
+			txtTotal = new JTextField();
+			txtTotal.setEditable(false);
+			txtTotal.setText("Total");
+			txtTotal.setBounds(244, 430, 86, 20);
+			txtTotal.setColumns(10);
+		}
+		return txtTotal;
+	}
+	private JButton getBtnVaciar() {
+		if (btnVaciar == null) {
+			btnVaciar = new JButton("Vaciar carrito");
+			btnVaciar.setBounds(83, 493, 121, 35);
+		}
+		return btnVaciar;
+	}
+	private JButton getBtnContinuar() {
+		if (btnContinuar == null) {
+			btnContinuar = new JButton("Continuar");
+			btnContinuar.setBounds(238, 493, 121, 35);
+		}
+		return btnContinuar;
+	}
+	private JPanel getInicio() {
+		if (inicio == null) {
+			inicio = new JPanel();
+			inicio.setLayout(new BorderLayout(0, 0));
+			inicio.add(getDireccionInicio(), BorderLayout.NORTH);
+			inicio.add(getContenidoInicio(), BorderLayout.CENTER);
+		}
+		return inicio;
+	}
+	private JPanel getDireccionInicio() {
+		if (direccionInicio == null) {
+			direccionInicio = new JPanel();
+			direccionInicio.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+			direccionInicio.setBackground(Color.WHITE);
+			direccionInicio.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			direccionInicio.add(getLblUrlInicio());
+		}
+		return direccionInicio;
+	}
+	private JLabel getLblUrlInicio() {
+		if (lblUrlInicio == null) {
+			lblUrlInicio = new JLabel("http://www.myshop.es");
+			lblUrlInicio.setPreferredSize(new Dimension(1011, 14));
+			lblUrlInicio.setBackground(Color.WHITE);
+		}
+		return lblUrlInicio;
+	}
+	private JPanel getContenidoInicio() {
+		if (contenidoInicio == null) {
+			contenidoInicio = new JPanel();
+			contenidoInicio.setLayout(null);
+			contenidoInicio.setBackground(new Color(65, 105, 225));
+		}
+		return contenidoInicio;
 	}
 }
