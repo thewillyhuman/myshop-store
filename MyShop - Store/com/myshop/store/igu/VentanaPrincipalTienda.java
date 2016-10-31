@@ -154,7 +154,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JLabel getLblAtras() {
 		if (lblAtras == null) {
 			lblAtras = new JLabel("");
-			lblAtras.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/img/fecha.jpg")));
+			lblAtras.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
 		}
 		return lblAtras;
 	}
