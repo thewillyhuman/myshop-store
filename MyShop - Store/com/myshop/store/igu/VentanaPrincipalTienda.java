@@ -10,12 +10,22 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.myshop.model.product.Product;
+import com.myshop.store.controller.ProductsController;
+
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
 
 public class VentanaPrincipalTienda extends JFrame {
 
@@ -42,6 +52,23 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel direccionInicio;
 	private JLabel lblUrlInicio;
 	private JPanel contenidoInicio;
+	private JPanel superior;
+	private JPanel inferior;
+	private JButton btnElectronica;
+	private JButton btnPapeleria;
+	private JPanel elec;
+	private JPanel pap;
+	private JButton btnFotografa;
+	private JButton btnGps;
+	private JButton btnTelefona;
+	private JButton btnTv;
+	private JButton btnInformtica;
+	private JButton btnArchivadores;
+	private JButton btnPapel;
+	private JButton btnCuadernos;
+	private JTable tableProductos;
+	private ModeloNoEditable modeloTabla;
+	private ProductsController pc;
 
 	/**
 	 * Launch the application.
@@ -70,13 +97,15 @@ public class VentanaPrincipalTienda extends JFrame {
 		contentPane.setBorder(new LineBorder(new Color(65, 105, 225), 2));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		contentPane.add(getInicio(), "name_556038923677876");
 		contentPane.add(getTienda(), "name_307605263018239");
+		contentPane.add(getInicio(), "name_556038923677876");
 	}
 
 	private JPanel getTienda() {
 		if (tienda == null) {
 			tienda = new JPanel();
+			tienda.setFocusTraversalKeysEnabled(false);
+			tienda.setFocusable(false);
 			tienda.setLayout(new BorderLayout(0, 0));
 			tienda.add(getDireccionTienda(), BorderLayout.NORTH);
 			tienda.add(getContenidoTienda(), BorderLayout.CENTER);
@@ -140,6 +169,9 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (categorias == null) {
 			categorias = new JPanel();
 			categorias.setBackground(new Color(65, 105, 225));
+			categorias.setLayout(new GridLayout(2, 0, 0, 0));
+			categorias.add(getSuperior());
+			categorias.add(getInferior());
 		}
 		return categorias;
 	}
@@ -147,6 +179,8 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (lista == null) {
 			lista = new JPanel();
 			lista.setBackground(new Color(65, 105, 225));
+			lista.setLayout(new BorderLayout(0, 0));
+			lista.add(getTableProductos(), BorderLayout.CENTER);
 		}
 		return lista;
 	}
@@ -234,5 +268,240 @@ public class VentanaPrincipalTienda extends JFrame {
 			contenidoInicio.setBackground(new Color(65, 105, 225));
 		}
 		return contenidoInicio;
+	}
+	private JPanel getSuperior() {
+		if (superior == null) {
+			superior = new JPanel();
+			superior.setBackground(new Color(65, 105, 225));
+			superior.add(getBtnElectronica());
+			superior.add(getBtnPapeleria());
+		}
+		return superior;
+	}
+	private JPanel getInferior() {
+		if (inferior == null) {
+			inferior = new JPanel();
+			inferior.setVisible(false);
+			inferior.setBackground(new Color(65, 105, 225));
+			inferior.setLayout(new CardLayout(0, 0));
+			inferior.add(getElec(), "panelElec");
+			inferior.add(getPap(), "panelPap");
+		}
+		return inferior;
+	}
+	private JButton getBtnElectronica() {
+		if (btnElectronica == null) {
+			btnElectronica = new JButton("Electrónica");
+			btnElectronica.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					inferior.setVisible(true);
+					((CardLayout)inferior.getLayout()).show(inferior,"panelElec");
+				}
+			});
+			btnElectronica.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnElectronica.setContentAreaFilled(false);
+			btnElectronica.setForeground(new Color(255, 255, 255));
+			btnElectronica.setBackground(new Color(65, 105, 225));
+			btnElectronica.setBorder(null);
+		}
+		return btnElectronica;
+	}
+	private JButton getBtnPapeleria() {
+		if (btnPapeleria == null) {
+			btnPapeleria = new JButton("Papelería");
+			btnPapeleria.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					inferior.setVisible(true);
+					((CardLayout)inferior.getLayout()).show(inferior,"panelPap");
+				}
+			});
+			btnPapeleria.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnPapeleria.setForeground(new Color(255, 255, 255));
+			btnPapeleria.setContentAreaFilled(false);
+			btnPapeleria.setBackground(new Color(65, 105, 225));
+			btnPapeleria.setBorder(null);
+		}
+		return btnPapeleria;
+	}
+	private JPanel getElec() {
+		if (elec == null) {
+			elec = new JPanel();
+			elec.setBackground(new Color(65, 105, 225));
+			elec.add(getBtnFotografa());
+			elec.add(getBtnGps());
+			elec.add(getBtnTelefona());
+			elec.add(getBtnTv());
+			elec.add(getBtnInformtica());
+		}
+		return elec;
+	}
+	private JPanel getPap() {
+		if (pap == null) {
+			pap = new JPanel();
+			pap.setBackground(new Color(65, 105, 225));
+			pap.add(getBtnArchivadores());
+			pap.add(getBtnPapel());
+			pap.add(getBtnCuadernos());
+		}
+		return pap;
+	}
+	private JButton getBtnFotografa() {
+		if (btnFotografa == null) {
+			btnFotografa = new JButton("Fotografía");
+			btnFotografa.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					limpiarProductos();
+					cargarProductos(1,1);
+				}
+			});
+			btnFotografa.setContentAreaFilled(false);
+			btnFotografa.setBackground(new Color(65, 105, 225));
+			btnFotografa.setBorder(null);
+			btnFotografa.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnFotografa.setForeground(new Color(255, 255, 255));
+		}
+		return btnFotografa;
+	}
+	private JButton getBtnGps() {
+		if (btnGps == null) {
+			btnGps = new JButton("GPS");
+			btnGps.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1,3);
+				}
+			});
+			btnGps.setContentAreaFilled(false);
+			btnGps.setBackground(new Color(65, 105, 225));
+			btnGps.setBorder(null);
+			btnGps.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnGps.setForeground(new Color(255, 255, 255));
+		}
+		return btnGps;
+	}
+	private JButton getBtnTelefona() {
+		if (btnTelefona == null) {
+			btnTelefona = new JButton("Telefonía");
+			btnTelefona.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1,2);
+				}
+			});
+			btnTelefona.setContentAreaFilled(false);
+			btnTelefona.setBackground(new Color(65, 105, 225));
+			btnTelefona.setBorder(null);
+			btnTelefona.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnTelefona.setForeground(new Color(255, 255, 255));
+		}
+		return btnTelefona;
+	}
+	private JButton getBtnTv() {
+		if (btnTv == null) {
+			btnTv = new JButton("TV");
+			btnTv.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1,4);
+				}
+			});
+			btnTv.setContentAreaFilled(false);
+			btnTv.setBackground(new Color(65, 105, 225));
+			btnTv.setBorder(null);
+			btnTv.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnTv.setForeground(new Color(255, 255, 255));
+		}
+		return btnTv;
+	}
+	private JButton getBtnInformtica() {
+		if (btnInformtica == null) {
+			btnInformtica = new JButton("Informática");
+			btnInformtica.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1,5);
+				}
+			});
+			btnInformtica.setContentAreaFilled(false);
+			btnInformtica.setBackground(new Color(65, 105, 225));
+			btnInformtica.setBorder(null);
+			btnInformtica.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnInformtica.setForeground(new Color(255, 255, 255));
+		}
+		return btnInformtica;
+	}
+	private JButton getBtnArchivadores() {
+		if (btnArchivadores == null) {
+			btnArchivadores = new JButton("Archivadores");
+			btnArchivadores.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2,6);
+				}
+			});
+			btnArchivadores.setBackground(new Color(65, 105, 225));
+			btnArchivadores.setForeground(new Color(255, 255, 255));
+			btnArchivadores.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnArchivadores.setBorder(null);
+			btnArchivadores.setContentAreaFilled(false);
+		}
+		return btnArchivadores;
+	}
+	private JButton getBtnPapel() {
+		if (btnPapel == null) {
+			btnPapel = new JButton("Papel");
+			btnPapel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2,7);
+				}
+			});
+			btnPapel.setBackground(new Color(65, 105, 225));
+			btnPapel.setForeground(new Color(255, 255, 255));
+			btnPapel.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnPapel.setBorder(null);
+			btnPapel.setContentAreaFilled(false);
+		}
+		return btnPapel;
+	}
+	private JButton getBtnCuadernos() {
+		if (btnCuadernos == null) {
+			btnCuadernos = new JButton("Cuadernos");
+			btnCuadernos.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2,8);
+				}
+			});
+			btnCuadernos.setBackground(new Color(65, 105, 225));
+			btnCuadernos.setForeground(new Color(255, 255, 255));
+			btnCuadernos.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnCuadernos.setBorder(null);
+			btnCuadernos.setContentAreaFilled(false);
+		}
+		return btnCuadernos;
+	}
+	private JTable getTableProductos() {
+		if (tableProductos == null) {
+			String[]nombreColumnas = {"Nombre", "Descripcion", "Precio", "Stock"};
+			modeloTabla=new ModeloNoEditable(nombreColumnas,0);
+			tableProductos=new JTable(modeloTabla);
+			tableProductos.setForeground(new Color(255, 255, 255));
+			tableProductos.setBackground(new Color(65, 105, 225));
+			
+		}
+		return tableProductos;
+	}
+	private void cargarProductos(int categoria, int subcategoria){
+		List<Product> aux =  new ProductsController().getAll(categoria,subcategoria);
+		for (Product p:aux){
+			modeloTabla.addRow(new Object[]{ p.getName(), p.getDescription(), p.getPrice(), p.getStock()});
+		}
+	}
+	private void limpiarProductos(){
+		int rowCount = modeloTabla.getRowCount();
+		for (int i = rowCount - 1; i >= 0; i--) {
+			modeloTabla.removeRow(i);
+		}
 	}
 }
