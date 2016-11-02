@@ -8,6 +8,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import com.myshop.model.customer.Address;
+import com.myshop.model.customer.Company;
 import com.myshop.model.customer.CreditCards;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.user.User;
@@ -44,6 +45,30 @@ public class UsersController {
 			 ic.setUser(user);
 		 }
 		 return ic;
+	}
+	
+	public Company getCompany(String username, String password){
+		Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");
+		String complexSql = "SELECT * FROM myshop.user U, myshop.company C WHERE "+ 
+		                    "U.username = :user AND U.password = :pass "
+						  + "AND U.user_id = C.user_id";
+				
+		List<Map<String,Object>> map;
+		
+		 try (Connection con = sql2o.open()) {
+			 map = con.createQuery(complexSql).addParameter("user", username)
+			            .addParameter("pass", password)
+			            .executeAndFetchTable().asList();
+		 }
+		 
+		 Company c = new Company();
+		 for(Map<String,Object> m : map){
+			 c.setName((String) m.get("name"));
+			 User u = new User((int)m.get("user_id"), (String)m.get("username"),(String)m.get("password"));
+			 c.setUser(u);
+		 }
+		 
+		 return c;
 	}
 	
 }
