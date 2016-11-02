@@ -6,14 +6,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.FlowLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 
@@ -29,6 +26,10 @@ import java.awt.event.FocusEvent;
 
 public class VentanaPagoLoginTienda extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textUser;
 	private JTextField textPass;

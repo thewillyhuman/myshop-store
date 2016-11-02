@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Dimension;
-import javax.swing.ImageIcon;
 import javax.swing.border.TitledBorder;
 
 import com.myshop.model.customer.Company;
@@ -25,6 +24,10 @@ import java.awt.event.FocusEvent;
 
 public class LoginEmpresaTienda extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textUser;
 	private JTextField textPass;
