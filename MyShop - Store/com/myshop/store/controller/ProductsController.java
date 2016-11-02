@@ -19,6 +19,5 @@ public class ProductsController {
 			            .addParameter("subcat", subcategory)
 			            .addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeAndFetch(Product.class);
 		 }
-		
 	}
 }
