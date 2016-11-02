@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
 
 import com.myshop.model.customer.Company;
 import com.myshop.model.customer.IndividualCustomer;
@@ -30,8 +29,6 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.UIManager;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -77,7 +74,6 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JButton btnCuadernos;
 	private JTable tableProductos;
 	private ModeloNoEditable modeloTabla;
-	private ProductsController pc;
 	private JTextField textUser;
 	private JTextField textPass;
 	private JTextField textCalle;
