@@ -40,8 +40,6 @@ import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.EmptyBorder;
 
 public class VentanaPrincipalTienda extends JFrame {
 
@@ -65,16 +63,25 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel direccionInicio;
 	private JLabel lblUrlInicio;
 	private JPanel contenidoInicio;
+	private JPanel superior;
+	private JPanel inferior;
+	private JButton btnElectronica;
+	private JButton btnPapeleria;
+	private JPanel elec;
+	private JPanel pap;
+	private JButton btnFotografa;
+	private JButton btnGps;
+	private JButton btnTelefona;
+	private JButton btnTv;
+	private JButton btnInformtica;
+	private JButton btnArchivadores;
+	private JButton btnPapel;
+	private JButton btnCuadernos;
+	private JScrollPane scrollPane;
+	private JPanel panelProductos;
 	private JTable table;
 	private DefaultTableModel modelo;
 	private JScrollPane scrollPane_1;
-	private Map<Object, Object> treeMap;
-	private JPanel izquierda;
-	private JScrollPane scrollProductos;
-	private List<Product> products;
-	private JPanel panelProductos;
-	private JPanel panelNavegacion;
-	private JButton btnInicio;
 
 	/**
 	 * Launch the application.
@@ -105,9 +112,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 		contentPane.add(getTienda(), "name_307605263018239");
 		contentPane.add(getInicio(), "name_556038923677876");
-		products = new ProductsController().getAllView();
-		cargarCategoriaInicial();
-
+		List<Product> pro = new ProductsController().getAll();
 
 		Action action = new AbstractAction() {
 			/**
@@ -121,7 +126,7 @@ public class VentanaPrincipalTienda extends JFrame {
 					int referencia = (int) table.getValueAt(tcl.getRow(), 0);
 					int stock = 0;
 					double precio = 0;
-					for (Product p : products) {
+					for (Product p : pro) {
 						if (p.getID() == referencia) {
 							stock = p.getStock();
 							precio = p.getPrice();
@@ -129,7 +134,7 @@ public class VentanaPrincipalTienda extends JFrame {
 					}
 					int nuevoValor = Integer.parseInt((String) tcl.getNewValue());
 					if (nuevoValor > stock) {
-						JOptionPane.showMessageDialog(derecha, "No hay tantos artículos en stock", "Error",
+						JOptionPane.showMessageDialog(derecha, "No hay tantos art�culos en stock", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						table.setValueAt(stock, tcl.getRow(), tcl.getColumn());
 						table.setValueAt(redondear(precio * stock), tcl.getRow(), 4);
@@ -137,6 +142,8 @@ public class VentanaPrincipalTienda extends JFrame {
 						JOptionPane.showMessageDialog(derecha, "No se pueden poner valores negativos", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						table.setValueAt(tcl.getOldValue(), tcl.getRow(), tcl.getColumn());
+						// table.setValueAt(redondear((precio*viejoValor))
+						// ,tcl.getRow(),4);
 					} else if (nuevoValor == 0) {
 						modelo.removeRow(tcl.getRow());
 						table.repaint();
@@ -204,6 +211,17 @@ public class VentanaPrincipalTienda extends JFrame {
 		return contenidoTienda;
 	}
 
+	private JPanel getIzquierda() {
+		if (izquierda == null) {
+			izquierda = new JPanel();
+			izquierda.setBounds(10, 11, 626, 539);
+			izquierda.setLayout(new BorderLayout(0, 0));
+			izquierda.add(getCategorias(), BorderLayout.NORTH);
+			izquierda.add(getLista(), BorderLayout.CENTER);
+		}
+		return izquierda;
+	}
+
 	private JPanel getDerecha() {
 		if (derecha == null) {
 			derecha = new JPanel();
@@ -218,6 +236,27 @@ public class VentanaPrincipalTienda extends JFrame {
 			derecha.add(getScrollPane_1());
 		}
 		return derecha;
+	}
+
+	private JPanel getCategorias() {
+		if (categorias == null) {
+			categorias = new JPanel();
+			categorias.setBackground(new Color(65, 105, 225));
+			categorias.setLayout(new GridLayout(2, 0, 0, 0));
+			categorias.add(getSuperior());
+			categorias.add(getInferior());
+		}
+		return categorias;
+	}
+
+	private JPanel getLista() {
+		if (lista == null) {
+			lista = new JPanel();
+			lista.setBackground(new Color(65, 105, 225));
+			lista.setLayout(new BorderLayout(0, 0));
+			lista.add(getScrollPane(), BorderLayout.CENTER);
+		}
+		return lista;
 	}
 
 	private JLabel getLblAtras() {
@@ -254,7 +293,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			txtTotal = new JTextField();
 			txtTotal.setText("0");
 			txtTotal.setEditable(false);
-			txtTotal.setBounds(219, 430, 86, 20);
+			txtTotal.setBounds(244, 430, 86, 20);
 			txtTotal.setColumns(10);
 		}
 		return txtTotal;
@@ -273,7 +312,7 @@ public class VentanaPrincipalTienda extends JFrame {
 					txtTotal.setText("0");
 				}
 			});
-			btnVaciar.setBounds(39, 493, 121, 35);
+			btnVaciar.setBounds(83, 493, 121, 35);
 
 		}
 		return btnVaciar;
@@ -282,16 +321,8 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JButton getBtnContinuar() {
 		if (btnContinuar == null) {
 			btnContinuar = new JButton("Continuar");
-			btnContinuar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					treeMap = new TreeMap<Object, Object>();
-					for(int i=0;i<table.getRowCount();i++){
-						treeMap.put(table.getValueAt(i, 0),table.getValueAt(i, 2));
-					}
-				}
-			});
 
-			btnContinuar.setBounds(202, 493, 121, 35);
+			btnContinuar.setBounds(238, 493, 121, 35);
 		}
 		return btnContinuar;
 	}
@@ -335,134 +366,168 @@ public class VentanaPrincipalTienda extends JFrame {
 		return contenidoInicio;
 	}
 
-	
-
-	private JTable getTable() {
-		if (table == null) {
-			table = new JTable();
-			table.setBackground(new Color(255, 255, 255));
-			table.setForeground(new Color(0, 0, 0));
-			modelo = new DefaultTableModel(new Object[][] {},
-					new String[] { "Referencia", "Nombre", "Cantidad", "Precio ud", "Precio" }) {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 4352988190229278374L;
-				/**
-				 * 
-				 */
-				boolean[] columnEditables = new boolean[] { false, false, true, false, false };
-
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			};
-			table.setModel(modelo);
-			table.getColumnModel().getColumn(0).setResizable(false);
-			table.getColumnModel().getColumn(1).setResizable(false);
-			table.getColumnModel().getColumn(2).setResizable(false);
-			table.getColumnModel().getColumn(3).setResizable(false);
-			table.getColumnModel().getColumn(4).setResizable(false);
-			table.setCellSelectionEnabled(true);
-
+	private JPanel getSuperior() {
+		if (superior == null) {
+			superior = new JPanel();
+			superior.setBackground(new Color(65, 105, 225));
+			superior.add(getBtnElectronica());
+			superior.add(getBtnPapeleria());
 		}
 		return table;
 	}
 
-	private JScrollPane getScrollPane_1() {
-		if (scrollPane_1 == null) {
-			scrollPane_1 = new JScrollPane();
-			scrollPane_1.setForeground(new Color(0, 0, 0));
-			scrollPane_1.setBackground(new Color(255, 255, 255));
-			scrollPane_1.setBounds(10, 53, 320, 337);
-			scrollPane_1.setViewportView(getTable());
-			scrollPane_1.getViewport().setBackground(new Color(255, 255, 255));
-
+	private JPanel getInferior() {
+		if (inferior == null) {
+			inferior = new JPanel();
+			inferior.setVisible(false);
+			inferior.setBackground(new Color(65, 105, 225));
+			inferior.setLayout(new CardLayout(0, 0));
+			inferior.add(getElec(), "panelElec");
+			inferior.add(getPap(), "panelPap");
 		}
 		return scrollPane_1;
 	}
 
-	private void actualizarTotal() {
-		double total = 0;
-		int filas = table.getRowCount();
-		for (int i = 0; i < filas; i++) {
-			total = total + (double) (table.getValueAt(i, 4));
+	private JButton getBtnElectronica() {
+		if (btnElectronica == null) {
+			btnElectronica = new JButton("Electr�nica");
+			btnElectronica.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					inferior.setVisible(true);
+					((CardLayout) inferior.getLayout()).show(inferior, "panelElec");
+				}
+			});
+			btnElectronica.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnElectronica.setContentAreaFilled(false);
+			btnElectronica.setForeground(new Color(255, 255, 255));
+			btnElectronica.setBackground(new Color(65, 105, 225));
+			btnElectronica.setBorder(null);
 		}
 		txtTotal.setText(Double.toString((redondear(total))));
 	}
 
-	private double redondear(double cifra) {
-
-		return BigDecimal.valueOf(cifra).setScale(3, RoundingMode.HALF_UP).doubleValue();
+	private JButton getBtnPapeleria() {
+		if (btnPapeleria == null) {
+			btnPapeleria = new JButton("Papeler�a");
+			btnPapeleria.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					inferior.setVisible(true);
+					((CardLayout) inferior.getLayout()).show(inferior, "panelPap");
+				}
+			});
+			btnPapeleria.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnPapeleria.setForeground(new Color(255, 255, 255));
+			btnPapeleria.setContentAreaFilled(false);
+			btnPapeleria.setBackground(new Color(65, 105, 225));
+			btnPapeleria.setBorder(null);
+		}
+		return btnPapeleria;
 	}
 
-	private boolean comprobarEntero(String text) {
-		try {
-			Integer.parseInt(text);
-			return true;
-		} catch (NumberFormatException e) {
-			return false;
+	private JPanel getElec() {
+		if (elec == null) {
+			elec = new JPanel();
+			elec.setBackground(new Color(65, 105, 225));
+			elec.add(getBtnFotografa());
+			elec.add(getBtnGps());
+			elec.add(getBtnTelefona());
+			elec.add(getBtnTv());
+			elec.add(getBtnInformtica());
 		}
 	}
-	private JPanel getIzquierda() {
-		if (izquierda == null) {
-			izquierda = new JPanel();
-			izquierda.setBackground(new Color(255, 255, 255));
-			izquierda.setBounds(10, 47, 700, 502);
-			izquierda.setLayout(new BorderLayout(0, 0));
-			izquierda.add(getScrollProductos(), BorderLayout.CENTER);
+
+	private JPanel getPap() {
+		if (pap == null) {
+			pap = new JPanel();
+			pap.setBackground(new Color(65, 105, 225));
+			pap.add(getBtnArchivadores());
+			pap.add(getBtnPapel());
+			pap.add(getBtnCuadernos());
 		}
 		return izquierda;
 	}
-	private JScrollPane getScrollProductos() {
-		if (scrollProductos == null) {
-			scrollProductos = new JScrollPane();
-			scrollProductos.setViewportView(getPanelProductos());
+
+	private JButton getBtnFotografa() {
+		if (btnFotografa == null) {
+			btnFotografa = new JButton("Fotograf�a");
+			btnFotografa.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					limpiarProductos();
+					cargarProductos(1, 1);
+				}
+			});
+			btnFotografa.setContentAreaFilled(false);
+			btnFotografa.setBackground(new Color(65, 105, 225));
+			btnFotografa.setBorder(null);
+			btnFotografa.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnFotografa.setForeground(new Color(255, 255, 255));
 		}
 		return scrollProductos;
 	}
-	private JPanel getPanelProductos() {
-		if (panelProductos == null) {
-			panelProductos = new JPanel();
-			panelProductos.setBackground(new Color(255, 255, 255));
-			panelProductos.setLayout(new BoxLayout(panelProductos, BoxLayout.Y_AXIS));
+
+	private JButton getBtnGps() {
+		if (btnGps == null) {
+			btnGps = new JButton("GPS");
+			btnGps.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1, 3);
+				}
+			});
+			btnGps.setContentAreaFilled(false);
+			btnGps.setBackground(new Color(65, 105, 225));
+			btnGps.setBorder(null);
+			btnGps.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnGps.setForeground(new Color(255, 255, 255));
 		}
 		return panelProductos;
 	}
 
-	private void cargarCategoriaInicial() {
-		getPanelProductos().removeAll();
-		List<Category> catRoot = new ProductsController().getCategorysRoot();
-		for (Category c : catRoot) {
-			JButton boton = new JButton();
-			boton.setText(c.getCategoryName());
-			boton.setContentAreaFilled(false);
-			boton.setBackground(new Color(255, 255, 255));
-			boton.setBorder(new EmptyBorder(0, 3, 5, 0));
-			getPanelProductos().add(boton);
-			boton.addActionListener(new ActionListener() {
+	private JButton getBtnTelefona() {
+		if (btnTelefona == null) {
+			btnTelefona = new JButton("Telefon�a");
+			btnTelefona.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					cargarCategorias(c.getCategoryName());
+					limpiarProductos();
+					cargarProductos(1, 2);
 				}
 			});
 		}
 		 adaptarPanel();
 	}
 
-	public void adaptarPanel(){
-		getPanelProductos().repaint();
-		getScrollProductos().setViewportView(getPanelProductos());
-		getScrollProductos().repaint();
+	private JButton getBtnTv() {
+		if (btnTv == null) {
+			btnTv = new JButton("TV");
+			btnTv.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1, 4);
+				}
+			});
+			btnTv.setContentAreaFilled(false);
+			btnTv.setBackground(new Color(65, 105, 225));
+			btnTv.setBorder(null);
+			btnTv.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnTv.setForeground(new Color(255, 255, 255));
+		}
+		return btnTv;
 	}
-	
-	public void cargarCategorias(String nombreCat){
-		
-		List<Category> cat  = new ProductsController().getCategorysChildren(nombreCat);
-		if(cat.isEmpty()){
-			JTextField texto = new JTextField();
-			texto.setText("Esta categoría no contiene productos");
-			getPanelProductos().removeAll();
-			getPanelProductos().add(texto);
+
+	private JButton getBtnInformtica() {
+		if (btnInformtica == null) {
+			btnInformtica = new JButton("Inform�tica");
+			btnInformtica.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(1, 5);
+				}
+			});
+			btnInformtica.setContentAreaFilled(false);
+			btnInformtica.setBackground(new Color(65, 105, 225));
+			btnInformtica.setBorder(null);
+			btnInformtica.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnInformtica.setForeground(new Color(255, 255, 255));
 		}
 		else{
 			getPanelProductos().removeAll();
@@ -489,17 +554,94 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		adaptarPanel();
 	}
-	public void cargarProductos(List<Product> listaPro){
-		getPanelProductos().removeAll();
-		for (Product p : listaPro) {
+
+	private JButton getBtnArchivadores() {
+		if (btnArchivadores == null) {
+			btnArchivadores = new JButton("Archivadores");
+			btnArchivadores.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2, 6);
+				}
+			});
+			pan2.add(pvp,BorderLayout.CENTER);
+			pan2.add(bot);
+			pan.add(lab, BorderLayout.NORTH);
+			pan.add(area, BorderLayout.CENTER);
+			pan.add(pan2, BorderLayout.SOUTH);
+			getPanelProductos().add(pan);
+			
+		}
+		
+	}
+
+	private JButton getBtnPapel() {
+		if (btnPapel == null) {
+			btnPapel = new JButton("Papel");
+			btnPapel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2, 7);
+				}
+			});
+			btnPapel.setBackground(new Color(65, 105, 225));
+			btnPapel.setForeground(new Color(255, 255, 255));
+			btnPapel.setFont(new Font("Tahoma", Font.BOLD, 11));
+			btnPapel.setBorder(null);
+			btnPapel.setContentAreaFilled(false);
+		}
+		return panelNavegacion;
+	}
+
+	private JButton getBtnCuadernos() {
+		if (btnCuadernos == null) {
+			btnCuadernos = new JButton("Cuadernos");
+			btnCuadernos.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					limpiarProductos();
+					cargarProductos(2, 8);
+				}
+			});
+			btnInicio.setContentAreaFilled(false);
+			btnInicio.setBackground(new Color(255, 255, 255));
+			btnInicio.setBorder(new EmptyBorder(0, 0, 0, 3));
+		}
+		return btnInicio;
+	}
+
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+			scrollPane.setBackground(new Color(65, 105, 225));
+			scrollPane.setViewportView(getPanelProductos());
+
+		}
+		return scrollPane;
+	}
+
+	private JPanel getPanelProductos() {
+		if (panelProductos == null) {
+			panelProductos = new JPanel();
+			panelProductos.setBorder(null);
+			panelProductos.setForeground(new Color(255, 255, 255));
+			panelProductos.setBackground(new Color(65, 105, 225));
+			panelProductos.setLayout(new BoxLayout(panelProductos, BoxLayout.Y_AXIS));
+		}
+		return panelProductos;
+	}
+
+	private void cargarProductos(int categoria, int subcategoria) {
+		List<Product> productos = new ProductsController().getAll(categoria, subcategoria);
+		for (Product p : productos) {
 			JPanel pan = new JPanel();
-			pan.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+			pan.setBorder(new LineBorder(new Color(255, 255, 255), 2));
 			pan.setLayout(new BorderLayout(0, 0));
-			pan.setBackground(new Color(255, 255, 255));
-			pan.setForeground(new Color(0, 0, 0));
+			pan.setBackground(new Color(65, 105, 225));
+			pan.setForeground(new Color(255, 255, 255));
 
 			JLabel lab = new JLabel();
-			lab.setForeground(new Color(0, 0, 0));
+			lab.setForeground(new Color(255, 255, 255));
 			lab.setHorizontalAlignment(JLabel.CENTER);
 			lab.setText(p.getName());
 
@@ -507,8 +649,8 @@ public class VentanaPrincipalTienda extends JFrame {
 			area.setWrapStyleWord(true);
 			area.setEditable(false);
 			area.setBorder(null);
-			area.setBackground(new Color(255, 255, 255));
-			area.setForeground(new Color(0, 0, 0));
+			area.setBackground(new Color(65, 105, 225));
+			area.setForeground(new Color(255, 255, 255));
 			area.setLineWrap(true);
 			area.setPreferredSize(new Dimension(60, 100));
 			area.setText(p.getDescription());
@@ -516,14 +658,13 @@ public class VentanaPrincipalTienda extends JFrame {
 			JPanel pan2 = new JPanel();
 			pan2.setLayout(new GridLayout(2, 0, 0, 0));
 			JTextField pvp = new JTextField();
-			pvp.setBackground(new Color(255, 255, 255));
-			pvp.setForeground(new Color(0, 0, 0));
+			pvp.setBackground(new Color(65, 105, 225));
+			pvp.setForeground(new Color(255, 255, 255));
 			pvp.setEditable(false);
 			pvp.setBorder(null);
-			pvp.setText("Precio: " + Double.toString(p.getPrice()) + ". Stock: " + p.getStock()+ ". Ref: " + p.getID());
+			pvp.setText("Precio: " + Double.toString(p.getPrice()) + ". Stock: " + p.getStock());
 			pvp.setHorizontalAlignment(JTextField.CENTER);
 			JButton bot = new JButton();
-			bot.setText("Añadir");
 			bot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int cod;
@@ -533,7 +674,7 @@ public class VentanaPrincipalTienda extends JFrame {
 						for (int i = 0; i < row; i++) {
 							cod = (int) table.getValueAt(i, 0);
 							if (p.getID() == cod) {
-								if (p.getStock() > Integer.parseInt(table.getValueAt(i, 2).toString())) {
+								if (p.getStock() >= ((Integer) table.getValueAt(i, 2) + 1)) {
 									Object cant = (Integer) table.getValueAt(i, 2) + 1;
 									((DefaultTableModel) getTable().getModel()).setValueAt(cant, i, 2);
 									Object pre = (double) redondear(
@@ -541,7 +682,7 @@ public class VentanaPrincipalTienda extends JFrame {
 									((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
 									actualizarTotal();
 								} else {
-									JOptionPane.showMessageDialog(derecha, "No se pueden añadir más artículos", "Error",
+									JOptionPane.showMessageDialog(derecha, "No se pueden a�adir m�s art�culos", "Error",
 											JOptionPane.ERROR_MESSAGE);
 								}
 								seguir = false;
@@ -572,41 +713,91 @@ public class VentanaPrincipalTienda extends JFrame {
 					}
 				}
 			});
-			pan2.add(pvp,BorderLayout.CENTER);
+			bot.setText("A�adir");
+			pan2.add(pvp);
 			pan2.add(bot);
 			pan.add(lab, BorderLayout.NORTH);
 			pan.add(area, BorderLayout.CENTER);
 			pan.add(pan2, BorderLayout.SOUTH);
-			getPanelProductos().add(pan);
-			
+			panelProductos.add(pan);
+			getPanelProductos().revalidate();
+			getPanelProductos().repaint();
+			getScrollPane().revalidate();
+			getScrollPane().repaint();
+
 		}
-		
+
 	}
-	private JPanel getPanelNavegacion() {
-		if (panelNavegacion == null) {
-			panelNavegacion = new JPanel();
-			panelNavegacion.setLayout(new BoxLayout(panelNavegacion, BoxLayout.Y_AXIS));
-			panelNavegacion.setAlignmentX(Component.LEFT_ALIGNMENT);
-			panelNavegacion.setAlignmentY(Component.CENTER_ALIGNMENT);
-			panelNavegacion.setBackground(new Color(255, 255, 255));
-			panelNavegacion.setBounds(10, 11, 700, 28);
-			panelNavegacion.add(getBtnNewButton());
-		}
-		return panelNavegacion;
+
+	private void limpiarProductos() {
+		getPanelProductos().removeAll();
 	}
-	private JButton getBtnNewButton() {
-		if (btnInicio == null) {
-			btnInicio = new JButton("Inicio");
-			btnInicio.setFocusPainted(false);
-			btnInicio.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					cargarCategoriaInicial();
+
+	private JTable getTable() {
+		if (table == null) {
+			table = new JTable();
+			table.setBackground(new Color(65, 105, 225));
+			table.setForeground(new Color(255, 255, 255));
+			modelo = new DefaultTableModel(new Object[][] {},
+					new String[] { "Referencia", "Nombre", "Cantidad", "Precio ud", "Precio" }) {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 4352988190229278374L;
+				/**
+				 * 
+				 */
+				boolean[] columnEditables = new boolean[] { false, false, true, false, false };
+
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
 				}
-			});
-			btnInicio.setContentAreaFilled(false);
-			btnInicio.setBackground(new Color(255, 255, 255));
-			btnInicio.setBorder(new EmptyBorder(0, 0, 0, 3));
+			};
+			table.setModel(modelo);
+			table.getColumnModel().getColumn(0).setResizable(false);
+			table.getColumnModel().getColumn(1).setResizable(false);
+			table.getColumnModel().getColumn(2).setResizable(false);
+			table.getColumnModel().getColumn(3).setResizable(false);
+			table.getColumnModel().getColumn(4).setResizable(false);
+			table.setCellSelectionEnabled(true);
+
 		}
-		return btnInicio;
+		return table;
+	}
+
+	private JScrollPane getScrollPane_1() {
+		if (scrollPane_1 == null) {
+			scrollPane_1 = new JScrollPane();
+			scrollPane_1.setForeground(new Color(255, 255, 255));
+			scrollPane_1.setBackground(new Color(65, 105, 225));
+			scrollPane_1.setBounds(20, 36, 377, 371);
+			scrollPane_1.setViewportView(getTable());
+			scrollPane_1.getViewport().setBackground(new Color(65, 105, 225));
+
+		}
+		return scrollPane_1;
+	}
+
+	private void actualizarTotal() {
+		double total = 0;
+		int filas = table.getRowCount();
+		for (int i = 0; i < filas; i++) {
+			total = total + (double) (table.getValueAt(i, 4));
+		}
+		txtTotal.setText(Double.toString((redondear(total))));
+	}
+
+	private double redondear(double cifra) {
+
+		return BigDecimal.valueOf(cifra).setScale(3, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	private boolean comprobarEntero(String text) {
+		try {
+			Integer.parseInt(text);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }
