@@ -82,6 +82,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTable table;
 	private DefaultTableModel modelo;
 	private JScrollPane scrollPane_1;
+	private Map<Object, Object> treeMap;
 
 	/**
 	 * Launch the application.
@@ -142,8 +143,6 @@ public class VentanaPrincipalTienda extends JFrame {
 						JOptionPane.showMessageDialog(derecha, "No se pueden poner valores negativos", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						table.setValueAt(tcl.getOldValue(), tcl.getRow(), tcl.getColumn());
-						// table.setValueAt(redondear((precio*viejoValor))
-						// ,tcl.getRow(),4);
 					} else if (nuevoValor == 0) {
 						modelo.removeRow(tcl.getRow());
 						table.repaint();
@@ -321,6 +320,14 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JButton getBtnContinuar() {
 		if (btnContinuar == null) {
 			btnContinuar = new JButton("Continuar");
+			btnContinuar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					treeMap = new TreeMap<Object, Object>();
+					for(int i=0;i<table.getRowCount();i++){
+						treeMap.put(table.getValueAt(i, 0),table.getValueAt(i, 2));
+					}
+				}
+			});
 
 			btnContinuar.setBounds(238, 493, 121, 35);
 		}
