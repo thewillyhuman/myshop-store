@@ -21,4 +21,14 @@ public class ProductsController {
 		 }
 		
 	}
+	
+	public List<Product> getAll(){
+		Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");
+		String complexSql = "SELECT * FROM myshop.product";
+		
+		 try (Connection con = sql2o.open()) {
+			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeAndFetch(Product.class);
+		 }
+		
+	}
 }
