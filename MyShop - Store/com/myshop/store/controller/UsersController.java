@@ -15,8 +15,9 @@ import com.myshop.model.user.User;
 
 public class UsersController {
 
+	private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");	
+	
 	public IndividualCustomer getCustomerData(String username, String password){
-		Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");
 		String complexSql = "SELECT * FROM myshop.user U, myshop.individual_customer IC, myshop.address A, myshop.credit_cards CC WHERE "
 				+ "U.username = :user AND U.password = :pass AND U.user_id = IC.user_id AND IC.customer_id = A.client_id AND IC.customer_id = CC.owner_id";
 				
@@ -27,6 +28,7 @@ public class UsersController {
 			            .addParameter("pass", password)
 			            .executeAndFetchTable().asList();
 		 }
+		 
 		 IndividualCustomer ic = new IndividualCustomer();
 		 for(Map<String,Object> m : map){
 			 ic.setName((String)m.get("name"));
@@ -48,7 +50,6 @@ public class UsersController {
 	}
 	
 	public Company getCompany(String username, String password){
-		Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");
 		String complexSql = "SELECT * FROM myshop.user U, myshop.company C WHERE "+ 
 		                    "U.username = :user AND U.password = :pass "
 						  + "AND U.user_id = C.user_id";
