@@ -134,6 +134,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		contentPane.add(getLogueoPago(), "login");
 
 		JPanel inicio = new JPanel();
+		inicio.setBackground(Color.WHITE);
 		contentPane.add(inicio, "name_381831475621552");
 		inicio.setLayout(new BorderLayout(0, 0));
 
@@ -150,20 +151,20 @@ public class VentanaPrincipalTienda extends JFrame {
 
 		JPanel contenidoInicio = new JPanel();
 		contenidoInicio.setLayout(null);
-		contenidoInicio.setBackground(new Color(65, 105, 225));
+		contenidoInicio.setBackground(Color.WHITE);
 		inicio.add(contenidoInicio, BorderLayout.CENTER);
 
 		JPanel panelEmpresa = new JPanel();
 		panelEmpresa.setLayout(null);
 		panelEmpresa.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"Acceso a tienda de empresa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelEmpresa.setBackground(new Color(65, 105, 225));
+		panelEmpresa.setBackground(Color.WHITE);
 		panelEmpresa.setBounds(12, 13, 492, 529);
 		contenidoInicio.add(panelEmpresa);
 
 		JLabel lblUsuarioNoEncontradoEmpresa = new JLabel("Usuario no encontrado");
 		lblUsuarioNoEncontradoEmpresa.setVisible(false);
-		lblUsuarioNoEncontradoEmpresa.setForeground(Color.YELLOW);
+		lblUsuarioNoEncontradoEmpresa.setForeground(Color.RED);
 		lblUsuarioNoEncontradoEmpresa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblUsuarioNoEncontradoEmpresa.setBounds(33, 329, 253, 47);
 		panelEmpresa.add(lblUsuarioNoEncontradoEmpresa);
@@ -219,7 +220,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		panelParticular.setLayout(null);
 		panelParticular.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acceso a particulares",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelParticular.setBackground(new Color(65, 105, 225));
+		panelParticular.setBackground(Color.WHITE);
 		panelParticular.setBounds(518, 13, 533, 529);
 		contenidoInicio.add(panelParticular);
 
@@ -425,12 +426,12 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (contenidoLogueoPago == null) {
 			contenidoLogueoPago = new JPanel();
 			contenidoLogueoPago.setLayout(null);
-			contenidoLogueoPago.setBackground(new Color(65, 105, 225));
+			contenidoLogueoPago.setBackground(Color.WHITE);
 
 			JPanel loginUsuario = new JPanel();
 			loginUsuario.setBorder(
 					new TitledBorder(null, "Inicio de sesion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			loginUsuario.setBackground(new Color(65, 105, 225));
+			loginUsuario.setBackground(Color.WHITE);
 			loginUsuario.setBounds(12, 13, 492, 529);
 			contenidoLogueoPago.add(loginUsuario);
 
@@ -439,7 +440,7 @@ public class VentanaPrincipalTienda extends JFrame {
 
 			JLabel lblUsuarioNoEncontrado = new JLabel("Usuario no encontrado");
 			lblUsuarioNoEncontrado.setVisible(false);
-			lblUsuarioNoEncontrado.setForeground(new Color(255, 255, 0));
+			lblUsuarioNoEncontrado.setForeground(Color.RED);
 			lblUsuarioNoEncontrado.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			lblUsuarioNoEncontrado.setBounds(33, 329, 253, 47);
 			loginUsuario.add(lblUsuarioNoEncontrado);
@@ -487,15 +488,16 @@ public class VentanaPrincipalTienda extends JFrame {
 			JPanel panelNoRegistro = new JPanel();
 			panelNoRegistro.setBorder(new TitledBorder(null, "Usuario no registrado", TitledBorder.LEADING,
 					TitledBorder.TOP, null, null));
-			panelNoRegistro.setBackground(new Color(65, 105, 225));
+			panelNoRegistro.setBackground(Color.WHITE);
 			panelNoRegistro.setBounds(518, 13, 533, 529);
 			contenidoLogueoPago.add(panelNoRegistro);
 			panelNoRegistro.setLayout(null);
 			
 			JLabel lblErroresDeTexto = new JLabel("Errores de texto");
+			lblErroresDeTexto.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			lblErroresDeTexto.setVisible(false);
-			lblErroresDeTexto.setForeground(new Color(255, 255, 0));
-			lblErroresDeTexto.setBounds(29, 458, 296, 24);
+			lblErroresDeTexto.setForeground(Color.RED);
+			lblErroresDeTexto.setBounds(29, 458, 431, 24);
 			panelNoRegistro.add(lblErroresDeTexto);
 
 			JLabel lblDatosDeEnvo = new JLabel("Datos de env\u00EDo:");
@@ -863,6 +865,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getPago() {
 		if (pago == null) {
 			pago = new JPanel();
+			pago.setBackground(Color.WHITE);
 			pago.setLayout(new BorderLayout(0, 0));
 			pago.add(getDireccionPago(), BorderLayout.NORTH);
 			pago.add(getContenidoPago(), BorderLayout.CENTER);
@@ -894,13 +897,13 @@ public class VentanaPrincipalTienda extends JFrame {
 		if (contenidoPago == null) {
 			contenidoPago = new JPanel();
 			contenidoPago.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-			contenidoPago.setBackground(new Color(65, 105, 225));
+			contenidoPago.setBackground(Color.WHITE);
 			contenidoPago.setLayout(null);
 			contenidoPago.add(getDatos());
 			contenidoPago.add(getMetodos());
 
 			JPanel carrito = new JPanel();
-			carrito.setBackground(new Color(65, 105, 225));
+			carrito.setBackground(Color.WHITE);
 			carrito.setBorder(new TitledBorder(null, "Carrito", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			carrito.setBounds(0, 0, 529, 271);
 			contenidoPago.add(carrito);
@@ -911,7 +914,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getDatos() {
 		if (datos == null) {
 			datos = new JPanel();
-			datos.setBackground(new Color(65, 105, 225));
+			datos.setBackground(Color.WHITE);
 			datos.setBorder(
 					new TitledBorder(null, "Resumen datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			datos.setBounds(0, 276, 529, 279);
@@ -955,7 +958,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getMetodos() {
 		if (metodos == null) {
 			metodos = new JPanel();
-			metodos.setBackground(new Color(65, 105, 225));
+			metodos.setBackground(Color.WHITE);
 			metodos.setBorder(
 					new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			metodos.setBounds(541, 0, 522, 555);
@@ -972,7 +975,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			panelMetodos.setLayout(new CardLayout(0, 0));
 			
 			JPanel panelTarjeta = new JPanel();
-			panelTarjeta.setBackground(new Color(65, 105, 225));
+			panelTarjeta.setBackground(Color.WHITE);
 			panelMetodos.add(panelTarjeta, "tarjeta");
 			panelTarjeta.setLayout(null);
 			
@@ -995,20 +998,20 @@ public class VentanaPrincipalTienda extends JFrame {
 			textTitular.setColumns(10);
 			
 			JLabel lblFechaCaducidad = new JLabel("Fecha caducidad");
-			lblFechaCaducidad.setBounds(12, 223, 123, 29);
+			lblFechaCaducidad.setBounds(12, 229, 123, 29);
 			panelTarjeta.add(lblFechaCaducidad);
 			
 			textFecha = new JTextField();
-			textFecha.setBounds(12, 245, 486, 29);
+			textFecha.setBounds(12, 250, 486, 29);
 			panelTarjeta.add(textFecha);
 			textFecha.setColumns(10);
 			
 			JLabel lblCvc = new JLabel("CVC");
-			lblCvc.setBounds(12, 278, 94, 16);
+			lblCvc.setBounds(12, 285, 94, 16);
 			panelTarjeta.add(lblCvc);
 			
 			textCVC = new JTextField();
-			textCVC.setBounds(12, 292, 149, 29);
+			textCVC.setBounds(12, 299, 149, 29);
 			panelTarjeta.add(textCVC);
 			textCVC.setColumns(10);
 			
@@ -1026,7 +1029,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getPanelRadioButtons() {
 		if (panelRadioButtons == null) {
 			panelRadioButtons = new JPanel();
-			panelRadioButtons.setBackground(new Color(65, 105, 225));
+			panelRadioButtons.setBackground(Color.WHITE);
 			
 			JRadioButton radioTarjeta = new JRadioButton("Tarjeta de cr\u00E9dito");
 			radioTarjeta.addActionListener(new ActionListener() {
@@ -1036,11 +1039,11 @@ public class VentanaPrincipalTienda extends JFrame {
 				}
 			});
 			radioTarjeta.setSelected(true);
-			radioTarjeta.setBackground(new Color(65, 105, 225));
+			radioTarjeta.setBackground(Color.WHITE);
 			panelRadioButtons.add(radioTarjeta);
 			
 			JRadioButton radioTransferencia = new JRadioButton("Transferencia bancaria");
-			radioTransferencia.setBackground(new Color(65, 105, 225));
+			radioTransferencia.setBackground(Color.WHITE);
 			radioTransferencia.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					CardLayout card = (CardLayout) panelMetodos.getLayout();
