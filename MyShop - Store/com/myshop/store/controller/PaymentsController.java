@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
-
 import com.myshop.model.product.Product;
 
 public class PaymentsController {
@@ -24,8 +23,8 @@ public class PaymentsController {
 		//primero meter el customer
 		//luego el individual customer con el id del customer introducido
 		//luego va el address con el id del individual customer metido
-		//luego la tarjeta de cr¨¦dito con el id del individual customer en el owner_id
-		//luego va el payment tras leer los paymentTypes y seleccionar el de la tarjeta. Estar¨¢ en recibido
+		//luego la tarjeta de crï¿½ï¿½dito con el id del individual customer en el owner_id
+		//luego va el payment tras leer los paymentTypes y seleccionar el de la tarjeta. Estarï¿½ï¿½ en recibido
 		//luego se mete el order con el id del customer en customer_id y con el id del payment en payment_id
 		//luego se crean los order items con el id de la order creada antes
 		 try (Connection con = sql2o.open()) {
