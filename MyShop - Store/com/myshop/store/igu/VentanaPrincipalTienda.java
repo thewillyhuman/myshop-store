@@ -11,8 +11,12 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
 
+import com.myshop.model.customer.Address;
 import com.myshop.model.customer.Company;
+import com.myshop.model.customer.CreditCards;
+import com.myshop.model.customer.Customer;
 import com.myshop.model.customer.IndividualCustomer;
+import com.myshop.model.order.Order;
 import com.myshop.model.product.Product;
 import com.myshop.store.controller.ProductsController;
 import com.myshop.store.controller.UsersController;
@@ -102,6 +106,9 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTextField textTitular;
 	private JTextField textFecha;
 	private JTextField textCVC;
+	private JLabel lblNmeroDeCuenta;
+	private JTextField textFNumeroCuenta;
+	private JButton btnConfirmarTrans;
 
 	/**
 	 * Launch the application.
@@ -1015,14 +1022,28 @@ public class VentanaPrincipalTienda extends JFrame {
 			panelTarjeta.add(textCVC);
 			textCVC.setColumns(10);
 			
-			JButton btnConfirmar = new JButton("Confirmar");
-			btnConfirmar.setBounds(12, 341, 94, 29);
-			panelTarjeta.add(btnConfirmar);
+			JButton btnConfirmarTarjeta = new JButton("Confirmar");
+			btnConfirmarTarjeta.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					IndividualCustomer ic = new IndividualCustomer();
+					Address a = new Address();
+					ic.setAddress(a);
+					CreditCards cc = new CreditCards();
+					ic.setCreditCard(cc);
+					Order o = new Order();
+					o.setCustomer(ic);
+				}
+			});
+			btnConfirmarTarjeta.setBounds(12, 341, 94, 29);
+			panelTarjeta.add(btnConfirmarTarjeta);
 			
 			JPanel panelTransferencia = new JPanel();
-			panelTransferencia.setBackground(new Color(65, 105, 225));
+			panelTransferencia.setBackground(Color.WHITE);
 			panelMetodos.add(panelTransferencia, "transferencia");
 			panelTransferencia.setLayout(null);
+			panelTransferencia.add(getLblNmeroDeCuenta());
+			panelTransferencia.add(getTextFNumeroCuenta());
+			panelTransferencia.add(getBtnConfirmarTrans());
 		}
 		return panelMetodos;
 	}
@@ -1057,5 +1078,31 @@ public class VentanaPrincipalTienda extends JFrame {
 			group.add(radioTransferencia);
 		}
 		return panelRadioButtons;
+	}
+	private JLabel getLblNmeroDeCuenta() {
+		if (lblNmeroDeCuenta == null) {
+			lblNmeroDeCuenta = new JLabel("N\u00FAmero de cuenta");
+			lblNmeroDeCuenta.setBounds(12, 149, 137, 29);
+		}
+		return lblNmeroDeCuenta;
+	}
+	private JTextField getTextFNumeroCuenta() {
+		if (textFNumeroCuenta == null) {
+			textFNumeroCuenta = new JTextField();
+			textFNumeroCuenta.setBounds(12, 180, 486, 29);
+			textFNumeroCuenta.setColumns(10);
+		}
+		return textFNumeroCuenta;
+	}
+	private JButton getBtnConfirmarTrans() {
+		if (btnConfirmarTrans == null) {
+			btnConfirmarTrans = new JButton("Confirmar");
+			btnConfirmarTrans.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+				}
+			});
+			btnConfirmarTrans.setBounds(12, 227, 97, 25);
+		}
+		return btnConfirmarTrans;
 	}
 }
