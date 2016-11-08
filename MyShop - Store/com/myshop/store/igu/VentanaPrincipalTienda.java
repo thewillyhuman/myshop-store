@@ -123,45 +123,46 @@ public class VentanaPrincipalTienda extends JFrame {
 		contentPane.setLayout(new CardLayout(0, 0));
 		contentPane.add(getTienda(), "tienda");
 		contentPane.add(getLogueoPago(), "login");
-		
+
 		JPanel inicio = new JPanel();
 		contentPane.add(inicio, "name_381831475621552");
 		inicio.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel direccionInicio = new JPanel();
 		direccionInicio.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		direccionInicio.setBackground(Color.WHITE);
 		inicio.add(direccionInicio, BorderLayout.NORTH);
 		direccionInicio.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		JLabel label = new JLabel("http://www.myshop.es");
 		label.setPreferredSize(new Dimension(1011, 14));
 		label.setBackground(Color.WHITE);
 		direccionInicio.add(label);
-		
+
 		JPanel contenidoInicio = new JPanel();
 		contenidoInicio.setLayout(null);
 		contenidoInicio.setBackground(new Color(65, 105, 225));
 		inicio.add(contenidoInicio, BorderLayout.CENTER);
-		
+
 		JPanel panelEmpresa = new JPanel();
 		panelEmpresa.setLayout(null);
-		panelEmpresa.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acceso a tienda de empresa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelEmpresa.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
+				"Acceso a tienda de empresa", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelEmpresa.setBackground(new Color(65, 105, 225));
 		panelEmpresa.setBounds(12, 13, 492, 529);
 		contenidoInicio.add(panelEmpresa);
-		
+
 		JLabel lblUsuarioNoEncontradoEmpresa = new JLabel("Usuario no encontrado");
 		lblUsuarioNoEncontradoEmpresa.setVisible(false);
 		lblUsuarioNoEncontradoEmpresa.setForeground(Color.YELLOW);
 		lblUsuarioNoEncontradoEmpresa.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblUsuarioNoEncontradoEmpresa.setBounds(33, 329, 253, 47);
 		panelEmpresa.add(lblUsuarioNoEncontradoEmpresa);
-		
+
 		JLabel lblUsuarioEmpresa = new JLabel("Nombre de usuario");
 		lblUsuarioEmpresa.setBounds(33, 169, 109, 16);
 		panelEmpresa.add(lblUsuarioEmpresa);
-		
+
 		textUserEmpresa = new JTextField();
 		textUserEmpresa.setColumns(10);
 		textUserEmpresa.setBounds(33, 195, 253, 22);
@@ -172,11 +173,11 @@ public class VentanaPrincipalTienda extends JFrame {
 			}
 		});
 		panelEmpresa.add(textUserEmpresa);
-		
+
 		JLabel lblPassword = new JLabel("Contrase\u00F1a");
 		lblPassword.setBounds(33, 230, 65, 16);
 		panelEmpresa.add(lblPassword);
-		
+
 		textPassEmpresa = new JTextField();
 		textPassEmpresa.addFocusListener(new FocusAdapter() {
 			@Override
@@ -187,15 +188,15 @@ public class VentanaPrincipalTienda extends JFrame {
 		textPassEmpresa.setColumns(10);
 		textPassEmpresa.setBounds(33, 252, 253, 22);
 		panelEmpresa.add(textPassEmpresa);
-		
+
 		JButton btnAccederEmpresa = new JButton("Acceder");
 		btnAccederEmpresa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UsersController uc = new UsersController();
 				Company c = uc.getCompany(textUserEmpresa.getText(), textPassEmpresa.getText());
-				if(c.getName() == null)
+				if (c.getName() == null)
 					lblUsuarioNoEncontradoEmpresa.setVisible(true);
-				else{
+				else {
 					CardLayout card = (CardLayout) contentPane.getLayout();
 					card.show(contentPane, "tienda");
 					esEmpresa = true;
@@ -204,14 +205,15 @@ public class VentanaPrincipalTienda extends JFrame {
 		});
 		btnAccederEmpresa.setBounds(33, 291, 103, 25);
 		panelEmpresa.add(btnAccederEmpresa);
-		
+
 		JPanel panelParticular = new JPanel();
 		panelParticular.setLayout(null);
-		panelParticular.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acceso a particulares", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelParticular.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Acceso a particulares",
+				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panelParticular.setBackground(new Color(65, 105, 225));
 		panelParticular.setBounds(518, 13, 533, 529);
 		contenidoInicio.add(panelParticular);
-		
+
 		JButton btnAccederParticular = new JButton("Acceder");
 		btnAccederParticular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -238,6 +240,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return tienda;
 	}
+
 	private JPanel getDireccionTienda() {
 		if (direccionTienda == null) {
 			direccionTienda = new JPanel();
@@ -249,6 +252,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return direccionTienda;
 	}
+
 	private JLabel getLblUrlTienda() {
 		if (lblUrlTienda == null) {
 			lblUrlTienda = new JLabel("http://www.myshop.es/tienda");
@@ -257,6 +261,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return lblUrlTienda;
 	}
+
 	private JPanel getContenidoTienda() {
 		if (contenidoTienda == null) {
 			contenidoTienda = new JPanel();
@@ -267,6 +272,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return contenidoTienda;
 	}
+
 	private JPanel getIzquierda() {
 		if (izquierda == null) {
 			izquierda = new JPanel();
@@ -277,6 +283,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return izquierda;
 	}
+
 	private JPanel getDerecha() {
 		if (derecha == null) {
 			derecha = new JPanel();
@@ -291,6 +298,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return derecha;
 	}
+
 	private JPanel getCategorias() {
 		if (categorias == null) {
 			categorias = new JPanel();
@@ -301,6 +309,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return categorias;
 	}
+
 	private JPanel getLista() {
 		if (lista == null) {
 			lista = new JPanel();
@@ -314,10 +323,12 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JLabel getLblAtras() {
 		if (lblAtras == null) {
 			lblAtras = new JLabel("");
-			lblAtras.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
+			lblAtras.setIcon(
+					new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
 		}
 		return lblAtras;
 	}
+
 	private JLabel getLblCarrito() {
 		if (lblCarrito == null) {
 			lblCarrito = new JLabel("Lista de la compra:");
@@ -327,6 +338,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return lblCarrito;
 	}
+
 	private JLabel getLblTotal() {
 		if (lblTotal == null) {
 			lblTotal = new JLabel("Total:");
@@ -336,6 +348,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return lblTotal;
 	}
+
 	private JTextField getTxtTotal() {
 		if (txtTotal == null) {
 			txtTotal = new JTextField();
@@ -346,6 +359,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return txtTotal;
 	}
+
 	private JButton getBtnVaciar() {
 		if (btnVaciar == null) {
 			btnVaciar = new JButton("Vaciar carrito");
@@ -353,6 +367,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnVaciar;
 	}
+
 	private JButton getBtnContinuar() {
 		if (btnContinuar == null) {
 			btnContinuar = new JButton("Continuar");
@@ -366,6 +381,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnContinuar;
 	}
+
 	private JPanel getLogueoPago() {
 		if (logueoPago == null) {
 			logueoPago = new JPanel();
@@ -375,6 +391,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return logueoPago;
 	}
+
 	private JPanel getDireccionILogueoPago() {
 		if (direccionILogueoPago == null) {
 			direccionILogueoPago = new JPanel();
@@ -385,6 +402,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return direccionILogueoPago;
 	}
+
 	private JLabel getLblUrlInicio() {
 		if (lblUrlInicio == null) {
 			lblUrlInicio = new JLabel("http://www.myshop.es/tienda/login");
@@ -393,28 +411,30 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return lblUrlInicio;
 	}
+
 	private JPanel getContenidoLogueoPago() {
 		if (contenidoLogueoPago == null) {
 			contenidoLogueoPago = new JPanel();
 			contenidoLogueoPago.setLayout(null);
 			contenidoLogueoPago.setBackground(new Color(65, 105, 225));
-			
+
 			JPanel loginUsuario = new JPanel();
-			loginUsuario.setBorder(new TitledBorder(null, "Inicio de sesion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			loginUsuario.setBorder(
+					new TitledBorder(null, "Inicio de sesion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			loginUsuario.setBackground(new Color(65, 105, 225));
 			loginUsuario.setBounds(12, 13, 492, 529);
 			contenidoLogueoPago.add(loginUsuario);
-			
+
 			JLabel lblNombreDeUsuario = new JLabel("Nombre de usuario");
 			lblNombreDeUsuario.setBounds(33, 169, 109, 16);
-			
+
 			JLabel lblUsuarioNoEncontrado = new JLabel("Usuario no encontrado");
 			lblUsuarioNoEncontrado.setVisible(false);
 			lblUsuarioNoEncontrado.setForeground(new Color(255, 255, 0));
 			lblUsuarioNoEncontrado.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			lblUsuarioNoEncontrado.setBounds(33, 329, 253, 47);
 			loginUsuario.add(lblUsuarioNoEncontrado);
-			
+
 			textUser = new JTextField();
 			textUser.addFocusListener(new FocusAdapter() {
 				@Override
@@ -424,10 +444,10 @@ public class VentanaPrincipalTienda extends JFrame {
 			});
 			textUser.setBounds(33, 195, 253, 22);
 			textUser.setColumns(10);
-			
+
 			JLabel lblContrasea = new JLabel("Contrase\u00F1a");
 			lblContrasea.setBounds(33, 230, 65, 16);
-			
+
 			textPass = new JTextField();
 			textPass.addFocusListener(new FocusAdapter() {
 				@Override
@@ -442,84 +462,139 @@ public class VentanaPrincipalTienda extends JFrame {
 			loginUsuario.add(textUser);
 			loginUsuario.add(lblContrasea);
 			loginUsuario.add(textPass);
-			
-			
+
 			JButton btnContinuar_1 = new JButton("Continuar");
 			btnContinuar_1.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					UsersController uc = new UsersController();
 					IndividualCustomer ic = uc.getCustomerData(textUser.getText(), textPass.getText());
-					if(ic.getName() == null)
+					if (ic.getName() == null)
 						lblUsuarioNoEncontrado.setVisible(true);
 				}
 			});
 			btnContinuar_1.setBounds(33, 291, 109, 25);
 			loginUsuario.add(btnContinuar_1);
-			
+
 			JPanel panelNoRegistro = new JPanel();
-			panelNoRegistro.setBorder(new TitledBorder(null, "Usuario no registrado", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panelNoRegistro.setBorder(new TitledBorder(null, "Usuario no registrado", TitledBorder.LEADING,
+					TitledBorder.TOP, null, null));
 			panelNoRegistro.setBackground(new Color(65, 105, 225));
 			panelNoRegistro.setBounds(518, 13, 533, 529);
 			contenidoLogueoPago.add(panelNoRegistro);
 			panelNoRegistro.setLayout(null);
 			
+			JLabel lblErroresDeTexto = new JLabel("Errores de texto");
+			lblErroresDeTexto.setVisible(false);
+			lblErroresDeTexto.setForeground(new Color(255, 255, 0));
+			lblErroresDeTexto.setBounds(29, 458, 296, 24);
+			panelNoRegistro.add(lblErroresDeTexto);
+
 			JLabel lblDatosDeEnvo = new JLabel("Datos de env\u00EDo:");
 			lblDatosDeEnvo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lblDatosDeEnvo.setBounds(32, 109, 132, 24);
 			panelNoRegistro.add(lblDatosDeEnvo);
-			
+
 			JLabel lblCalle = new JLabel("Calle");
 			lblCalle.setBounds(34, 164, 106, 24);
 			panelNoRegistro.add(lblCalle);
-			
+
 			textCalle = new JTextField();
+			textCalle.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent arg0) {
+					lblErroresDeTexto.setVisible(false);
+				}
+			});
 			textCalle.setBounds(32, 189, 474, 24);
 			panelNoRegistro.add(textCalle);
 			textCalle.setColumns(10);
-			
+
 			JLabel lblCiudad = new JLabel("Ciudad");
 			lblCiudad.setBounds(32, 226, 84, 16);
 			panelNoRegistro.add(lblCiudad);
-			
+
 			textCiudad = new JTextField();
 			textCiudad.setBounds(32, 245, 474, 24);
 			panelNoRegistro.add(textCiudad);
 			textCiudad.setColumns(10);
-			
+			textCiudad.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent arg0) {
+					lblErroresDeTexto.setVisible(false);
+				}
+			});
+
 			JLabel lblProvinciaestado = new JLabel("Provincia/Estado");
 			lblProvinciaestado.setBounds(32, 283, 132, 24);
 			panelNoRegistro.add(lblProvinciaestado);
-			
+
 			textProvinciaEstado = new JTextField();
 			textProvinciaEstado.setBounds(32, 309, 474, 24);
 			panelNoRegistro.add(textProvinciaEstado);
 			textProvinciaEstado.setColumns(10);
-			
+			textProvinciaEstado.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent arg0) {
+					lblErroresDeTexto.setVisible(false);
+				}
+			});
+
 			JLabel lblCodigoPostal = new JLabel("Codigo postal");
 			lblCodigoPostal.setBounds(32, 346, 108, 24);
 			panelNoRegistro.add(lblCodigoPostal);
-			
+
 			textCodigoPostal = new JTextField();
 			textCodigoPostal.setBounds(32, 373, 474, 24);
 			panelNoRegistro.add(textCodigoPostal);
 			textCodigoPostal.setColumns(10);
+			textCodigoPostal.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent arg0) {
+					lblErroresDeTexto.setVisible(false);
+				}
+			});
+			
 			
 			JButton btnContinuar_2 = new JButton("Continuar");
 			btnContinuar_2.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					textCiudadPago.setText(textCiudad.getText());
-					textProvinciaPago.setText(textProvinciaEstado.getText());
-					textDireccionPago.setText(textCalle.getText());
-					textCodigoPostalPago.setText(textCodigoPostal.getText());
-					CardLayout card = (CardLayout) contentPane.getLayout();
-					card.show(contentPane, "pago");
+					if (compruebaCampos()) {
+						textCiudadPago.setText(textCiudad.getText());
+						textProvinciaPago.setText(textProvinciaEstado.getText());
+						textDireccionPago.setText(textCalle.getText());
+						textCodigoPostalPago.setText(textCodigoPostal.getText());
+						CardLayout card = (CardLayout) contentPane.getLayout();
+						card.show(contentPane, "pago");
+					} else {
+						
+					}
+				}
+
+				private boolean compruebaCampos() {
+					if (textCiudad.getText().isEmpty() || textProvinciaEstado.getText().isEmpty()
+							|| textCalle.getText().isEmpty() || textCodigoPostal.getText().isEmpty()) {
+						lblErroresDeTexto.setText("Hay alg¨²n campo vac¨ªo. No se deje ninguno");
+						lblErroresDeTexto.setVisible(true);
+						return false;
+					} else {
+						if (textCodigoPostal.getText().matches("[0-9]+"))
+							return true;
+						else{
+							lblErroresDeTexto.setText("El codigo postal solo puede contener n¨²meros");
+							lblErroresDeTexto.setVisible(true);
+							return false;
+						}
+					}
 				}
 			});
 			btnContinuar_2.setBounds(32, 418, 97, 25);
 			panelNoRegistro.add(btnContinuar_2);
+			
+			
 		}
 		return contenidoLogueoPago;
 	}
+
 	private JPanel getSuperior() {
 		if (superior == null) {
 			superior = new JPanel();
@@ -529,6 +604,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return superior;
 	}
+
 	private JPanel getInferior() {
 		if (inferior == null) {
 			inferior = new JPanel();
@@ -540,13 +616,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return inferior;
 	}
+
 	private JButton getBtnElectronica() {
 		if (btnElectronica == null) {
 			btnElectronica = new JButton("Electrónica");
 			btnElectronica.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					inferior.setVisible(true);
-					((CardLayout)inferior.getLayout()).show(inferior,"panelElec");
+					((CardLayout) inferior.getLayout()).show(inferior, "panelElec");
 				}
 			});
 			btnElectronica.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -557,13 +634,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnElectronica;
 	}
+
 	private JButton getBtnPapeleria() {
 		if (btnPapeleria == null) {
 			btnPapeleria = new JButton("Papelería");
 			btnPapeleria.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					inferior.setVisible(true);
-					((CardLayout)inferior.getLayout()).show(inferior,"panelPap");
+					((CardLayout) inferior.getLayout()).show(inferior, "panelPap");
 				}
 			});
 			btnPapeleria.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -574,6 +652,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnPapeleria;
 	}
+
 	private JPanel getElec() {
 		if (elec == null) {
 			elec = new JPanel();
@@ -586,6 +665,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return elec;
 	}
+
 	private JPanel getPap() {
 		if (pap == null) {
 			pap = new JPanel();
@@ -596,13 +676,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return pap;
 	}
+
 	private JButton getBtnFotografa() {
 		if (btnFotografa == null) {
 			btnFotografa = new JButton("Fotografía");
 			btnFotografa.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					limpiarProductos();
-					cargarProductos(1,1);
+					cargarProductos(1, 1);
 				}
 			});
 			btnFotografa.setContentAreaFilled(false);
@@ -613,13 +694,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnFotografa;
 	}
+
 	private JButton getBtnGps() {
 		if (btnGps == null) {
 			btnGps = new JButton("GPS");
 			btnGps.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(1,3);
+					cargarProductos(1, 3);
 				}
 			});
 			btnGps.setContentAreaFilled(false);
@@ -630,13 +712,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnGps;
 	}
+
 	private JButton getBtnTelefona() {
 		if (btnTelefona == null) {
 			btnTelefona = new JButton("Telefonía");
 			btnTelefona.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(1,2);
+					cargarProductos(1, 2);
 				}
 			});
 			btnTelefona.setContentAreaFilled(false);
@@ -647,13 +730,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnTelefona;
 	}
+
 	private JButton getBtnTv() {
 		if (btnTv == null) {
 			btnTv = new JButton("TV");
 			btnTv.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(1,4);
+					cargarProductos(1, 4);
 				}
 			});
 			btnTv.setContentAreaFilled(false);
@@ -664,13 +748,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnTv;
 	}
+
 	private JButton getBtnInformtica() {
 		if (btnInformtica == null) {
 			btnInformtica = new JButton("Informática");
 			btnInformtica.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(1,5);
+					cargarProductos(1, 5);
 				}
 			});
 			btnInformtica.setContentAreaFilled(false);
@@ -681,13 +766,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnInformtica;
 	}
+
 	private JButton getBtnArchivadores() {
 		if (btnArchivadores == null) {
 			btnArchivadores = new JButton("Archivadores");
 			btnArchivadores.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(2,6);
+					cargarProductos(2, 6);
 				}
 			});
 			btnArchivadores.setBackground(new Color(65, 105, 225));
@@ -698,13 +784,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnArchivadores;
 	}
+
 	private JButton getBtnPapel() {
 		if (btnPapel == null) {
 			btnPapel = new JButton("Papel");
 			btnPapel.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(2,7);
+					cargarProductos(2, 7);
 				}
 			});
 			btnPapel.setBackground(new Color(65, 105, 225));
@@ -715,13 +802,14 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnPapel;
 	}
+
 	private JButton getBtnCuadernos() {
 		if (btnCuadernos == null) {
 			btnCuadernos = new JButton("Cuadernos");
 			btnCuadernos.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					limpiarProductos();
-					cargarProductos(2,8);
+					cargarProductos(2, 8);
 				}
 			});
 			btnCuadernos.setBackground(new Color(65, 105, 225));
@@ -732,33 +820,37 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return btnCuadernos;
 	}
+
 	private JTable getTableProductos() {
 		if (tableProductos == null) {
-			String[]nombreColumnas = {"Nombre", "Descripcion", "Precio", "Stock"};
-			modeloTabla=new ModeloNoEditable(nombreColumnas,0);
-			tableProductos=new JTable(modeloTabla);
+			String[] nombreColumnas = { "Nombre", "Descripcion", "Precio", "Stock" };
+			modeloTabla = new ModeloNoEditable(nombreColumnas, 0);
+			tableProductos = new JTable(modeloTabla);
 			tableProductos.setForeground(new Color(255, 255, 255));
 			tableProductos.setBackground(new Color(65, 105, 225));
-			
+
 		}
 		return tableProductos;
 	}
-	private void cargarProductos(int categoria, int subcategoria){
-		List<Product> aux =  new ProductsController().getAll(categoria,subcategoria);
-		for (Product p:aux){
-			if(!esEmpresa)
-				modeloTabla.addRow(new Object[]{ p.getName(), p.getDescription(), p.getPrice(), p.getStock()});
-			else{
-				modeloTabla.addRow(new Object[]{ p.getName(), p.getDescription(), p.getCompanyPrice(), p.getStock()});					
+
+	private void cargarProductos(int categoria, int subcategoria) {
+		List<Product> aux = new ProductsController().getAll(categoria, subcategoria);
+		for (Product p : aux) {
+			if (!esEmpresa)
+				modeloTabla.addRow(new Object[] { p.getName(), p.getDescription(), p.getPrice(), p.getStock() });
+			else {
+				modeloTabla.addRow(new Object[] { p.getName(), p.getDescription(), p.getCompanyPrice(), p.getStock() });
 			}
 		}
 	}
-	private void limpiarProductos(){
+
+	private void limpiarProductos() {
 		int rowCount = modeloTabla.getRowCount();
 		for (int i = rowCount - 1; i >= 0; i--) {
 			modeloTabla.removeRow(i);
 		}
 	}
+
 	private JPanel getPago() {
 		if (pago == null) {
 			pago = new JPanel();
@@ -768,6 +860,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return pago;
 	}
+
 	private JPanel getDireccionPago() {
 		if (direccionPago == null) {
 			direccionPago = new JPanel();
@@ -778,6 +871,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return direccionPago;
 	}
+
 	private JLabel getLblHttpwwwmyshopestiendapago() {
 		if (lblHttpwwwmyshopestiendapago == null) {
 			lblHttpwwwmyshopestiendapago = new JLabel("http://www.myshop.es/tienda/pago");
@@ -786,6 +880,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return lblHttpwwwmyshopestiendapago;
 	}
+
 	private JPanel getContenidoPago() {
 		if (contenidoPago == null) {
 			contenidoPago = new JPanel();
@@ -794,7 +889,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			contenidoPago.setLayout(null);
 			contenidoPago.add(getDatos());
 			contenidoPago.add(getMetodos());
-			
+
 			JPanel carrito = new JPanel();
 			carrito.setBackground(new Color(65, 105, 225));
 			carrito.setBorder(new TitledBorder(null, "Carrito", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -803,41 +898,43 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return contenidoPago;
 	}
+
 	private JPanel getDatos() {
 		if (datos == null) {
 			datos = new JPanel();
 			datos.setBackground(new Color(65, 105, 225));
-			datos.setBorder(new TitledBorder(null, "Resumen datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			datos.setBorder(
+					new TitledBorder(null, "Resumen datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			datos.setBounds(0, 276, 529, 279);
 			datos.setLayout(new GridLayout(0, 1, 0, 0));
-			
+
 			JLabel lblNewLabel = new JLabel("Ciudad");
 			datos.add(lblNewLabel);
-			
+
 			textCiudadPago = new JTextField();
 			textCiudadPago.setEditable(false);
 			datos.add(textCiudadPago);
 			textCiudadPago.setColumns(10);
-			
+
 			JLabel lblProvincia = new JLabel("Provincia/Estado");
 			datos.add(lblProvincia);
-			
+
 			textProvinciaPago = new JTextField();
 			textProvinciaPago.setEditable(false);
 			datos.add(textProvinciaPago);
 			textProvinciaPago.setColumns(10);
-			
+
 			JLabel lblDireccin = new JLabel("Direcci\u00F3n");
 			datos.add(lblDireccin);
-			
+
 			textDireccionPago = new JTextField();
 			textDireccionPago.setEditable(false);
 			datos.add(textDireccionPago);
 			textDireccionPago.setColumns(10);
-			
+
 			JLabel lblCdigoPostal = new JLabel("C\u00F3digo postal");
 			datos.add(lblCdigoPostal);
-			
+
 			textCodigoPostalPago = new JTextField();
 			textCodigoPostalPago.setEditable(false);
 			datos.add(textCodigoPostalPago);
@@ -845,11 +942,13 @@ public class VentanaPrincipalTienda extends JFrame {
 		}
 		return datos;
 	}
+
 	private JPanel getMetodos() {
 		if (metodos == null) {
 			metodos = new JPanel();
 			metodos.setBackground(new Color(65, 105, 225));
-			metodos.setBorder(new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			metodos.setBorder(
+					new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			metodos.setBounds(541, 0, 522, 555);
 		}
 		return metodos;
