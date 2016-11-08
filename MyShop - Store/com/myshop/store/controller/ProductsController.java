@@ -19,9 +19,8 @@ public class ProductsController {
 		 try (Connection con = sql2o.open()) {
 			 return con.createQuery(complexSql).addParameter("cat", category)
 			            .addParameter("subcat", subcategory)
-			            .addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeAndFetch(Product.class);
+			            .addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
 		 }
-		
 	}
 	
 	public List<Product> getAll(){
