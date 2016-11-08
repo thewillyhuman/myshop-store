@@ -74,10 +74,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTextField txtTotal;
 	private JButton btnVaciar;
 	private JButton btnContinuar;
-	private JPanel inicio;
-	private JPanel direccionInicio;
 	private JLabel lblUrlInicio;
-	private JPanel contenidoInicio;
 	private JTable table;
 	private DefaultTableModel modelo;
 	private JScrollPane scrollPane_1;
