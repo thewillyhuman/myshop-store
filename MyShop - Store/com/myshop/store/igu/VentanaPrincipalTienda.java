@@ -19,6 +19,8 @@ import com.myshop.store.controller.UsersController;
 
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -32,6 +34,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JRadioButton;
 
 public class VentanaPrincipalTienda extends JFrame {
 
@@ -93,6 +96,12 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTextField textCiudadPago;
 	private JTextField textProvinciaPago;
 	private JTextField textCodigoPostalPago;
+	private JPanel panelMetodos;
+	private JPanel panelRadioButtons;
+	private JTextField textNumero;
+	private JTextField textTitular;
+	private JTextField textFecha;
+	private JTextField textCVC;
 
 	/**
 	 * Launch the application.
@@ -950,7 +959,100 @@ public class VentanaPrincipalTienda extends JFrame {
 			metodos.setBorder(
 					new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			metodos.setBounds(541, 0, 522, 555);
+			metodos.setLayout(new BorderLayout(0, 0));
+			metodos.add(getPanelMetodos(), BorderLayout.CENTER);
+			metodos.add(getPanelRadioButtons(), BorderLayout.NORTH);
 		}
 		return metodos;
+	}
+	private JPanel getPanelMetodos() {
+		if (panelMetodos == null) {
+			panelMetodos = new JPanel();
+			panelMetodos.setBackground(new Color(65, 105, 225));
+			panelMetodos.setLayout(new CardLayout(0, 0));
+			
+			JPanel panelTarjeta = new JPanel();
+			panelTarjeta.setBackground(new Color(65, 105, 225));
+			panelMetodos.add(panelTarjeta, "tarjeta");
+			panelTarjeta.setLayout(null);
+			
+			JLabel lblNmeroTajeta = new JLabel("N\u00FAmero tajeta");
+			lblNmeroTajeta.setBounds(12, 126, 149, 29);
+			panelTarjeta.add(lblNmeroTajeta);
+			
+			textNumero = new JTextField();
+			textNumero.setBounds(12, 149, 486, 29);
+			panelTarjeta.add(textNumero);
+			textNumero.setColumns(10);
+			
+			JLabel lblNombreTitular = new JLabel("Nombre del titular");
+			lblNombreTitular.setBounds(12, 183, 172, 16);
+			panelTarjeta.add(lblNombreTitular);
+			
+			textTitular = new JTextField();
+			textTitular.setBounds(12, 199, 486, 29);
+			panelTarjeta.add(textTitular);
+			textTitular.setColumns(10);
+			
+			JLabel lblFechaCaducidad = new JLabel("Fecha caducidad");
+			lblFechaCaducidad.setBounds(12, 223, 123, 29);
+			panelTarjeta.add(lblFechaCaducidad);
+			
+			textFecha = new JTextField();
+			textFecha.setBounds(12, 245, 486, 29);
+			panelTarjeta.add(textFecha);
+			textFecha.setColumns(10);
+			
+			JLabel lblCvc = new JLabel("CVC");
+			lblCvc.setBounds(12, 278, 94, 16);
+			panelTarjeta.add(lblCvc);
+			
+			textCVC = new JTextField();
+			textCVC.setBounds(12, 292, 149, 29);
+			panelTarjeta.add(textCVC);
+			textCVC.setColumns(10);
+			
+			JButton btnConfirmar = new JButton("Confirmar");
+			btnConfirmar.setBounds(12, 341, 94, 29);
+			panelTarjeta.add(btnConfirmar);
+			
+			JPanel panelTransferencia = new JPanel();
+			panelTransferencia.setBackground(new Color(65, 105, 225));
+			panelMetodos.add(panelTransferencia, "transferencia");
+			panelTransferencia.setLayout(null);
+		}
+		return panelMetodos;
+	}
+	private JPanel getPanelRadioButtons() {
+		if (panelRadioButtons == null) {
+			panelRadioButtons = new JPanel();
+			panelRadioButtons.setBackground(new Color(65, 105, 225));
+			
+			JRadioButton radioTarjeta = new JRadioButton("Tarjeta de cr\u00E9dito");
+			radioTarjeta.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					CardLayout card = (CardLayout) panelMetodos.getLayout();
+					card.show(panelMetodos, "tarjeta");
+				}
+			});
+			radioTarjeta.setSelected(true);
+			radioTarjeta.setBackground(new Color(65, 105, 225));
+			panelRadioButtons.add(radioTarjeta);
+			
+			JRadioButton radioTransferencia = new JRadioButton("Transferencia bancaria");
+			radioTransferencia.setBackground(new Color(65, 105, 225));
+			radioTransferencia.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					CardLayout card = (CardLayout) panelMetodos.getLayout();
+					card.show(panelMetodos, "transferencia");
+				}
+			});
+			panelRadioButtons.add(radioTransferencia);
+			
+			ButtonGroup group = new ButtonGroup();
+			group.add(radioTarjeta);
+			group.add(radioTransferencia);
+		}
+		return panelRadioButtons;
 	}
 }
