@@ -117,6 +117,10 @@ public class VentanaPrincipalTienda extends JFrame {
 	private boolean esEmpresa;
 	private JTable tablaCarritoPago;
 	private JLabel labelPrecio;
+	private JTextField textNombre;
+	private JTextField textApellidos;
+	private JTextField textNombrePago;
+	private JTextField textApellidosPago;
 
 	/**
 	 * Launch the application.
@@ -883,7 +887,7 @@ public class VentanaPrincipalTienda extends JFrame {
 
 			JLabel lblDatosDeEnvo = new JLabel("Datos de env\u00EDo:");
 			lblDatosDeEnvo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-			lblDatosDeEnvo.setBounds(32, 109, 132, 24);
+			lblDatosDeEnvo.setBounds(34, 31, 132, 24);
 			panelNoRegistro.add(lblDatosDeEnvo);
 
 			JLabel lblCalle = new JLabel("Calle");
@@ -946,6 +950,15 @@ public class VentanaPrincipalTienda extends JFrame {
 				}
 			});
 			
+			textNombre = new JTextField();
+			textNombre.setBounds(34, 83, 472, 24);
+			panelNoRegistro.add(textNombre);
+			textNombre.setColumns(10);
+			
+			textApellidos = new JTextField();
+			textApellidos.setBounds(34, 138, 474, 24);
+			panelNoRegistro.add(textApellidos);
+			textApellidos.setColumns(10);
 			
 			JButton btnContinuar_2 = new JButton("Continuar");
 			btnContinuar_2.addActionListener(new ActionListener() {
@@ -956,6 +969,8 @@ public class VentanaPrincipalTienda extends JFrame {
 						textDireccionPago.setText(textCalle.getText());
 						textCodigoPostalPago.setText(textCodigoPostal.getText());
 						labelPrecio.setText(txtTotal.getText());
+						textNombrePago.setText(textNombre.getText());
+						textApellidosPago.setText(textApellidos.getText());
 						CardLayout card = (CardLayout) contentPane.getLayout();
 						card.show(contentPane, "pago");
 					} else {
@@ -965,7 +980,8 @@ public class VentanaPrincipalTienda extends JFrame {
 
 				private boolean compruebaCampos() {
 					if (textCiudad.getText().isEmpty() || textProvinciaEstado.getText().isEmpty()
-							|| textCalle.getText().isEmpty() || textCodigoPostal.getText().isEmpty()) {
+							|| textCalle.getText().isEmpty() || textCodigoPostal.getText().isEmpty()
+							|| textNombre.getText().isEmpty()|| textApellidos.getText().isEmpty()) {
 						lblErroresDeTexto.setText("Hay algún campo vacío. No se deje ninguno");
 						lblErroresDeTexto.setVisible(true);
 						return false;
@@ -982,6 +998,16 @@ public class VentanaPrincipalTienda extends JFrame {
 			});
 			btnContinuar_2.setBounds(32, 418, 97, 25);
 			panelNoRegistro.add(btnContinuar_2);
+			
+			JLabel lblNombre = new JLabel("Nombre:");
+			lblNombre.setBounds(34, 67, 84, 16);
+			panelNoRegistro.add(lblNombre);
+			
+			JLabel lblApellidos = new JLabel("Apellidos");
+			lblApellidos.setBounds(32, 120, 84, 16);
+			panelNoRegistro.add(lblApellidos);
+			
+			
 			
 			
 		}
@@ -1086,6 +1112,22 @@ public class VentanaPrincipalTienda extends JFrame {
 					new TitledBorder(null, "Resumen datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			datos.setBounds(0, 276, 529, 279);
 			datos.setLayout(new GridLayout(0, 1, 0, 0));
+			
+			JLabel lblNombre_1 = new JLabel("Nombre");
+			datos.add(lblNombre_1);
+			
+			textNombrePago = new JTextField();
+			textNombrePago.setEditable(false);
+			datos.add(textNombrePago);
+			textNombrePago.setColumns(10);
+			
+			JLabel lblApellidos_1 = new JLabel("Apellidos");
+			datos.add(lblApellidos_1);
+			
+			textApellidosPago = new JTextField();
+			textApellidosPago.setEditable(false);
+			datos.add(textApellidosPago);
+			textApellidosPago.setColumns(10);
 
 			JLabel lblNewLabel = new JLabel("Ciudad");
 			datos.add(lblNewLabel);
