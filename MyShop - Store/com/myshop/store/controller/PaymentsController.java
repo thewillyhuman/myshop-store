@@ -7,6 +7,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
 import com.myshop.model.customer.Address;
+import com.myshop.model.customer.Company;
 import com.myshop.model.customer.CreditCards;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Product;
@@ -22,6 +23,7 @@ public class PaymentsController {
 	private String insertPayment = "insert into myshop.payments (payment_type_id, received) VALUES (:id , :boolean)";
 	private String insertOrder = "insert into myshop.order (status_id, date_received, customer_id, payment_id) VALUES ( :idState , :date, :idCustomer, :idPayment)";
 	private String insertItem = "insert into myshop.order_item (product_id, order_id, quantity) VALUES (:productID, :orderID, :quantity)";
+	private String actualizarProducto = "update product set stock = stock - (select quantity from order_item where order_item_id = :orderId) where product_id = :id;";
 
 	public void payCreditCard(IndividualCustomer ic, Address a, CreditCards cc, List<Product> productos,
 			List<Integer> cantidades) {
@@ -41,21 +43,15 @@ public class PaymentsController {
 					.addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
 					.getKey(int.class);
 			for (int i = 0; i < productos.size(); i++) {
-				con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
-						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate();
+				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate().getKey(int.class);
+				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID()).addParameter("orderId", orderitemID).executeUpdate();
 			}
 
 		}
 	}
 
-	/**
-	 * Add to de database the customer information, the order and de payment
-	 * method
-	 * 
-	 * @param category
-	 * @param subcategory
-	 * @return
-	 */
+	
 	public void payBankTransfer(IndividualCustomer ic, Address a, List<Product> productos,
 			List<Integer> cantidades) {
 
@@ -72,8 +68,43 @@ public class PaymentsController {
 					.addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
 					.getKey(int.class);
 			for (int i = 0; i < productos.size(); i++) {
-				con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
-						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate();
+				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate().getKey(int.class);
+				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID()).addParameter("orderId", orderitemID).executeUpdate();
+			}
+		}
+	}
+	
+	public void payCreditCardCompany(Company c,CreditCards cc, List<Product> productos,
+			List<Integer> cantidades) {
+		try (Connection con = sql2o.open()) {
+			int paymentID = con.createQuery(insertPayment).addParameter("id", 1).addParameter("boolean", true)
+					.executeUpdate().getKey(int.class);
+			int orderID = con.createQuery(insertOrder).addParameter("idState", 2).addParameter("date", new Date())
+					.addParameter("idCustomer", c.getID()).addParameter("idPayment", paymentID).executeUpdate()
+					.getKey(int.class);
+			for (int i = 0; i < productos.size(); i++) {
+				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate().getKey(int.class);
+				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID()).addParameter("orderId", orderitemID).executeUpdate();
+			}
+		}
+	}
+
+	
+	public void payBankTransferCompany(Company c,List<Product> productos,
+			List<Integer> cantidades) {
+
+		try (Connection con = sql2o.open()) {
+			int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", false)
+					.executeUpdate().getKey(int.class);
+			int orderID = con.createQuery(insertOrder).addParameter("idState", 1).addParameter("date", new Date())
+					.addParameter("idCustomer", c.getID()).addParameter("idPayment", paymentID).executeUpdate()
+					.getKey(int.class);
+			for (int i = 0; i < productos.size(); i++) {
+				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate().getKey(int.class);
+				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID()).addParameter("orderId", orderitemID).executeUpdate();
 			}
 		}
 	}

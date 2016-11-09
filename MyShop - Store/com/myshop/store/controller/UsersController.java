@@ -49,7 +49,7 @@ public class UsersController {
 		 return ic;
 	}
 	
-	public Company getCompany(String username, String password){
+	public Company getCompany(String username, char[] ds){
 		String complexSql = "SELECT * FROM myshop.user U, myshop.company C WHERE "+ 
 		                    "U.username = :user AND U.password = :pass "
 						  + "AND U.user_id = C.user_id";
@@ -58,12 +58,13 @@ public class UsersController {
 		
 		 try (Connection con = sql2o.open()) {
 			 map = con.createQuery(complexSql).addParameter("user", username)
-			            .addParameter("pass", password)
+			            .addParameter("pass", String.valueOf(ds))
 			            .executeAndFetchTable().asList();
 		 }
 		 
 		 Company c = new Company();
 		 for(Map<String,Object> m : map){
+			 c.setID((int) m.get("company_id"));
 			 c.setName((String) m.get("name"));
 			 User u = new User((int)m.get("user_id"), (String)m.get("username"),(String)m.get("password"));
 			 c.setUser(u);
