@@ -128,6 +128,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private IndividualCustomer customer;
 	private Company c;
 	private JPasswordField textPassEmpresa;
+	private Double precioTotal = 0.0;
 
 	/**
 	 * Launch the application.
@@ -458,6 +459,10 @@ public class VentanaPrincipalTienda extends JFrame {
 						if (esEmpresa) {
 							datos.setVisible(false);
 							labelPrecio.setText(txtTotal.getText());
+							precioTotal = Double.valueOf(txtTotal.getText());
+							lblNmeroDeCuenta.setText("Se ingresará la cantidad de "
+					+ (precioTotal + new Random().nextInt(100))
+					+ " € en la cuenta 879895-587458-5695");
 							CardLayout card = (CardLayout) contentPane.getLayout();
 							card.show(contentPane, "pago");
 						} else {
@@ -1034,6 +1039,10 @@ public class VentanaPrincipalTienda extends JFrame {
 						textDireccionPago.setText(address.getStreet());
 						textCodigoPostalPago.setText(address.getCip_code());
 						labelPrecio.setText(txtTotal.getText());
+						precioTotal = Double.valueOf(txtTotal.getText());
+						lblNmeroDeCuenta.setText("Se ingresará la cantidad de "
+								+ (precioTotal + new Random().nextInt(100))
+								+ " € en la cuenta 879895-587458-5695");
 						customer = new IndividualCustomer();
 						customer.setName(textNombre.getText());
 						customer.setSurname(textApellidos.getText());
@@ -1416,9 +1425,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JLabel getLblNmeroDeCuenta() {
 		if (lblNmeroDeCuenta == null) {
 			lblNmeroDeCuenta = new JLabel("");
-			lblNmeroDeCuenta.setText("Se ingresará la cantidad de "
-					+ (Integer.valueOf(labelPrecio.getText()) + new Random().nextInt(100))
-					+ " € en la cuenta 879895-587458-5695");
+			lblNmeroDeCuenta.setText("");
 			lblNmeroDeCuenta.setBounds(12, 149, 486, 29);
 		}
 		return lblNmeroDeCuenta;
