@@ -115,6 +115,8 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel direccionILogueoPago;
 	private JPanel contenidoLogueoPago;
 	private boolean esEmpresa;
+	private JTable tablaCarritoPago;
+	private JLabel labelPrecio;
 
 	/**
 	 * Launch the application.
@@ -278,7 +280,7 @@ public class VentanaPrincipalTienda extends JFrame {
 					}
 					int nuevoValor = Integer.parseInt((String) tcl.getNewValue());
 					if (nuevoValor > stock) {
-						JOptionPane.showMessageDialog(derecha, "No hay tantos artículos en stock", "Error",
+						JOptionPane.showMessageDialog(derecha, "No hay tantos artÃ­culos en stock", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						table.setValueAt(stock, tcl.getRow(), tcl.getColumn());
 						table.setValueAt(redondear(precio * stock), tcl.getRow(), 4);
@@ -332,6 +334,8 @@ public class VentanaPrincipalTienda extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					vaciarCarrito();
 					cargarCategoriaInicial();
+					CardLayout card = (CardLayout) contentPane.getLayout();
+					card.show(contentPane, "inicio");
 				}
 			});
 			btnAtras.setBorder(null);
@@ -579,7 +583,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		botonesNavegacion(nombreCat);
 		if(cat.isEmpty()){
 			JTextField texto = new JTextField();
-			texto.setText("Esta categoría no contiene productos");
+			texto.setText("Esta categoréŸ† no contiene productos");
 			getPanelProductos().removeAll();
 			getPanelProductos().add(texto);
 		}
@@ -659,7 +663,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			panAdd.setBackground(new Color(255, 255, 255));
 			panAdd.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			JButton bot = new JButton();
-			bot.setText("Añadir");
+			bot.setText("AÃ±adir");
 			bot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int cod;
@@ -677,7 +681,7 @@ public class VentanaPrincipalTienda extends JFrame {
 									((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
 									actualizarTotal();
 								} else {
-									JOptionPane.showMessageDialog(derecha, "No se pueden añadir más artículos", "Error",
+									JOptionPane.showMessageDialog(derecha, "No se pueden aé¦»dir mé†© artéŸˆulos", "Error",
 											JOptionPane.ERROR_MESSAGE);
 								}
 								seguir = false;
@@ -774,6 +778,18 @@ public class VentanaPrincipalTienda extends JFrame {
 			direccionILogueoPago.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			direccionILogueoPago.setBackground(Color.WHITE);
 			direccionILogueoPago.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			
+			JButton btnAtrasPagoLogin = new JButton("");
+			btnAtrasPagoLogin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					CardLayout card = (CardLayout) contentPane.getLayout();
+					card.show(contentPane, "tienda");
+				}
+			});
+			btnAtrasPagoLogin.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
+			btnAtrasPagoLogin.setSelectedIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
+			btnAtrasPagoLogin.setBorder(null);
+			direccionILogueoPago.add(btnAtrasPagoLogin);
 			direccionILogueoPago.add(getLblUrlInicio());
 		}
 		return direccionILogueoPago;
@@ -939,6 +955,7 @@ public class VentanaPrincipalTienda extends JFrame {
 						textProvinciaPago.setText(textProvinciaEstado.getText());
 						textDireccionPago.setText(textCalle.getText());
 						textCodigoPostalPago.setText(textCodigoPostal.getText());
+						labelPrecio.setText(txtTotal.getText());
 						CardLayout card = (CardLayout) contentPane.getLayout();
 						card.show(contentPane, "pago");
 					} else {
@@ -949,14 +966,14 @@ public class VentanaPrincipalTienda extends JFrame {
 				private boolean compruebaCampos() {
 					if (textCiudad.getText().isEmpty() || textProvinciaEstado.getText().isEmpty()
 							|| textCalle.getText().isEmpty() || textCodigoPostal.getText().isEmpty()) {
-						lblErroresDeTexto.setText("Hay alg¨²n campo vac¨ªo. No se deje ninguno");
+						lblErroresDeTexto.setText("Hay algÃºn campo vacÃ­o. No se deje ninguno");
 						lblErroresDeTexto.setVisible(true);
 						return false;
 					} else {
 						if (textCodigoPostal.getText().matches("[0-9]+"))
 							return true;
 						else{
-							lblErroresDeTexto.setText("El codigo postal solo puede contener n¨²meros");
+							lblErroresDeTexto.setText("El codigo postal solo puede contener nÃºmeros");
 							lblErroresDeTexto.setVisible(true);
 							return false;
 						}
@@ -987,6 +1004,17 @@ public class VentanaPrincipalTienda extends JFrame {
 			direccionPago.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			direccionPago.setBackground(Color.WHITE);
 			direccionPago.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			
+			JButton botonAtrasPago = new JButton("");
+			botonAtrasPago.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CardLayout card = (CardLayout) contentPane.getLayout();
+					card.show(contentPane, "login");
+				}
+			});
+			botonAtrasPago.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
+			botonAtrasPago.setBorder(null);
+			direccionPago.add(botonAtrasPago);
 			direccionPago.add(getLblHttpwwwmyshopestiendapago());
 		}
 		return direccionPago;
@@ -1015,6 +1043,37 @@ public class VentanaPrincipalTienda extends JFrame {
 			carrito.setBorder(new TitledBorder(null, "Carrito", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			carrito.setBounds(0, 0, 529, 271);
 			contenidoPago.add(carrito);
+			carrito.setLayout(new BorderLayout(0, 0));
+			
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setForeground(Color.BLACK);
+			scrollPane.setBackground(Color.WHITE);
+			carrito.add(scrollPane);
+			
+			tablaCarritoPago = new JTable(table.getModel()){
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				public boolean isCellEditable(int row, int column){
+					return false;
+				}
+			};
+			tablaCarritoPago.setForeground(Color.BLACK);
+			tablaCarritoPago.setCellSelectionEnabled(true);
+			
+			tablaCarritoPago.setBackground(Color.WHITE);
+			scrollPane.setViewportView(tablaCarritoPago);
+			
+			JPanel panel = new JPanel();
+			carrito.add(panel, BorderLayout.SOUTH);
+			
+			JLabel lblPrecio = new JLabel("Precio Total");
+			panel.add(lblPrecio);
+			
+			labelPrecio  = new JLabel("");
+			panel.add(labelPrecio);
 		}
 		return contenidoPago;
 	}
