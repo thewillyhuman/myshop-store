@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -112,7 +113,6 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTextField textTitular;
 	private JTextField textCVC;
 	private JLabel lblNmeroDeCuenta;
-	private JTextField textFNumeroCuenta;
 	private JButton btnConfirmarTrans;
 	private JPanel logueoPago;
 	private JPanel direccionILogueoPago;
@@ -227,7 +227,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		});
 		btnAccederEmpresa.setBounds(33, 291, 103, 25);
 		panelEmpresa.add(btnAccederEmpresa);
-		
+
 		textPassEmpresa = new JPasswordField();
 		textPassEmpresa.setBounds(33, 256, 253, 22);
 		panelEmpresa.add(textPassEmpresa);
@@ -457,6 +457,7 @@ public class VentanaPrincipalTienda extends JFrame {
 						}
 						if (esEmpresa) {
 							datos.setVisible(false);
+							labelPrecio.setText(txtTotal.getText());
 							CardLayout card = (CardLayout) contentPane.getLayout();
 							card.show(contentPane, "pago");
 						} else {
@@ -1053,10 +1054,40 @@ public class VentanaPrincipalTienda extends JFrame {
 						lblErroresDeTexto.setVisible(true);
 						return false;
 					} else {
-						if (textCodigoPostal.getText().matches("[0-9]+"))
-							return true;
-						else {
-							lblErroresDeTexto.setText("El codigo postal solo puede contener números");
+						if (textCiudad.getText().matches("[a-zA-Z]+")) {
+							if (textNombre.getText().matches("[a-zA-Z]+")) {
+								if (textApellidos.getText().matches("[a-zA-Z]+")) {
+									if (textProvinciaEstado.getText().matches("[a-zA-Z]+")) {
+										if (textCodigoPostal.getText().matches("[0-9]+")) {
+											if (textCodigoPostal.getText().length() == 5) {
+												return true;
+											} else {
+												lblErroresDeTexto.setText("deben ser 5 dígitos");
+												lblErroresDeTexto.setVisible(true);
+												return false;
+											}
+										} else {
+											lblErroresDeTexto.setText("El codigo postal solo puede contener números");
+											lblErroresDeTexto.setVisible(true);
+											return false;
+										}
+									} else {
+										lblErroresDeTexto.setText("la provincia sólo puede contener letras");
+										lblErroresDeTexto.setVisible(true);
+										return false;
+									}
+								} else {
+									lblErroresDeTexto.setText("los apellidos sólo puede contener letras");
+									lblErroresDeTexto.setVisible(true);
+									return false;
+								}
+							} else {
+								lblErroresDeTexto.setText("el nombre sólo puede contener letras");
+								lblErroresDeTexto.setVisible(true);
+								return false;
+							}
+						} else {
+							lblErroresDeTexto.setText("la ciudad sólo puede contener letras");
 							lblErroresDeTexto.setVisible(true);
 							return false;
 						}
@@ -1128,7 +1159,6 @@ public class VentanaPrincipalTienda extends JFrame {
 			contenidoPago.setBackground(Color.WHITE);
 			contenidoPago.setLayout(null);
 			contenidoPago.add(getDatos());
-			contenidoPago.add(getMetodos());
 
 			JPanel carrito = new JPanel();
 			carrito.setBackground(Color.WHITE);
@@ -1164,8 +1194,10 @@ public class VentanaPrincipalTienda extends JFrame {
 			JLabel lblPrecio = new JLabel("Precio Total");
 			panel.add(lblPrecio);
 
-			labelPrecio = new JLabel("");
+			labelPrecio = new JLabel("0");
 			panel.add(labelPrecio);
+
+			contenidoPago.add(getMetodos());
 		}
 		return contenidoPago;
 	}
@@ -1236,7 +1268,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			metodos.setBackground(Color.WHITE);
 			metodos.setBorder(
 					new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			metodos.setBounds(541, 0, 522, 488);
+			metodos.setBounds(541, 0, 522, 541);
 			metodos.setLayout(new BorderLayout(0, 0));
 			metodos.add(getPanelMetodos(), BorderLayout.CENTER);
 			metodos.add(getPanelRadioButtons(), BorderLayout.NORTH);
@@ -1259,10 +1291,10 @@ public class VentanaPrincipalTienda extends JFrame {
 			lblNmeroTajeta.setBounds(12, 126, 149, 29);
 			panelTarjeta.add(lblNmeroTajeta);
 
-			JLabel lblWarning = new JLabel("El numero de la tarjeta sólo puede contener números");
+			JLabel lblWarning = new JLabel("Número tarjeta solo numeros. CVC 3 dígitos\r\n");
 			lblWarning.setForeground(Color.RED);
 			lblWarning.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblWarning.setBounds(12, 389, 420, 29);
+			lblWarning.setBounds(12, 389, 442, 67);
 			lblWarning.setVisible(false);
 			panelTarjeta.add(lblWarning);
 
@@ -1310,7 +1342,8 @@ public class VentanaPrincipalTienda extends JFrame {
 			JButton btnConfirmarTarjeta = new JButton("Confirmar");
 			btnConfirmarTarjeta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (textNumero.getText().matches("[1-9]+")) {
+					if (textNumero.getText().matches("[1-9]+")
+							|| (textCVC.getText().matches("[a-zA-Z]+") && textCVC.getText().length() == 3)) {
 						CreditCards cc = new CreditCards();
 						cc.setCreditCardNumber(Integer.parseInt(textNumero.getText()));
 						cc.setCreditCardExDate((java.util.Date) spinnerFecha.getValue());
@@ -1323,15 +1356,15 @@ public class VentanaPrincipalTienda extends JFrame {
 							cantidades.add((Integer) tablaCarritoPago.getValueAt(i, 2));
 						}
 						PaymentsController pc = new PaymentsController();
-						if(!esEmpresa)
+						if (!esEmpresa)
 							pc.payCreditCard(customer, address, cc, productos, cantidades);
-						else{
-							pc.payCreditCardCompany(c,cc,productos,cantidades);
+						else {
+							pc.payCreditCardCompany(c, cc, productos, cantidades);
 						}
+						volverTienda();
 					} else {
 						lblWarning.setVisible(true);
 					}
-					volverTienda();
 				}
 			});
 			btnConfirmarTarjeta.setBounds(12, 341, 94, 29);
@@ -1342,7 +1375,6 @@ public class VentanaPrincipalTienda extends JFrame {
 			panelMetodos.add(panelTransferencia, "transferencia");
 			panelTransferencia.setLayout(null);
 			panelTransferencia.add(getLblNmeroDeCuenta());
-			panelTransferencia.add(getTextFNumeroCuenta());
 			panelTransferencia.add(getBtnConfirmarTrans());
 		}
 		return panelMetodos;
@@ -1383,19 +1415,13 @@ public class VentanaPrincipalTienda extends JFrame {
 
 	private JLabel getLblNmeroDeCuenta() {
 		if (lblNmeroDeCuenta == null) {
-			lblNmeroDeCuenta = new JLabel("N\u00FAmero de cuenta");
-			lblNmeroDeCuenta.setBounds(12, 149, 137, 29);
+			lblNmeroDeCuenta = new JLabel("");
+			lblNmeroDeCuenta.setText("Se ingresará la cantidad de "
+					+ (Integer.valueOf(labelPrecio.getText()) + new Random().nextInt(100))
+					+ " € en la cuenta 879895-587458-5695");
+			lblNmeroDeCuenta.setBounds(12, 149, 486, 29);
 		}
 		return lblNmeroDeCuenta;
-	}
-
-	private JTextField getTextFNumeroCuenta() {
-		if (textFNumeroCuenta == null) {
-			textFNumeroCuenta = new JTextField();
-			textFNumeroCuenta.setBounds(12, 180, 486, 29);
-			textFNumeroCuenta.setColumns(10);
-		}
-		return textFNumeroCuenta;
 	}
 
 	private JButton getBtnConfirmarTrans() {
@@ -1412,29 +1438,36 @@ public class VentanaPrincipalTienda extends JFrame {
 						cantidades.add((Integer) tablaCarritoPago.getValueAt(i, 2));
 					}
 					PaymentsController pc = new PaymentsController();
-					if(!esEmpresa)
+					if (!esEmpresa)
 						pc.payBankTransfer(customer, address, productos, cantidades);
-					else{
-						pc.payBankTransferCompany(c, productos,cantidades);
+					else {
+						pc.payBankTransferCompany(c, productos, cantidades);
 					}
 					volverTienda();
 				}
 
-				
 			});
 			btnConfirmarTrans.setBounds(12, 227, 97, 25);
 		}
 		return btnConfirmarTrans;
 	}
-	
+
 	private void volverTienda() {
-			JOptionPane.showMessageDialog(this, "Pago realizado");
-			vaciarCarrito();
-			cargarCategoriaInicial();
-			borrarBotonesNavegacion();
-			CardLayout card = (CardLayout) contentPane.getLayout();
-			card.show(contentPane, "tienda");
-			
-		
+		JOptionPane.showMessageDialog(this, "Pago realizado");
+		vaciarCarrito();
+		cargarCategoriaInicial();
+		borrarBotonesNavegacion();
+		textNombre.setText("");
+		textApellidos.setText("");
+		textProvinciaEstado.setText("");
+		textCalle.setText("");
+		textCodigoPostal.setText("");
+		textCiudad.setText("");
+		textNumero.setText("");
+		textTitular.setText("");
+		textCVC.setText("");
+		CardLayout card = (CardLayout) contentPane.getLayout();
+		card.show(contentPane, "tienda");
+
 	}
 }
