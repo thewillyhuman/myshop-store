@@ -342,6 +342,7 @@ public class VentanaPrincipalTienda extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					vaciarCarrito();
 					cargarCategoriaInicial();
+					borrarBotonesNavegacion();
 					CardLayout card = (CardLayout) contentPane.getLayout();
 					card.show(contentPane, "inicio");
 				}
@@ -609,10 +610,12 @@ public class VentanaPrincipalTienda extends JFrame {
 				getPanelProductos().add(boton);
 				boton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
 						List<Product> pro = new ProductsController().getProductsByCategory(c.getCategoryName());
 						if (pro.isEmpty()) {
 							cargarCategorias(c.getCategoryName());
 						} else {
+							botonesNavegacion(c.getCategoryName());
 							cargarProductos(pro);
 						}
 						adaptarPanel();
@@ -630,9 +633,47 @@ public class VentanaPrincipalTienda extends JFrame {
 		b.setContentAreaFilled(false);
 		b.setBackground(new Color(255, 255, 255));
 		b.setBorder(new EmptyBorder(0, 0, 0, 3));
-		getPanelNavegacion().add(b);
-	}
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Component[] component = getPanelNavegacion().getComponents();
+				int posicion=0;
+				int total=component.length;
+				for(int i=0; i<total; i++){
+			        if (component[i] instanceof JButton)
+			        {
+			        	JButton button = (JButton) component[i];
+			        	    if(button.getText().equals(b.getText())){
+			        	    	posicion=i;
+			        	    }
+			        }
 
+			    }
+				int borrar =total-posicion;
+				for(int j=0; j<borrar; j++){
+					getPanelNavegacion().remove(posicion);
+				}
+				
+				List<Product> pro = new ProductsController().getProductsByCategory(b.getText());
+				if (pro.isEmpty()) {
+					cargarCategorias(b.getText());
+				} else {
+					botonesNavegacion(b.getText());
+					cargarProductos(pro);
+				}
+				adaptarPanel();
+			}
+		});
+		getPanelNavegacion().add(b);
+		getPanelNavegacion().repaint();
+		getPanelNavegacion().revalidate();
+	}
+	public void borrarBotonesNavegacion(){
+		getPanelNavegacion().removeAll();
+		getPanelNavegacion().add(getBtnInicio());
+		getPanelNavegacion().repaint();
+		getPanelNavegacion().revalidate();
+	}
 	public void cargarProductos(List<Product> listaPro) {
 		getPanelProductos().removeAll();
 		for (Product p : listaPro) {
@@ -767,6 +808,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			btnInicio.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					cargarCategoriaInicial();
+					borrarBotonesNavegacion();
 				}
 			});
 			btnInicio.setContentAreaFilled(false);
@@ -1267,7 +1309,7 @@ public class VentanaPrincipalTienda extends JFrame {
 					if (textNumero.getText().matches("1-9]+")) {
 						CreditCards cc = new CreditCards();
 						cc.setCreditCardNumber(Integer.parseInt(textNumero.getText()));
-						cc.setCreditCardExDate((Date) spinnerFecha.getValue());
+						cc.setCreditCardExDate((java.sql.Date) spinnerFecha.getValue());
 						List<Product> productos = new ArrayList<Product>();
 						List<Integer> cantidades = new ArrayList<Integer>();
 						for (int i = 0; i < tablaCarritoPago.getRowCount(); i++) {
