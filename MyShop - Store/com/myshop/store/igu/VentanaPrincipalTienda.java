@@ -68,7 +68,6 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JLabel lblUrlTienda;
 	private JPanel contenidoTienda;
 	private JPanel derecha;
-	private JLabel lblAtras;
 	private JLabel lblCarrito;
 	private JLabel lblTotal;
 	private JTextField txtTotal;
@@ -93,7 +92,6 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JTextField textCodigoPostal;
 	private JTextField textUserEmpresa;
 	private JTextField textPassEmpresa;
-	private boolean esEmpresa = false;
 	private JPanel pago;
 	private JPanel direccionPago;
 	private JLabel lblHttpwwwmyshopestiendapago;
@@ -116,6 +114,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel logueoPago;
 	private JPanel direccionILogueoPago;
 	private JPanel contenidoLogueoPago;
+	private boolean esEmpresa;
 
 	/**
 	 * Launch the application.
@@ -144,14 +143,10 @@ public class VentanaPrincipalTienda extends JFrame {
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		contentPane.add(getTienda(), "tienda");
-		contentPane.add(getLogueoPago(), "login");
 		JPanel inicio = new JPanel();
 		inicio.setBackground(Color.WHITE);
-		contentPane.add(inicio, "name_381831475621552");
+		contentPane.add(inicio, "inicio");
 		inicio.setLayout(new BorderLayout(0, 0));
-		products = new ProductsController().getAllView();
-		cargarCategoriaInicial();
 
 		JPanel direccionInicio = new JPanel();
 		direccionInicio.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -244,16 +239,19 @@ public class VentanaPrincipalTienda extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CardLayout card = (CardLayout) contentPane.getLayout();
 				card.show(contentPane, "tienda");
+				esEmpresa = false;
 			}
 		});
 		btnAccederParticular.setBounds(213, 254, 108, 25);
 		panelParticular.add(btnAccederParticular);
 		contentPane.add(inicio, "inicio");
+		contentPane.add(getTienda(), "tienda");
+		contentPane.add(getLogueoPago(), "login");
+		products = new ProductsController().getAllView();
+		cargarCategoriaInicial();
 		CardLayout card = (CardLayout) contentPane.getLayout();
 		card.show(contentPane, "inicio");
 		contentPane.add(getPago(), "pago");
-	
-
 
 		Action action = new AbstractAction() {
 			/**
@@ -270,7 +268,12 @@ public class VentanaPrincipalTienda extends JFrame {
 					for (Product p : products) {
 						if (p.getID() == referencia) {
 							stock = p.getStock();
-							precio = p.getPrice();
+							if(esEmpresa==false){
+								precio = p.getPrice();
+							}
+							else{
+								precio = p.getCompanyPrice();
+							}
 						}
 					}
 					int nuevoValor = Integer.parseInt((String) tcl.getNewValue());
@@ -323,7 +326,18 @@ public class VentanaPrincipalTienda extends JFrame {
 			direccionTienda.setBackground(Color.WHITE);
 			direccionTienda.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 			direccionTienda.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-			direccionTienda.add(getLblAtras());
+			
+			JButton btnAtras = new JButton("");
+			btnAtras.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					vaciarCarrito();
+					cargarCategoriaInicial();
+				}
+			});
+			btnAtras.setBorder(null);
+			btnAtras.setIcon(new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
+			
+			direccionTienda.add(btnAtras);
 			direccionTienda.add(getLblUrlTienda());
 		}
 		return direccionTienda;
@@ -366,15 +380,6 @@ public class VentanaPrincipalTienda extends JFrame {
 		return derecha;
 	}
 
-	private JLabel getLblAtras() {
-		if (lblAtras == null) {
-			lblAtras = new JLabel("");
-			lblAtras.setIcon(
-					new ImageIcon(VentanaPrincipalTienda.class.getResource("/com/myshop/store/igu/img/fecha.jpg")));
-		}
-		return lblAtras;
-	}
-
 	private JLabel getLblCarrito() {
 		if (lblCarrito == null) {
 			lblCarrito = new JLabel("Lista de la compra:");
@@ -411,18 +416,21 @@ public class VentanaPrincipalTienda extends JFrame {
 			btnVaciar = new JButton("Vaciar carrito");
 			btnVaciar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					DefaultTableModel modeloTabla = (DefaultTableModel) table.getModel();
-					modeloTabla.setRowCount(0);
-					getTable().removeAll();
-					getTable().repaint();
-					getTable().revalidate();
-					txtTotal.setText("0");
+					vaciarCarrito();
 				}
 			});
 			btnVaciar.setBounds(39, 493, 121, 35);
 
 		}
 		return btnVaciar;
+	}
+	private void vaciarCarrito(){
+		DefaultTableModel modeloTabla = (DefaultTableModel) table.getModel();
+		modeloTabla.setRowCount(0);
+		getTable().removeAll();
+		getTable().repaint();
+		getTable().revalidate();
+		txtTotal.setText("0");
 	}
 
 	private JButton getBtnContinuar() {
@@ -568,6 +576,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	public void cargarCategorias(String nombreCat){
 		
 		List<Category> cat  = new ProductsController().getCategorysChildren(nombreCat);
+		botonesNavegacion(nombreCat);
 		if(cat.isEmpty()){
 			JTextField texto = new JTextField();
 			texto.setText("Esta categoría no contiene productos");
@@ -598,6 +607,15 @@ public class VentanaPrincipalTienda extends JFrame {
 			}
 		}
 		adaptarPanel();
+	}
+	public void botonesNavegacion(String nombreCat){
+		JButton b = new JButton();
+		b.setText(nombreCat);
+		b.setFocusPainted(false);
+		b.setContentAreaFilled(false);
+		b.setBackground(new Color(255, 255, 255));
+		b.setBorder(new EmptyBorder(0, 0, 0, 3));
+		getPanelNavegacion().add(b);
 	}
 	public void cargarProductos(List<Product> listaPro){
 		getPanelProductos().removeAll();
@@ -630,8 +648,16 @@ public class VentanaPrincipalTienda extends JFrame {
 			pvp.setForeground(new Color(0, 0, 0));
 			pvp.setEditable(false);
 			pvp.setBorder(null);
-			pvp.setText("Precio: " + Double.toString(p.getPrice()) + ". Stock: " + p.getStock()+ ". Ref: " + p.getID());
+			if(esEmpresa==false){
+				pvp.setText("Precio: " + Double.toString(p.getPrice()) + ". Stock: " + p.getStock()+ ". Ref: " + p.getID());
+			}
+			else{
+				pvp.setText("Precio: " + Double.toString(p.getCompanyPrice()) + ". Stock: " + p.getStock()+ ". Ref: " + p.getID());
+			}
 			pvp.setHorizontalAlignment(JTextField.CENTER);
+			JPanel panAdd = new JPanel();
+			panAdd.setBackground(new Color(255, 255, 255));
+			panAdd.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 			JButton bot = new JButton();
 			bot.setText("Añadir");
 			bot.addActionListener(new ActionListener() {
@@ -662,8 +688,14 @@ public class VentanaPrincipalTienda extends JFrame {
 								nuevaFila[0] = p.getID();
 								nuevaFila[1] = p.getName();
 								nuevaFila[2] = 1;
-								nuevaFila[3] = p.getPrice();
-								nuevaFila[4] = p.getPrice();
+								if(esEmpresa==false){
+									nuevaFila[3] = p.getPrice();
+									nuevaFila[4] = p.getPrice();
+								}
+								else {
+									nuevaFila[3] = p.getCompanyPrice();
+									nuevaFila[4] = p.getCompanyPrice();
+								}
 								((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
 								actualizarTotal();
 							}
@@ -674,16 +706,23 @@ public class VentanaPrincipalTienda extends JFrame {
 						nuevaFila[0] = p.getID();
 						nuevaFila[1] = p.getName();
 						nuevaFila[2] = 1;
-						nuevaFila[3] = p.getPrice();
-						nuevaFila[4] = p.getPrice();
+						if(esEmpresa==false){
+							nuevaFila[3] = p.getPrice();
+							nuevaFila[4] = p.getPrice();
+						}
+						else {
+							nuevaFila[3] = p.getCompanyPrice();
+							nuevaFila[4] = p.getCompanyPrice();
+						}
 
 						((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
 						actualizarTotal();
 					}
 				}
 			});
+			panAdd.add(bot);
 			pan2.add(pvp,BorderLayout.CENTER);
-			pan2.add(bot);
+			pan2.add(panAdd);
 			pan.add(lab, BorderLayout.NORTH);
 			pan.add(area, BorderLayout.CENTER);
 			pan.add(pan2, BorderLayout.SOUTH);
@@ -695,16 +734,16 @@ public class VentanaPrincipalTienda extends JFrame {
 	private JPanel getPanelNavegacion() {
 		if (panelNavegacion == null) {
 			panelNavegacion = new JPanel();
-			panelNavegacion.setLayout(new BoxLayout(panelNavegacion, BoxLayout.Y_AXIS));
 			panelNavegacion.setAlignmentX(Component.LEFT_ALIGNMENT);
 			panelNavegacion.setAlignmentY(Component.CENTER_ALIGNMENT);
 			panelNavegacion.setBackground(new Color(255, 255, 255));
 			panelNavegacion.setBounds(10, 11, 700, 28);
-			panelNavegacion.add(getBtnNewButton());
+			panelNavegacion.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			panelNavegacion.add(getBtnInicio());
 		}
 		return panelNavegacion;
 	}
-	private JButton getBtnNewButton() {
+	private JButton getBtnInicio() {
 		if (btnInicio == null) {
 			btnInicio = new JButton("Inicio");
 			btnInicio.setFocusPainted(false);
