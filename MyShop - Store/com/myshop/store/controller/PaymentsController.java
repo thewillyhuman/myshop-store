@@ -1,59 +1,81 @@
 package com.myshop.store.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
+
+import com.myshop.model.customer.Address;
+import com.myshop.model.customer.CreditCards;
+import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Product;
 
 public class PaymentsController {
 
-	private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app",
-			"'m:9AU7n");
+	private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop",
+			"myshop-app", "'m:9AU7n");
+	private String insertCustomer = "INSERT INTO myshop.customer VALUES ( )";
+	private String insertIndividual = "insert into myshop.individual_customer (customer_id, name, surname) VALUES (:id, :name, :surname);";
+	private String insertAddress = "insert into myshop.address VALUES (:id, :street, :city, :state, :cip)";
+	private String insertCredit = "insert into myshop.credit_cards (owner_id, credit_card_number, credit_card_ex_date) VALUES (:id, :number, :date);";
+	private String insertPayment = "insert into myshop.payments (payment_type_id, received) VALUES (:id , :boolean)";
+	private String insertOrder = "insert into myshop.order (status_id, date_received, customer_id, payment_id) VALUES ( :idState , :date, :idCustomer, :idPayment)";
+	private String insertItem = "insert into myshop.order_item (product_id, order_id, quantity) VALUES (:productID, :orderID, :quantity)";
 
-	public List<Product> payCreditCard(int category, int subcategory){
-		String insertCustomer = "insert into customer VALUES ( )";
-		String selectLastId = "SELECT LAST_INSERT_ID";
-		String insertIndividual = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat";
-		String insertAddress = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat";
-		String insertCredit = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat";
-		String selectPaymentsType = "SELECT * FROM myshop.payment_type";
-		String insertPayment = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat";
-		
-		//primero meter el customer
-		//luego el individual customer con el id del customer introducido
-		//luego va el address con el id del individual customer metido
-		//luego la tarjeta de cr��dito con el id del individual customer en el owner_id
-		//luego va el payment tras leer los paymentTypes y seleccionar el de la tarjeta. Estar�� en recibido
-		//luego se mete el order con el id del customer en customer_id y con el id del payment en payment_id
-		//luego se crean los order items con el id de la order creada antes
-		 try (Connection con = sql2o.open()) {
-			 return con.createQuery(insertCustomer).addParameter("cat", category)
-			            .addParameter("subcat", subcategory)
-			            .addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
-		 }
+	public void payCreditCard(IndividualCustomer ic, Address a, CreditCards cc, List<Product> productos,
+			List<Integer> cantidades) {
+
+		try (Connection con = sql2o.open()) {
+			int customerID = con.createQuery(insertCustomer).executeUpdate().getKey(int.class);
+			con.createQuery(insertIndividual).addParameter("id", customerID).addParameter("name", ic.getName())
+					.addParameter("surname", ic.getSurname()).executeUpdate();
+			con.createQuery(insertAddress).addParameter("id", customerID).addParameter("street", a.getStreet())
+					.addParameter("city", a.getCity()).addParameter("state", a.getState()).addParameter("cip", a.getCip_code())
+					.executeUpdate();
+			con.createQuery(insertCredit).addParameter("id", customerID).addParameter("number", cc.getCreditCardNumber())
+					.addParameter("date", cc.getCreditCardExDate()).executeUpdate();
+			int paymentID = con.createQuery(insertPayment).addParameter("id", 1).addParameter("boolean", true)
+					.executeUpdate().getKey(int.class);
+			int orderID = con.createQuery(insertOrder).addParameter("idState", 2).addParameter("date", new Date())
+					.addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
+					.getKey(int.class);
+			for (int i = 0; i < productos.size(); i++) {
+				con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate();
+			}
+
+		}
 	}
+
 	/**
-	 * Add to de database the customer information, the order and de payment method
+	 * Add to de database the customer information, the order and de payment
+	 * method
+	 * 
 	 * @param category
 	 * @param subcategory
 	 * @return
 	 */
-	public List<Product> payBankTransfer(int category, int subcategory){
-		String complexSql = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat";
-		
-		
-		//primero meter el customer
-				//luego el individual customer con el id del customer introducido
-				//luego va el address con el id del individual customer metido
-				//luego va el payment tras leer los paymentTypes y seleccionar el de la tarjeta. Sin recibir
-				//luego se mete el order con el id del customer en customer_id y con el id del payment en payment_id
-				//luego se crean los order items con el id de la order creada antes
-		 try (Connection con = sql2o.open()) {
-			 return con.createQuery(complexSql).addParameter("cat", category)
-			            .addParameter("subcat", subcategory)
-			            .addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
-		 }
+	public void payBankTransfer(IndividualCustomer ic, Address a, List<Product> productos,
+			List<Integer> cantidades) {
+
+		try (Connection con = sql2o.open()) {
+			int customerID = con.createQuery(insertCustomer).executeUpdate().getKey(int.class);
+			con.createQuery(insertIndividual).addParameter("id", customerID).addParameter("name", ic.getName())
+					.addParameter("surname", ic.getSurname()).executeUpdate();
+			con.createQuery(insertAddress).addParameter("id", customerID).addParameter("street", a.getStreet())
+					.addParameter("city", a.getCity()).addParameter("state", a.getState()).addParameter("cip", a.getCip_code())
+					.executeUpdate();
+			int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", false)
+					.executeUpdate().getKey(int.class);
+			int orderID = con.createQuery(insertOrder).addParameter("idState", 1).addParameter("date", new Date())
+					.addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
+					.getKey(int.class);
+			for (int i = 0; i < productos.size(); i++) {
+				con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate();
+			}
+		}
 	}
 
 }
