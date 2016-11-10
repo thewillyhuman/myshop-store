@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JButton;
 
@@ -210,7 +211,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		panelEmpresa.add(textUserEmpresa);
 
 		JLabel lblPassword = new JLabel("Contrase\u00F1a");
-		lblPassword.setBounds(33, 230, 65, 16);
+		lblPassword.setBounds(33, 230, 91, 16);
 		panelEmpresa.add(lblPassword);
 
 		JButton btnAccederEmpresa = new JButton("Acceder");
@@ -612,7 +613,7 @@ public class VentanaPrincipalTienda extends JFrame {
 		botonesNavegacion(nombreCat);
 		if (cat.isEmpty()) {
 			JTextField texto = new JTextField();
-			texto.setText("Esta categor韆 no contiene productos");
+			texto.setText("Esta categoría no contiene productos");
 			getPanelProductos().removeAll();
 			getPanelProductos().add(texto);
 		} else {
@@ -644,11 +645,12 @@ public class VentanaPrincipalTienda extends JFrame {
 
 	public void botonesNavegacion(String nombreCat) {
 		JButton b = new JButton();
-		b.setText(nombreCat);
+		b.setBorder(new MatteBorder(0, 2, 0, 0, Color.BLACK));
+		b.setText("  " + nombreCat);
+		b.setHorizontalAlignment(SwingConstants.CENTER);
 		b.setFocusPainted(false);
 		b.setContentAreaFilled(false);
 		b.setBackground(new Color(255, 255, 255));
-		b.setBorder(new EmptyBorder(0, 0, 0, 3));
 		b.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -671,9 +673,9 @@ public class VentanaPrincipalTienda extends JFrame {
 
 				List<Product> pro = new ProductsController().getProductsByCategory(b.getText());
 				if (pro.isEmpty()) {
-					cargarCategorias(b.getText());
+					cargarCategorias(quitarBlancos(b.getText()));
 				} else {
-					botonesNavegacion(b.getText());
+					botonesNavegacion(quitarBlancos(b.getText()));
 					cargarProductos(pro);
 				}
 				adaptarPanel();
@@ -683,7 +685,9 @@ public class VentanaPrincipalTienda extends JFrame {
 		getPanelNavegacion().repaint();
 		getPanelNavegacion().revalidate();
 	}
-
+	public String quitarBlancos(String texto){
+		return texto.replaceAll("\\s","");
+	}
 	public void borrarBotonesNavegacion() {
 		getPanelNavegacion().removeAll();
 		getPanelNavegacion().add(getBtnInicio());
@@ -723,77 +727,86 @@ public class VentanaPrincipalTienda extends JFrame {
 			pvp.setEditable(false);
 			pvp.setBorder(null);
 			if (esEmpresa == false) {
-				pvp.setText("Precio: " + Double.toString(p.getPrice()) + ". Stock: " + p.getStock() + ". Ref: "
-						+ p.getID());
+				pvp.setText("Precio: " + Double.toString(p.getPrice()));
 			} else {
-				pvp.setText("Precio: " + Double.toString(p.getCompanyPrice()) + ". Stock: " + p.getStock() + ". Ref: "
-						+ p.getID());
+				pvp.setText("Precio: " + Double.toString(p.getCompanyPrice()));
 			}
 			pvp.setHorizontalAlignment(JTextField.CENTER);
 			JPanel panAdd = new JPanel();
 			panAdd.setBackground(new Color(255, 255, 255));
 			panAdd.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-			JButton bot = new JButton();
-			bot.setText("Añadir");
-			bot.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int cod;
-					int row = getTable().getRowCount();
-					boolean seguir = true;
-					if ((row > 0) && (seguir)) {
-						for (int i = 0; i < row; i++) {
-							cod = (int) table.getValueAt(i, 0);
-							if (p.getID() == cod) {
-								if (p.getStock() > Integer.parseInt(table.getValueAt(i, 2).toString())) {
-									Object cant = (Integer) table.getValueAt(i, 2) + 1;
-									((DefaultTableModel) getTable().getModel()).setValueAt(cant, i, 2);
-									Object pre = (double) redondear(
-											((Integer) table.getValueAt(i, 2) * (double) table.getValueAt(i, 3)));
-									((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
+			if (p.getStock() > 0) {
+				JButton bot = new JButton();
+				bot.setText("Añadir");
+				bot.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						int cod;
+						int row = getTable().getRowCount();
+						boolean seguir = true;
+						if ((row > 0) && (seguir)) {
+							for (int i = 0; i < row; i++) {
+								cod = (int) table.getValueAt(i, 0);
+								if (p.getID() == cod) {
+									if (p.getStock() > Integer.parseInt(table.getValueAt(i, 2).toString())) {
+										Object cant = (Integer) table.getValueAt(i, 2) + 1;
+										((DefaultTableModel) getTable().getModel()).setValueAt(cant, i, 2);
+										Object pre = (double) redondear(
+												((Integer) table.getValueAt(i, 2) * (double) table.getValueAt(i, 3)));
+										((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
+										actualizarTotal();
+									} else {
+										JOptionPane.showMessageDialog(derecha, "No se pueden añadir más artículos",
+												"Error", JOptionPane.ERROR_MESSAGE);
+									}
+									seguir = false;
+
+								}
+								if ((i == (row - 1)) && (seguir)) {
+									Object[] nuevaFila = new Object[5];
+									nuevaFila[0] = p.getID();
+									nuevaFila[1] = p.getName();
+									nuevaFila[2] = 1;
+									if (esEmpresa == false) {
+										nuevaFila[3] = p.getPrice();
+										nuevaFila[4] = p.getPrice();
+									} else {
+										nuevaFila[3] = p.getCompanyPrice();
+										nuevaFila[4] = p.getCompanyPrice();
+									}
+									((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
 									actualizarTotal();
-								} else {
-									JOptionPane.showMessageDialog(derecha, "No se pueden a馻dir m醩 art韈ulos", "Error",
-											JOptionPane.ERROR_MESSAGE);
 								}
-								seguir = false;
-
 							}
-							if ((i == (row - 1)) && (seguir)) {
-								Object[] nuevaFila = new Object[5];
-								nuevaFila[0] = p.getID();
-								nuevaFila[1] = p.getName();
-								nuevaFila[2] = 1;
-								if (esEmpresa == false) {
-									nuevaFila[3] = p.getPrice();
-									nuevaFila[4] = p.getPrice();
-								} else {
-									nuevaFila[3] = p.getCompanyPrice();
-									nuevaFila[4] = p.getCompanyPrice();
-								}
-								((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
-								actualizarTotal();
-							}
-						}
-					} else {
-
-						Object[] nuevaFila = new Object[5];
-						nuevaFila[0] = p.getID();
-						nuevaFila[1] = p.getName();
-						nuevaFila[2] = 1;
-						if (esEmpresa == false) {
-							nuevaFila[3] = p.getPrice();
-							nuevaFila[4] = p.getPrice();
 						} else {
-							nuevaFila[3] = p.getCompanyPrice();
-							nuevaFila[4] = p.getCompanyPrice();
-						}
 
-						((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
-						actualizarTotal();
+							Object[] nuevaFila = new Object[5];
+							nuevaFila[0] = p.getID();
+							nuevaFila[1] = p.getName();
+							nuevaFila[2] = 1;
+							if (esEmpresa == false) {
+								nuevaFila[3] = p.getPrice();
+								nuevaFila[4] = p.getPrice();
+							} else {
+								nuevaFila[3] = p.getCompanyPrice();
+								nuevaFila[4] = p.getCompanyPrice();
+							}
+
+							((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
+							actualizarTotal();
+						}
 					}
-				}
-			});
-			panAdd.add(bot);
+				});
+				panAdd.add(bot);
+			}
+			if(p.getStock()==0){
+				JTextField stock0 = new JTextField();
+				stock0.setBackground(new Color(255, 255, 255));
+				stock0.setForeground(Color.RED);
+				stock0.setEditable(false);
+				stock0.setBorder(null);
+				stock0.setText("Sin stock");
+				panAdd.add(stock0);
+			}
 			pan2.add(pvp, BorderLayout.CENTER);
 			pan2.add(panAdd);
 			pan.add(lab, BorderLayout.NORTH);
@@ -887,7 +900,7 @@ public class VentanaPrincipalTienda extends JFrame {
 
 			JPanel loginUsuario = new JPanel();
 			loginUsuario.setBorder(
-					new TitledBorder(null, "Inicio de sesion", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					new TitledBorder(null, "Inicio de sesión", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			loginUsuario.setBackground(Color.WHITE);
 			loginUsuario.setBounds(12, 13, 492, 529);
 			contenidoLogueoPago.add(loginUsuario);
@@ -912,8 +925,8 @@ public class VentanaPrincipalTienda extends JFrame {
 			textUser.setBounds(33, 195, 253, 22);
 			textUser.setColumns(10);
 
-			JLabel lblContrasea = new JLabel("Contrase\u00F1a");
-			lblContrasea.setBounds(33, 230, 65, 16);
+			JLabel lblContrasea = new JLabel("Contraseña");
+			lblContrasea.setBounds(33, 230, 92, 16);
 
 			textPass = new JTextField();
 			textPass.addFocusListener(new FocusAdapter() {
@@ -957,7 +970,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			lblErroresDeTexto.setBounds(29, 458, 431, 24);
 			panelNoRegistro.add(lblErroresDeTexto);
 
-			JLabel lblDatosDeEnvo = new JLabel("Datos de env\u00EDo:");
+			JLabel lblDatosDeEnvo = new JLabel("Datos de envío:");
 			lblDatosDeEnvo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lblDatosDeEnvo.setBounds(34, 31, 132, 24);
 			panelNoRegistro.add(lblDatosDeEnvo);
@@ -1007,7 +1020,7 @@ public class VentanaPrincipalTienda extends JFrame {
 				}
 			});
 
-			JLabel lblCodigoPostal = new JLabel("Codigo postal");
+			JLabel lblCodigoPostal = new JLabel("Código postal");
 			lblCodigoPostal.setBounds(32, 346, 108, 24);
 			panelNoRegistro.add(lblCodigoPostal);
 
@@ -1071,40 +1084,40 @@ public class VentanaPrincipalTienda extends JFrame {
 						lblErroresDeTexto.setVisible(true);
 						return false;
 					} else {
-						if (textCiudad.getText().matches("[a-zA-Z]+")) {
-							if (textNombre.getText().matches("[a-zA-Z]+")) {
-								if (textApellidos.getText().matches("[a-zA-Z]+")) {
-									if (textProvinciaEstado.getText().matches("[a-zA-Z]+")) {
+						if (textCiudad.getText().matches("^[ A-z]+$")) {
+							if (textNombre.getText().matches("^[ A-z]+$")) {
+								if (textApellidos.getText().matches("^[ A-z]+$")) {
+									if (textProvinciaEstado.getText().matches("^[ A-z]+$")) {
 										if (textCodigoPostal.getText().matches("[0-9]+")) {
 											if (textCodigoPostal.getText().length() == 5) {
 												return true;
 											} else {
-												lblErroresDeTexto.setText("deben ser 5 dígitos");
+												lblErroresDeTexto.setText("El código postal deben ser de 5 dígitos");
 												lblErroresDeTexto.setVisible(true);
 												return false;
 											}
 										} else {
-											lblErroresDeTexto.setText("El codigo postal solo puede contener números");
+											lblErroresDeTexto.setText("El código postal solo puede contener números");
 											lblErroresDeTexto.setVisible(true);
 											return false;
 										}
 									} else {
-										lblErroresDeTexto.setText("la provincia sólo puede contener letras");
+										lblErroresDeTexto.setText("La provincia sólo puede contener letras");
 										lblErroresDeTexto.setVisible(true);
 										return false;
 									}
 								} else {
-									lblErroresDeTexto.setText("los apellidos sólo puede contener letras");
+									lblErroresDeTexto.setText("Los apellidos sólo pueden contener letras");
 									lblErroresDeTexto.setVisible(true);
 									return false;
 								}
 							} else {
-								lblErroresDeTexto.setText("el nombre sólo puede contener letras");
+								lblErroresDeTexto.setText("El nombre sólo puede contener letras");
 								lblErroresDeTexto.setVisible(true);
 								return false;
 							}
 						} else {
-							lblErroresDeTexto.setText("la ciudad sólo puede contener letras");
+							lblErroresDeTexto.setText("La ciudad sólo puede contener letras");
 							lblErroresDeTexto.setVisible(true);
 							return false;
 						}
@@ -1280,7 +1293,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			datos.add(textProvinciaPago);
 			textProvinciaPago.setColumns(10);
 
-			JLabel lblDireccin = new JLabel("Direcci\u00F3n");
+			JLabel lblDireccin = new JLabel("Dirección");
 			datos.add(lblDireccin);
 
 			textDireccionPago = new JTextField();
@@ -1288,7 +1301,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			datos.add(textDireccionPago);
 			textDireccionPago.setColumns(10);
 
-			JLabel lblCdigoPostal = new JLabel("C\u00F3digo postal");
+			JLabel lblCdigoPostal = new JLabel("Código postal");
 			datos.add(lblCdigoPostal);
 
 			textCodigoPostalPago = new JTextField();
@@ -1304,7 +1317,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			metodos = new JPanel();
 			metodos.setBackground(Color.WHITE);
 			metodos.setBorder(
-					new TitledBorder(null, "M\u00E9todo de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					new TitledBorder(null, "Método de pago", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			metodos.setBounds(541, 0, 522, 541);
 			metodos.setLayout(new BorderLayout(0, 0));
 			metodos.add(getPanelMetodos(), BorderLayout.CENTER);
@@ -1324,7 +1337,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			panelMetodos.add(panelTarjeta, "tarjeta");
 			panelTarjeta.setLayout(null);
 
-			JLabel lblNmeroTajeta = new JLabel("N\u00FAmero tajeta");
+			JLabel lblNmeroTajeta = new JLabel("Número tarjeta");
 			lblNmeroTajeta.setBounds(12, 126, 149, 29);
 			panelTarjeta.add(lblNmeroTajeta);
 
@@ -1418,7 +1431,7 @@ public class VentanaPrincipalTienda extends JFrame {
 			panelRadioButtons = new JPanel();
 			panelRadioButtons.setBackground(Color.WHITE);
 
-			JRadioButton radioTarjeta = new JRadioButton("Tarjeta de cr\u00E9dito");
+			JRadioButton radioTarjeta = new JRadioButton("Tarjeta de crédito");
 			radioTarjeta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					CardLayout card = (CardLayout) panelMetodos.getLayout();
