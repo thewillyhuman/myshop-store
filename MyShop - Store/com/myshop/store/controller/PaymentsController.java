@@ -74,31 +74,15 @@ public class PaymentsController {
 			}
 		}
 	}
+
 	
-	public void payCreditCardCompany(Company c,CreditCards cc, List<Product> productos,
+	public void payCompany(Company c,List<Product> productos,
 			List<Integer> cantidades) {
+
 		try (Connection con = sql2o.open()) {
-			int paymentID = con.createQuery(insertPayment).addParameter("id", 1).addParameter("boolean", true)
+			int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", true)
 					.executeUpdate().getKey(int.class);
 			int orderID = con.createQuery(insertOrder).addParameter("idState", 2).addParameter("date", new Date())
-					.addParameter("idCustomer", c.getID()).addParameter("idPayment", paymentID).executeUpdate()
-					.getKey(int.class);
-			for (int i = 0; i < productos.size(); i++) {
-				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
-						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate().getKey(int.class);
-				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID()).addParameter("orderId", orderitemID).executeUpdate();
-			}
-		}
-	}
-
-	
-	public void payBankTransferCompany(Company c,List<Product> productos,
-			List<Integer> cantidades) {
-
-		try (Connection con = sql2o.open()) {
-			int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", false)
-					.executeUpdate().getKey(int.class);
-			int orderID = con.createQuery(insertOrder).addParameter("idState", 1).addParameter("date", new Date())
 					.addParameter("idCustomer", c.getID()).addParameter("idPayment", paymentID).executeUpdate()
 					.getKey(int.class);
 			for (int i = 0; i < productos.size(); i++) {
