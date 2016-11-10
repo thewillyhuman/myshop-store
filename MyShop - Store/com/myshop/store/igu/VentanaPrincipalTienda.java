@@ -129,6 +129,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	private Company c;
 	private JPasswordField textPassEmpresa;
 	private Double precioTotal = 0.0;
+	private JButton btnConfirmar;
 
 	/**
 	 * Launch the application.
@@ -245,6 +246,9 @@ public class VentanaPrincipalTienda extends JFrame {
 		btnAccederParticular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				datos.setVisible(true);
+				metodos.setVisible(true);
+				btnConfirmar.setVisible(false);
+				btnConfirmar.setEnabled(false);
 				CardLayout card = (CardLayout) contentPane.getLayout();
 				card.show(contentPane, "tienda");
 				esEmpresa = false;
@@ -458,6 +462,9 @@ public class VentanaPrincipalTienda extends JFrame {
 						}
 						if (esEmpresa) {
 							datos.setVisible(false);
+							metodos.setVisible(false);
+							btnConfirmar.setEnabled(true);
+							btnConfirmar.setVisible(true);
 							labelPrecio.setText(txtTotal.getText());
 							precioTotal = Double.valueOf(txtTotal.getText());
 							lblNmeroDeCuenta.setText("Se ingresará la cantidad de "
@@ -1046,6 +1053,7 @@ public class VentanaPrincipalTienda extends JFrame {
 						customer = new IndividualCustomer();
 						customer.setName(textNombre.getText());
 						customer.setSurname(textApellidos.getText());
+						metodos.setVisible(true);
 						textNombrePago.setText(customer.getName());
 						textApellidosPago.setText(customer.getSurname());
 						CardLayout card = (CardLayout) contentPane.getLayout();
@@ -1205,6 +1213,26 @@ public class VentanaPrincipalTienda extends JFrame {
 
 			labelPrecio = new JLabel("0");
 			panel.add(labelPrecio);
+			
+			btnConfirmar = new JButton("Confirmar");
+			btnConfirmar.setVisible(false);
+			btnConfirmar.setEnabled(false);
+			btnConfirmar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					List<Product> productos = new ArrayList<Product>();
+					List<Integer> cantidades = new ArrayList<Integer>();
+					for (int i = 0; i < tablaCarritoPago.getRowCount(); i++) {
+						Product p = new Product();
+						p.setID((int) tablaCarritoPago.getValueAt(i, 0));
+						productos.add(p);
+						cantidades.add((Integer) tablaCarritoPago.getValueAt(i, 2));
+					}
+					PaymentsController pc = new PaymentsController();
+					pc.payCompany(c, productos, cantidades);
+					volverTienda();
+				}
+			});
+			panel.add(btnConfirmar);
 
 			contenidoPago.add(getMetodos());
 		}
@@ -1365,11 +1393,7 @@ public class VentanaPrincipalTienda extends JFrame {
 							cantidades.add((Integer) tablaCarritoPago.getValueAt(i, 2));
 						}
 						PaymentsController pc = new PaymentsController();
-						if (!esEmpresa)
 							pc.payCreditCard(customer, address, cc, productos, cantidades);
-						else {
-							pc.payCreditCardCompany(c, cc, productos, cantidades);
-						}
 						volverTienda();
 					} else {
 						lblWarning.setVisible(true);
@@ -1445,11 +1469,7 @@ public class VentanaPrincipalTienda extends JFrame {
 						cantidades.add((Integer) tablaCarritoPago.getValueAt(i, 2));
 					}
 					PaymentsController pc = new PaymentsController();
-					if (!esEmpresa)
 						pc.payBankTransfer(customer, address, productos, cantidades);
-					else {
-						pc.payBankTransferCompany(c, productos, cantidades);
-					}
 					volverTienda();
 				}
 
@@ -1460,7 +1480,7 @@ public class VentanaPrincipalTienda extends JFrame {
 	}
 
 	private void volverTienda() {
-		JOptionPane.showMessageDialog(this, "Pago realizado");
+		JOptionPane.showMessageDialog(this, "Pedido realizado");
 		vaciarCarrito();
 		cargarCategoriaInicial();
 		borrarBotonesNavegacion();
