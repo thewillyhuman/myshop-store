@@ -17,7 +17,7 @@ public class UsersController {
 
 	private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");	
 	
-	public IndividualCustomer getCustomerData(String username, String password){
+	public IndividualCustomer getCustomerData(String username, char[] cs){
 		String complexSql = "SELECT * FROM myshop.user U, myshop.individual_customer IC, myshop.address A, myshop.credit_cards CC WHERE "
 				+ "U.username = :user AND U.password = :pass AND U.user_id = IC.user_id AND IC.customer_id = A.client_id AND IC.customer_id = CC.owner_id";
 				
@@ -25,7 +25,7 @@ public class UsersController {
 		
 		 try (Connection con = sql2o.open()) {
 			 map = con.createQuery(complexSql).addParameter("user", username)
-			            .addParameter("pass", password)
+			            .addParameter("pass", cs)
 			            .executeAndFetchTable().asList();
 		 }
 		 
