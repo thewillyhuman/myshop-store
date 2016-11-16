@@ -32,11 +32,20 @@ public class ProductsController {
 		
 	}
 	
+	public List<Product> getAll(){
+		String complexSql = "SELECT * FROM myshop.product";
+		
+		 try (Connection con = sql2o.open()) {
+			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
+		 }
+		
+	}
+	
 	public List<Product> getAllView(){
 		String complexSql = "SELECT * FROM myshop.full_products;";
 		
 		 try (Connection con = sql2o.open()) {
-			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeAndFetch(Product.class);
+			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
 		 }
 		
 	}
@@ -61,7 +70,7 @@ public class ProductsController {
 		String complexSql = "SELECT * FROM myshop.product where category_id =(SELECT category_id FROM myshop.category where name= :nom)";
 		
 		try (Connection con = sql2o.open()) {
-			 return con.createQuery(complexSql).addParameter("nom", nombre).addColumnMapping("product_id","ID").
+			 return con.createQuery(complexSql).addParameter("nom", nombre).addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").
 					 throwOnMappingFailure(false).executeAndFetch(Product.class);
 		 }
 		

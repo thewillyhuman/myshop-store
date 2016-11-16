@@ -1,8 +1,8 @@
 package com.myshop.store.controller;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import java.sql.Date;
 
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
@@ -17,7 +17,7 @@ public class UsersController {
 
 	private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");	
 	
-	public IndividualCustomer getCustomerData(String username, String password){
+	public IndividualCustomer getCustomerData(String username, char[] cs){
 		String complexSql = "SELECT * FROM myshop.user U, myshop.individual_customer IC, myshop.address A, myshop.credit_cards CC WHERE "
 				+ "U.username = :user AND U.password = :pass AND U.user_id = IC.user_id AND IC.customer_id = A.client_id AND IC.customer_id = CC.owner_id";
 				
@@ -25,7 +25,7 @@ public class UsersController {
 		
 		 try (Connection con = sql2o.open()) {
 			 map = con.createQuery(complexSql).addParameter("user", username)
-			            .addParameter("pass", password)
+			            .addParameter("pass", String.valueOf(cs))
 			            .executeAndFetchTable().asList();
 		 }
 		 
@@ -49,7 +49,7 @@ public class UsersController {
 		 return ic;
 	}
 	
-	public Company getCompany(String username, String password){
+	public Company getCompany(String username, char[] ds){
 		String complexSql = "SELECT * FROM myshop.user U, myshop.company C WHERE "+ 
 		                    "U.username = :user AND U.password = :pass "
 						  + "AND U.user_id = C.user_id";
@@ -58,12 +58,13 @@ public class UsersController {
 		
 		 try (Connection con = sql2o.open()) {
 			 map = con.createQuery(complexSql).addParameter("user", username)
-			            .addParameter("pass", password)
+			            .addParameter("pass", String.valueOf(ds))
 			            .executeAndFetchTable().asList();
 		 }
 		 
 		 Company c = new Company();
 		 for(Map<String,Object> m : map){
+			 c.setID((int) m.get("company_id"));
 			 c.setName((String) m.get("name"));
 			 User u = new User((int)m.get("user_id"), (String)m.get("username"),(String)m.get("password"));
 			 c.setUser(u);
