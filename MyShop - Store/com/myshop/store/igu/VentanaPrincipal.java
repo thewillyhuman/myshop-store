@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 import java.awt.CardLayout;
 import javax.swing.JLabel;
@@ -16,18 +15,14 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
 
-import com.myshop.model.customer.Address;
+
 import com.myshop.model.customer.Company;
-import com.myshop.model.customer.CreditCards;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Category;
 import com.myshop.model.product.Product;
-import com.myshop.model.user.User;
-import com.myshop.store.controller.PaymentsController;
 import com.myshop.store.controller.ProductsController;
 import com.myshop.store.controller.UsersController;
 
-import java.awt.ComponentOrientation;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
@@ -35,15 +30,13 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.JButton;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,30 +48,24 @@ import javax.swing.JScrollPane;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.FocusAdapter;
-import javax.swing.JSpinner;
 import javax.swing.JPasswordField;
 import javax.swing.JSplitPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.SystemColor;
+import javax.swing.JSpinner;
 
 public class VentanaPrincipal extends JFrame {
 
 	public static final Color blue_code = Color.decode("#0079ff");
-	/**
-	 * 
-	 */
+	final static String newline = "\n";
+	final static String tab = "\t";
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel Tienda;
@@ -180,6 +167,22 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lbShopComprobacion;
 	private JPanel panelContenidoComprobacion;
 	private JScrollPane scrollCarritoComprobacion;
+	private Map<Object, Object> treeMap;
+	private JTextArea textAreaCarrito;
+	private JPanel panelPrecios;
+	private JButton btPagar;
+	private JLabel lbSubtotal;
+	private JLabel lbImpuestos;
+	private JLabel lbTotalComprobacion;
+	private JLabel lbSubtotalTexto;
+	private JLabel lbImpuestosText;
+	private JLabel lbTotalComprobacionTexto;
+	private JPanel panelDatosComprobacion;
+	private JLabel lbDireccionComprobacion;
+	private JLabel lbPersonaComprobacion;
+	private JLabel lbFecha;
+	private JSpinner spinnerFecha;
+	private JLabel lbMetodoComprobacion;
 
 	/**
 	 * Launch the application.
@@ -211,6 +214,7 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(getTienda(), "panelTiendaInicio");
 		contentPane.add(getInicio(), "panelRegistro");
 		contentPane.add(getEnvio(), "panelEnvio");
+		contentPane.add(getComprobacion(), "panelComprobacion");
 		esEmpresa=false;
 		individualCustomer=null;
 		company=null;
@@ -265,7 +269,7 @@ public class VentanaPrincipal extends JFrame {
 
 		};
 		new TableCellListener(getTable(), action);
-		contentPane.add(getComprobacion(), "name_493087322733441");
+		
 	}
 
 	private boolean comprobarEntero(String text) {
@@ -630,10 +634,10 @@ public class VentanaPrincipal extends JFrame {
 			JLabel labPrecio = new JLabel();
 			labPrecio.setForeground(new Color(0, 0, 0));
 			if(esEmpresa==false){
-				labPrecio.setText("Precio: " + Double.toString(p.getPrice()) + " \u20ac");
+				labPrecio.setText("Precio: " + Double.toString(p.getPrice()));
 			}
 			if(esEmpresa==true){
-				labPrecio.setText("Precio: " + Double.toString(p.getCompanyPrice()) + " \u20ac");
+				labPrecio.setText("Precio: " + Double.toString(p.getCompanyPrice()));
 			}
 			
 			if (p.getStock() > 0) {
@@ -739,7 +743,7 @@ public class VentanaPrincipal extends JFrame {
 		for (int i = 0; i < filas; i++) {
 			total = total + (double) (table.getValueAt(i, 4));
 		}
-		lbTotalTexto.setText(Double.toString((redondear(total )))+ " \u20ac");
+		lbTotalTexto.setText(Double.toString((redondear(total ))));
 	}
 
 	private double redondear(double cifra) {
@@ -1108,7 +1112,7 @@ public class VentanaPrincipal extends JFrame {
 		getTable().removeAll();
 		getTable().repaint();
 		getTable().revalidate();
-		lbTotalTexto.setText("0" + " \u20ac");
+		lbTotalTexto.setText("0");
 	}
 	private JLabel getLbTotal() {
 		if (lbTotal == null) {
@@ -1119,18 +1123,64 @@ public class VentanaPrincipal extends JFrame {
 	}
 	private JLabel getLbTotalTexto() {
 		if (lbTotalTexto == null) {
-			lbTotalTexto = new JLabel("0" + " \u20ac");
+			lbTotalTexto = new JLabel("0");
 			lbTotalTexto.setBounds(180, 399, 73, 14);
 		}
 		return lbTotalTexto;
 	}
+
 	private JButton getBtContinuarTienda() {
 		if (btContinuarTienda == null) {
 			btContinuarTienda = new JButton("Continuar");
 			btContinuarTienda.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelEnvio");
+					if (table.getRowCount() != 0) {
+						treeMap = new TreeMap<Object, Object>();
+						for (int i = 0; i < table.getRowCount(); i++) {
+							treeMap.put(table.getValueAt(i, 0), table.getValueAt(i, 2));
+						}
+						if(individualCustomer!=null && esEmpresa==false){
+							txtNombre.setEditable(false);
+							txtNombre.setText(individualCustomer.getName());
+							txtApellidos.setEditable(false);
+							txtApellidos.setText(individualCustomer.getSurname());
+							txtDireccion.setEditable(false);
+							txtDireccion.setText(individualCustomer.getAddress().getStreet());
+							txtCiudad.setEditable(false);
+							txtCiudad.setText(individualCustomer.getAddress().getCity());
+							txtPostal.setEditable(false);
+							txtPostal.setText(individualCustomer.getAddress().getCip_code());
+							txtProvincia.setEditable(false);
+							txtProvincia.setText(individualCustomer.getAddress().getState());
+							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+							cardLayout.show(contentPane, "panelEnvio");
+						}
+						if(individualCustomer==null && esEmpresa==false){
+							txtNombre.setEditable(true);
+							txtApellidos.setEditable(true);
+							txtDireccion.setEditable(true);
+							txtCiudad.setEditable(true);
+							txtPostal.setEditable(true);
+							txtProvincia.setEditable(true);
+							getLbTextoTransferencia().setText("Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
+									+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"+ new Random().nextInt(10000));
+							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+							cardLayout.show(contentPane, "panelEnvio");
+						}
+						if(company!=null && esEmpresa==true){
+							getTextAreaCarrito().setText("");
+							for (int i = 0; i < table.getRowCount(); i++) {
+								getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
+							table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 3))*0.79) 
+							+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
+							}
+							lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
+							lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())-Double.parseDouble(lbTotalTexto.getText())*0.79)));
+							lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
+							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+							cardLayout.show(contentPane, "panelComprobacion");
+						}
+					}
 				}
 			});
 			btContinuarTienda.setBorder(new LineBorder(blue_code, 1, true));
@@ -1423,6 +1473,26 @@ public class VentanaPrincipal extends JFrame {
 	private JButton getBtComprobar() {
 		if (btComprobar == null) {
 			btComprobar = new JButton("Comprobar compra");
+			btComprobar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(comprobarDatos()){
+						getTextAreaCarrito().setText("");
+						for (int i = 0; i < table.getRowCount(); i++) {
+							getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
+						table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 3))*0.79) 
+						+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
+						}
+						lbDireccionComprobacion.setText("Enviado a: " + txtDireccion.getText() + ", "+txtCiudad.getText());
+						lbMetodoComprobacion.setText("Método de pago: " + getCbMetodo().getSelectedItem().toString());
+						lbPersonaComprobacion.setText("Facturado a: " + txtNombre.getText() + " "+txtApellidos.getText());
+						lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
+						lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())-Double.parseDouble(lbTotalTexto.getText())*0.79)));
+						lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+						cardLayout.show(contentPane, "panelComprobacion");
+					}
+				}
+			});
 			btComprobar.setBorder(new LineBorder(blue_code, 1, true));
 			btComprobar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			btComprobar.setForeground(Color.WHITE);
@@ -1430,6 +1500,59 @@ public class VentanaPrincipal extends JFrame {
 			btComprobar.setBounds(780, 213, 148, 29);
 		}
 		return btComprobar;
+	}
+	private boolean comprobarDatos(){
+		StringBuilder textoError = new StringBuilder();
+		if (!txtNombre.getText().matches("^[ A-z]+$")){
+			textoError.append("El nombre solo puede contener letras." + newline);
+			
+		}
+		if (!txtApellidos.getText().matches("^[ A-z]+$")){
+			textoError.append("Los apellidos solo pueden contener letras." + newline);
+			
+		}
+		if (!txtCiudad.getText().matches("^[ A-z]+$")){
+			textoError.append("La ciudad solo puede contener letras." + newline);
+			
+			}
+		if (!txtProvincia.getText().matches("^[ A-z]+$")){
+			textoError.append("La provincia solo puede contener letras." + newline);
+		}
+		if (!(txtPostal.getText().matches("[0-9]+") && (txtPostal.getText().length() == 5))){
+			textoError.append("El código postal tiene que ser 5 números." + newline);
+			
+		}
+		if (txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty()
+				|| txtCiudad.getText().isEmpty() || txtProvincia.getText().isEmpty()
+				|| txtPostal.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
+			textoError.append("No puede haber campos vacíos." + newline);
+			
+		}
+		if (cbMetodo.getSelectedIndex()==0){
+			if (!txtNombreTitular.getText().matches("^[ A-z]+$")){
+				textoError.append("El nombre del titular solo puede contener letras." + newline);
+			}
+			if (!(txtNumero.getText().matches("[0-9]+") && (txtNumero.getText().length() == 20))){
+				textoError.append("El número de la tarjeta tienen que ser 20 caracteres numéricos." + newline);
+			}
+			if (!(txtCvc.getText().matches("[0-9]+") && (txtCvc.getText().length() == 3))){
+				textoError.append("El CVC de la tarjeta tienen que ser 3 caracteres numéricos." + newline);
+			}
+			Date fechaTarjeta = (Date) spinnerFecha.getValue();
+			Date fechaHoy = new Date();
+			if (fechaTarjeta.after(fechaHoy)){
+				textoError.append("La tarjeta no tiene una fecha válida." + newline);
+			}
+			
+		}
+		if(textoError.length()>0){
+			JOptionPane.showMessageDialog(Envio, textoError.toString(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		
+		return true;
+		
 	}
 	private JPanel getPanelTarjeta() {
 		if (panelTarjeta == null) {
@@ -1441,34 +1564,36 @@ public class VentanaPrincipal extends JFrame {
 			panelTarjeta.add(getTxtNombreTitular());
 			panelTarjeta.add(getTxtNumero());
 			panelTarjeta.add(getTxtCvc());
+			panelTarjeta.add(getLbFecha());
+			panelTarjeta.add(getSpinnerFecha());
 		}
 		return panelTarjeta;
 	}
 	private JLabel getLbNombreTitular() {
 		if (lbNombreTitular == null) {
 			lbNombreTitular = new JLabel("Nombre titular:");
-			lbNombreTitular.setBounds(107, 29, 95, 14);
+			lbNombreTitular.setBounds(49, 29, 95, 14);
 		}
 		return lbNombreTitular;
 	}
 	private JLabel getLbNumero() {
 		if (lbNumero == null) {
 			lbNumero = new JLabel("Nº tarjeta:");
-			lbNumero.setBounds(323, 29, 95, 14);
+			lbNumero.setBounds(267, 29, 95, 14);
 		}
 		return lbNumero;
 	}
 	private JLabel getLbCvc() {
 		if (lbCvc == null) {
 			lbCvc = new JLabel("CVC:");
-			lbCvc.setBounds(548, 29, 95, 14);
+			lbCvc.setBounds(624, 29, 95, 14);
 		}
 		return lbCvc;
 	}
 	private JTextField getTxtNombreTitular() {
 		if (txtNombreTitular == null) {
 			txtNombreTitular = new JTextField();
-			txtNombreTitular.setBounds(107, 54, 177, 20);
+			txtNombreTitular.setBounds(49, 54, 177, 20);
 			txtNombreTitular.setColumns(10);
 		}
 		return txtNombreTitular;
@@ -1477,7 +1602,7 @@ public class VentanaPrincipal extends JFrame {
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
 			txtNumero.setColumns(10);
-			txtNumero.setBounds(323, 54, 188, 20);
+			txtNumero.setBounds(264, 54, 188, 20);
 		}
 		return txtNumero;
 	}
@@ -1485,7 +1610,7 @@ public class VentanaPrincipal extends JFrame {
 		if (txtCvc == null) {
 			txtCvc = new JTextField();
 			txtCvc.setColumns(10);
-			txtCvc.setBounds(548, 54, 72, 20);
+			txtCvc.setBounds(624, 54, 72, 20);
 		}
 		return txtCvc;
 	}
@@ -1499,8 +1624,8 @@ public class VentanaPrincipal extends JFrame {
 	}
 	private JLabel getLbTextoTransferencia() {
 		if (lbTextoTransferencia == null) {
-			lbTextoTransferencia = new JLabel("New label");
-			lbTextoTransferencia.setBounds(110, 42, 585, 28);
+			lbTextoTransferencia = new JLabel("");
+			lbTextoTransferencia.setBounds(52, 42, 674, 28);
 		}
 		return lbTextoTransferencia;
 	}
@@ -1595,14 +1720,148 @@ public class VentanaPrincipal extends JFrame {
 			panelContenidoComprobacion.setBorder(null);
 			panelContenidoComprobacion.setLayout(null);
 			panelContenidoComprobacion.add(getScrollCarritoComprobacion());
+			panelContenidoComprobacion.add(getPanelPrecios());
+			panelContenidoComprobacion.add(getBtPagar());
+			panelContenidoComprobacion.add(getPanel_1_1());
 		}
 		return panelContenidoComprobacion;
 	}
 	private JScrollPane getScrollCarritoComprobacion() {
 		if (scrollCarritoComprobacion == null) {
 			scrollCarritoComprobacion = new JScrollPane();
-			scrollCarritoComprobacion.setBounds(10, 21, 967, 301);
+			scrollCarritoComprobacion.setBounds(45, 21, 892, 301);
+			scrollCarritoComprobacion.setViewportView(getTextAreaCarrito());
 		}
 		return scrollCarritoComprobacion;
+	}
+	private JTextArea getTextAreaCarrito() {
+		if (textAreaCarrito == null) {
+			textAreaCarrito = new JTextArea();
+			textAreaCarrito.setBorder(new EtchedBorder(EtchedBorder.RAISED, Color.DARK_GRAY, Color.LIGHT_GRAY));
+			textAreaCarrito.setBackground(SystemColor.control);
+			textAreaCarrito.setForeground(Color.DARK_GRAY);
+			textAreaCarrito.setFont(new Font("Monospaced", Font.PLAIN, 15));
+			textAreaCarrito.setEditable(false);
+		}
+		return textAreaCarrito;
+	}
+	private JPanel getPanelPrecios() {
+		if (panelPrecios == null) {
+			panelPrecios = new JPanel();
+			panelPrecios.setBounds(738, 344, 184, 112);
+			panelPrecios.setLayout(null);
+			panelPrecios.add(getLbSubtotal());
+			panelPrecios.add(getLbImpuestos());
+			panelPrecios.add(getLbTotalComprobacion());
+			panelPrecios.add(getLbSubtotalTexto());
+			panelPrecios.add(getLbImpuestosText());
+			panelPrecios.add(getLbTotalComprobacionTexto());
+		}
+		return panelPrecios;
+	}
+	private JButton getBtPagar() {
+		if (btPagar == null) {
+			btPagar = new JButton("Confirmar y pagar");
+			btPagar.setForeground(Color.WHITE);
+			btPagar.setBorder(new LineBorder(blue_code, 1, true));
+			btPagar.setBackground(new Color(0, 121, 255));
+			btPagar.setBounds(748, 467, 163, 29);
+		}
+		return btPagar;
+	}
+	private JLabel getLbSubtotal() {
+		if (lbSubtotal == null) {
+			lbSubtotal = new JLabel("Subtotal");
+			lbSubtotal.setForeground(Color.GRAY);
+			lbSubtotal.setBounds(10, 11, 67, 14);
+		}
+		return lbSubtotal;
+	}
+	private JLabel getLbImpuestos() {
+		if (lbImpuestos == null) {
+			lbImpuestos = new JLabel("Impuestos");
+			lbImpuestos.setForeground(Color.GRAY);
+			lbImpuestos.setBounds(10, 36, 67, 14);
+		}
+		return lbImpuestos;
+	}
+	private JLabel getLbTotalComprobacion() {
+		if (lbTotalComprobacion == null) {
+			lbTotalComprobacion = new JLabel("Total");
+			lbTotalComprobacion.setBounds(10, 75, 67, 14);
+		}
+		return lbTotalComprobacion;
+	}
+	private JLabel getLbSubtotalTexto() {
+		if (lbSubtotalTexto == null) {
+			lbSubtotalTexto = new JLabel("");
+			lbSubtotalTexto.setForeground(Color.GRAY);
+			lbSubtotalTexto.setBounds(106, 11, 68, 14);
+		}
+		return lbSubtotalTexto;
+	}
+	private JLabel getLbImpuestosText() {
+		if (lbImpuestosText == null) {
+			lbImpuestosText = new JLabel("");
+			lbImpuestosText.setForeground(Color.GRAY);
+			lbImpuestosText.setBounds(106, 36, 68, 14);
+		}
+		return lbImpuestosText;
+	}
+	private JLabel getLbTotalComprobacionTexto() {
+		if (lbTotalComprobacionTexto == null) {
+			lbTotalComprobacionTexto = new JLabel("");
+			lbTotalComprobacionTexto.setBounds(106, 75, 67, 14);
+		}
+		return lbTotalComprobacionTexto;
+	}
+	private JPanel getPanel_1_1() {
+		if (panelDatosComprobacion == null) {
+			panelDatosComprobacion = new JPanel();
+			panelDatosComprobacion.setBounds(65, 349, 636, 112);
+			panelDatosComprobacion.setLayout(null);
+			panelDatosComprobacion.add(getLbDireccionComprobacion());
+			panelDatosComprobacion.add(getLbPersonaComprobacion());
+			panelDatosComprobacion.add(getLbMetodoComprobacion());
+		}
+		return panelDatosComprobacion;
+	}
+	private JLabel getLbDireccionComprobacion() {
+		if (lbDireccionComprobacion == null) {
+			lbDireccionComprobacion = new JLabel("");
+			lbDireccionComprobacion.setBounds(10, 11, 605, 14);
+		}
+		return lbDireccionComprobacion;
+	}
+	private JLabel getLbPersonaComprobacion() {
+		if (lbPersonaComprobacion == null) {
+			lbPersonaComprobacion = new JLabel("");
+			lbPersonaComprobacion.setBounds(10, 36, 605, 14);
+		}
+		return lbPersonaComprobacion;
+	}
+	private JLabel getLbFecha() {
+		if (lbFecha == null) {
+			lbFecha = new JLabel("Fecha de caducidad:");
+			lbFecha.setBounds(480, 29, 118, 14);
+		}
+		return lbFecha;
+	}
+	private JSpinner getSpinnerFecha() {
+		if (spinnerFecha == null) {
+			SpinnerDateModel spinMod=new SpinnerDateModel();
+			spinnerFecha = new JSpinner(spinMod);
+			spinnerFecha.setValue(new Date());
+			spinnerFecha.setEditor(new JSpinner.DateEditor(spinnerFecha,"dd/MM/yyyy"));
+			spinnerFecha.setBounds(480, 54, 118, 20);
+		}
+		return spinnerFecha;
+	}
+	private JLabel getLbMetodoComprobacion() {
+		if (lbMetodoComprobacion == null) {
+			lbMetodoComprobacion = new JLabel("");
+			lbMetodoComprobacion.setBounds(10, 65, 360, 14);
+		}
+		return lbMetodoComprobacion;
 	}
 }

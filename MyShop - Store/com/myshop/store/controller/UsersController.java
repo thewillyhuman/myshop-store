@@ -25,7 +25,7 @@ public class UsersController {
 		
 		 try (Connection con = sql2o.open()) {
 			 map = con.createQuery(complexSql).addParameter("user", username)
-			            .addParameter("pass", cs)
+			            .addParameter("pass", String.valueOf(cs))
 			            .executeAndFetchTable().asList();
 		 }
 		 
