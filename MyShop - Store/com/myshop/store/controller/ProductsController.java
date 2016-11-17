@@ -27,15 +27,6 @@ public class ProductsController {
 		String complexSql = "SELECT * FROM myshop.product";
 		
 		 try (Connection con = sql2o.open()) {
-			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeAndFetch(Product.class);
-		 }
-		
-	}
-	
-	public List<Product> getAll(){
-		String complexSql = "SELECT * FROM myshop.product";
-		
-		 try (Connection con = sql2o.open()) {
 			 return con.createQuery(complexSql).addColumnMapping("product_id","ID").addColumnMapping("company_price","companyPrice").throwOnMappingFailure(false).executeAndFetch(Product.class);
 		 }
 		
