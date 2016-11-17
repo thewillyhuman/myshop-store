@@ -36,7 +36,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -1340,7 +1339,7 @@ public class VentanaPrincipal extends JFrame {
 							getTextAreaCarrito().setText("");
 							for (int i = 0; i < table.getRowCount(); i++) {
 								getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
-							table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 3))*0.79) 
+							table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 4))*0.79) 
 							+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
 							}
 							lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
@@ -1649,7 +1648,7 @@ public class VentanaPrincipal extends JFrame {
 						getTextAreaCarrito().setText("");
 						for (int i = 0; i < table.getRowCount(); i++) {
 							getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
-						table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 3))*0.79) 
+						table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 4))*0.79) 
 						+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
 						}
 						lbDireccionComprobacion.setText("Enviado a: " + txtDireccion.getText() + ", "+txtCiudad.getText());
