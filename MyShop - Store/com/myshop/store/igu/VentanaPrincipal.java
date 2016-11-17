@@ -37,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -45,6 +46,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
@@ -59,6 +61,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.SystemColor;
 import javax.swing.JSpinner;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -74,7 +78,6 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel panelLogo;
 	private JLabel lbLogo;
 	private JLabel lbUrl;
-	private JButton btEntrar;
 	private JButton btIzquierda;
 	private JLabel lbDerecha;
 	private JLabel lbRecargar;
@@ -97,14 +100,9 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel panelIzquierdaInicio;
 	private JPanel panelDerechaInicio;
 	private JLabel lbParticularesInicio;
-	private JLabel lbEmpresasInicio;
-	private JLabel lbBusinessInicio;
-	private JTextField txtUsuarioParticularesInicio;
-	private JTextField txtUsuarioEmpresaInicio;
-	private JPasswordField passwordFieldParticularesInicio;
-	private JPasswordField passwordFieldEmpresasInicio;
-	private JButton btEntrarParticularesInicio;
-	private JButton btEntrarEmpresasInicio;
+	private JTextField txtUsuarioRegistradosInicio;
+	private JPasswordField passwordFieldRegistradosInicio;
+	private JButton btEntrarRegistradosInicio;
 	private boolean esEmpresa;
 	private IndividualCustomer individualCustomer;
 	private Company company;
@@ -141,8 +139,6 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField txtPostal;
 	private JLabel lbProvincia;
 	private JTextField txtProvincia;
-	private JLabel lbMetodo;
-	private JComboBox<String> cbMetodo;
 	private JPanel panelMetodoPago;
 	private JButton btComprobar;
 	private JPanel panelTarjeta;
@@ -182,6 +178,13 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel lbFecha;
 	private JSpinner spinnerFecha;
 	private JLabel lbMetodoComprobacion;
+	private JLabel lblAccesoSinRegistro;
+	private JButton btnEntrar;
+	private JRadioButton rbTarjeta;
+	private JRadioButton rbTransferencia;
+	private JRadioButton rbContrareembolso;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JLabel lbContrareembolso;
 
 	/**
 	 * Launch the application.
@@ -210,8 +213,8 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
-		contentPane.add(getTienda(), "panelTiendaInicio");
 		contentPane.add(getInicio(), "panelRegistro");
+		contentPane.add(getTienda(), "panelTiendaInicio");
 		contentPane.add(getEnvio(), "panelEnvio");
 		contentPane.add(getComprobacion(), "panelComprobacion");
 		esEmpresa=false;
@@ -325,7 +328,6 @@ public class VentanaPrincipal extends JFrame {
 			panelLogo.setBackground(Color.DARK_GRAY);
 			panelLogo.setLayout(new BorderLayout(0, 0));
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
-			panelLogo.add(getBtEntrar(), BorderLayout.EAST);
 		}
 		return panelLogo;
 	}
@@ -347,30 +349,7 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			JButton btSalir = new JButton("(cerrar sesión)");
-			btSalir.setContentAreaFilled(false);
-			btSalir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
-					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					JOptionPane.showMessageDialog(Tienda, "Se ha cerrado sesión correctamente.", "Información",
-							JOptionPane.PLAIN_MESSAGE);
-				}
-			});
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btSalir.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btSalir.setBackground(Color.DARK_GRAY);
-			btSalir.setForeground(Color.WHITE);
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			JPanel panel = new JPanel();
-			panel.setBackground(Color.DARK_GRAY);
-			panel.setForeground(Color.WHITE);
-			panel.setBorder(null);
-			panel.add(lbLogoBienvenida);
-			panel.add(btSalir);
-			getPanelLogo().add(panel,BorderLayout.EAST);
+			getPanelLogo().add(lbLogoBienvenida,BorderLayout.EAST);
 		}
 		if(individualCustomer!=null){
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
@@ -381,34 +360,10 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			JButton btSalir = new JButton("(cerrar sesión)");
-			btSalir.setContentAreaFilled(false);
-			btSalir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
-					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					JOptionPane.showMessageDialog(Tienda, "Se ha cerrado sesión correctamente.", "Información",
-							JOptionPane.PLAIN_MESSAGE);
-				}
-			});
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btSalir.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btSalir.setBackground(Color.DARK_GRAY);
-			btSalir.setForeground(Color.WHITE);
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			JPanel panel = new JPanel();
-			panel.setBackground(Color.DARK_GRAY);
-			panel.setForeground(Color.WHITE);
-			panel.setBorder(null);
-			panel.add(lbLogoBienvenida);
-			panel.add(btSalir);
-			getPanelLogo().add(panel,BorderLayout.EAST);
+			getPanelLogo().add(lbLogoBienvenida,BorderLayout.EAST);
 		}
 		if(individualCustomer==null && !esEmpresa) {
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
-			panelLogo.add(getBtEntrar(), BorderLayout.EAST);
 		}
 		
 	}
@@ -424,30 +379,7 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			JButton btSalir = new JButton("(cerrar sesión)");
-			btSalir.setContentAreaFilled(false);
-			btSalir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
-					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					JOptionPane.showMessageDialog(Tienda, "Se ha cerrado sesión correctamente.", "Información",
-							JOptionPane.PLAIN_MESSAGE);
-				}
-			});
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btSalir.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btSalir.setBackground(Color.DARK_GRAY);
-			btSalir.setForeground(Color.WHITE);
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			JPanel panel = new JPanel();
-			panel.setBackground(Color.DARK_GRAY);
-			panel.setForeground(Color.WHITE);
-			panel.setBorder(null);
-			panel.add(lbLogoBienvenida);
-			panel.add(btSalir);
-			getPanelLogoEnvio().add(panel,BorderLayout.EAST);
+			getPanelLogoEnvio().add(lbLogoBienvenida,BorderLayout.EAST);
 		}
 		if(individualCustomer==null) {
 			panelLogoEnvio.add(getLabel_3(), BorderLayout.WEST);
@@ -471,30 +403,7 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			JButton btSalir = new JButton("(cerrar sesión)");
-			btSalir.setContentAreaFilled(false);
-			btSalir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
-					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					JOptionPane.showMessageDialog(Tienda, "Se ha cerrado sesión correctamente.", "Información",
-							JOptionPane.PLAIN_MESSAGE);
-				}
-			});
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btSalir.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btSalir.setBackground(Color.DARK_GRAY);
-			btSalir.setForeground(Color.WHITE);
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			JPanel panel = new JPanel();
-			panel.setBackground(Color.DARK_GRAY);
-			panel.setForeground(Color.WHITE);
-			panel.setBorder(null);
-			panel.add(lbLogoBienvenida);
-			panel.add(btSalir);
-			getPanelLogoComprobacion().add(panel,BorderLayout.EAST);
+			getPanelLogoComprobacion().add(lbLogoBienvenida,BorderLayout.EAST);
 		}
 		if(individualCustomer!=null){
 			panelLogoComprobacion.add(getLbShopComprobacion(), BorderLayout.WEST);
@@ -505,30 +414,7 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			JButton btSalir = new JButton("(cerrar sesión)");
-			btSalir.setContentAreaFilled(false);
-			btSalir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					
-					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					JOptionPane.showMessageDialog(Tienda, "Se ha cerrado sesión correctamente.", "Información",
-							JOptionPane.PLAIN_MESSAGE);
-				}
-			});
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btSalir.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btSalir.setBackground(Color.DARK_GRAY);
-			btSalir.setForeground(Color.WHITE);
-			btSalir.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			JPanel panel = new JPanel();
-			panel.setBackground(Color.DARK_GRAY);
-			panel.setForeground(Color.WHITE);
-			panel.setBorder(null);
-			panel.add(lbLogoBienvenida);
-			panel.add(btSalir);
-			getPanelLogoComprobacion().add(panel,BorderLayout.EAST);
+			getPanelLogoComprobacion().add(lbLogoBienvenida,BorderLayout.EAST);
 		}
 		if(individualCustomer==null && !esEmpresa) {
 			panelLogoComprobacion.add(getLbShopComprobacion(), BorderLayout.WEST);
@@ -542,7 +428,6 @@ public class VentanaPrincipal extends JFrame {
 		vaciarCarrito();
 		getPanelLogo().removeAll();
 		getPanelLogo().add(getLbLogo(), BorderLayout.WEST);
-		getPanelLogo().add(getBtEntrar(), BorderLayout.EAST);
 		getPanelLogo().repaint();
 		cargarCategoriaInicial();
 		borrarBotonesNavegacion();
@@ -560,30 +445,11 @@ public class VentanaPrincipal extends JFrame {
 	}
 	private JLabel getLbUrl() {
 		if (lbUrl == null) {
-			lbUrl = new JLabel("  http://www.myshop.es");
+			lbUrl = new JLabel("  http://www.myshop.es/tienda");
 			lbUrl.setPreferredSize(new Dimension(920, 22));
 			lbUrl.setBorder(new LineBorder(new Color(0, 0, 0)));
 		}
 		return lbUrl;
-	}
-	private JButton getBtEntrar() {
-		if (btEntrar == null) {
-			btEntrar = new JButton("Entrar");
-			btEntrar.setContentAreaFilled(false);
-			btEntrar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					actualizarTextoRegistro();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelRegistro");
-				}
-			});
-			btEntrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			btEntrar.setBorder(new EmptyBorder(0, 8, 0, 12));
-			btEntrar.setBackground(Color.DARK_GRAY);
-			btEntrar.setForeground(Color.WHITE);
-			
-		}
-		return btEntrar;
 	}
 	private JButton getBtIzquierda() {
 		if (btIzquierda == null) {
@@ -954,16 +820,6 @@ public class VentanaPrincipal extends JFrame {
 	private JButton getBtIzquierdaInicio() {
 		if (btIzquierdaInicio == null) {
 			btIzquierdaInicio = new JButton("");
-			btIzquierdaInicio.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					vaciarCarrito();
-					cargarCategoriaInicial();
-					borrarBotonesNavegacion();
-					cambiarPanelLogoTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-				}
-			});
 			btIzquierdaInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
 			btIzquierdaInicio.setBorder(null);
 			btIzquierdaInicio.setBackground(Color.WHITE);
@@ -1026,9 +882,9 @@ public class VentanaPrincipal extends JFrame {
 			panelIzquierdaInicio = new JPanel();
 			panelIzquierdaInicio.setLayout(null);
 			panelIzquierdaInicio.add(getLbParticularesInicio());
-			panelIzquierdaInicio.add(getTxtUsuarioParticularesInicio());
-			panelIzquierdaInicio.add(getPasswordFieldParticularesInicio());
-			panelIzquierdaInicio.add(getBtEntrarParticularesInicio());
+			panelIzquierdaInicio.add(getTxtUsuarioRegistradosInicio());
+			panelIzquierdaInicio.add(getPasswordFieldRegistradosInicio());
+			panelIzquierdaInicio.add(getBtEntrarRegistradosInicio());
 		}
 		return panelIzquierdaInicio;
 	}
@@ -1036,135 +892,77 @@ public class VentanaPrincipal extends JFrame {
 		if (panelDerechaInicio == null) {
 			panelDerechaInicio = new JPanel();
 			panelDerechaInicio.setLayout(null);
-			panelDerechaInicio.add(getLbEmpresasInicio());
-			panelDerechaInicio.add(getLbBusinessInicio());
-			panelDerechaInicio.add(getTxtUsuarioEmpresaInicio());
-			panelDerechaInicio.add(getPasswordFieldEmpresasInicio());
-			panelDerechaInicio.add(getBtEntrarEmpresasInicio());
+			panelDerechaInicio.add(getLblAccesoSinRegistro());
+			panelDerechaInicio.add(getBtnEntrar());
 		}
 		return panelDerechaInicio;
 	}
 	private JLabel getLbParticularesInicio() {
 		if (lbParticularesInicio == null) {
-			lbParticularesInicio = new JLabel("MyShop");
-			lbParticularesInicio.setFont(new Font("Tahoma", Font.PLAIN, 30));
+			lbParticularesInicio = new JLabel("Clientes registrados");
+			lbParticularesInicio.setFont(new Font("Tahoma", Font.PLAIN, 25));
 			lbParticularesInicio.setForeground(Color.DARK_GRAY);
-			lbParticularesInicio.setBounds(170, 102, 115, 49);
+			lbParticularesInicio.setBounds(124, 118, 224, 49);
 		}
 		return lbParticularesInicio;
 	}
-	private JLabel getLbEmpresasInicio() {
-		if (lbEmpresasInicio == null) {
-			lbEmpresasInicio = new JLabel("MyShop");
-			lbEmpresasInicio.setBounds(177, 104, 105, 37);
-			lbEmpresasInicio.setForeground(Color.DARK_GRAY);
-			lbEmpresasInicio.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		}
-		return lbEmpresasInicio;
-	}
-	private JLabel getLbBusinessInicio() {
-		if (lbBusinessInicio == null) {
-			lbBusinessInicio = new JLabel("business");
-			lbBusinessInicio.setForeground(Color.DARK_GRAY);
-			lbBusinessInicio.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			lbBusinessInicio.setBounds(286, 126, 61, 26);
-		}
-		return lbBusinessInicio;
-	}
-	private JTextField getTxtUsuarioParticularesInicio() {
-		if (txtUsuarioParticularesInicio == null) {
-			txtUsuarioParticularesInicio = new JTextField();
-			txtUsuarioParticularesInicio.addMouseListener(new MouseAdapter() {
+	private JTextField getTxtUsuarioRegistradosInicio() {
+		if (txtUsuarioRegistradosInicio == null) {
+			txtUsuarioRegistradosInicio = new JTextField();
+			txtUsuarioRegistradosInicio.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					txtUsuarioParticularesInicio.setText("");
-					txtUsuarioParticularesInicio.setForeground(Color.BLACK);
+					txtUsuarioRegistradosInicio.setText("");
+					txtUsuarioRegistradosInicio.setForeground(Color.BLACK);
 				}
 			});
-			txtUsuarioParticularesInicio.setForeground(Color.LIGHT_GRAY);
-			txtUsuarioParticularesInicio.setHorizontalAlignment(SwingConstants.CENTER);
-			txtUsuarioParticularesInicio.setText("Usuario");
-			txtUsuarioParticularesInicio.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
-			txtUsuarioParticularesInicio.setBounds(152, 254, 155, 23);
-			txtUsuarioParticularesInicio.setColumns(10);
+			txtUsuarioRegistradosInicio.setForeground(Color.LIGHT_GRAY);
+			txtUsuarioRegistradosInicio.setHorizontalAlignment(SwingConstants.CENTER);
+			txtUsuarioRegistradosInicio.setText("Usuario");
+			txtUsuarioRegistradosInicio.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
+			txtUsuarioRegistradosInicio.setBounds(152, 254, 155, 23);
+			txtUsuarioRegistradosInicio.setColumns(10);
 		}
-		return txtUsuarioParticularesInicio;
+		return txtUsuarioRegistradosInicio;
 	}
-	private JTextField getTxtUsuarioEmpresaInicio() {
-		if (txtUsuarioEmpresaInicio == null) {
-			txtUsuarioEmpresaInicio = new JTextField();
-			txtUsuarioEmpresaInicio.addMouseListener(new MouseAdapter() {
+	private JPasswordField getPasswordFieldRegistradosInicio() {
+		if (passwordFieldRegistradosInicio == null) {
+			passwordFieldRegistradosInicio = new JPasswordField();
+			passwordFieldRegistradosInicio.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					txtUsuarioEmpresaInicio.setText("");
-					txtUsuarioEmpresaInicio.setForeground(Color.BLACK);
+					passwordFieldRegistradosInicio.setText("");
+					passwordFieldRegistradosInicio.setForeground(Color.BLACK);
+					passwordFieldRegistradosInicio.setEchoChar('*');
 				}
 			});
-			txtUsuarioEmpresaInicio.setForeground(Color.LIGHT_GRAY);
-			txtUsuarioEmpresaInicio.setText("Usuario");
-			txtUsuarioEmpresaInicio.setHorizontalAlignment(SwingConstants.CENTER);
-			txtUsuarioEmpresaInicio.setColumns(10);
-			txtUsuarioEmpresaInicio.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
-			txtUsuarioEmpresaInicio.setBounds(178, 250, 155, 23);
+			passwordFieldRegistradosInicio.setForeground(Color.LIGHT_GRAY);
+			passwordFieldRegistradosInicio.setHorizontalAlignment(SwingConstants.CENTER);
+			passwordFieldRegistradosInicio.setEchoChar((char) 0);
+			passwordFieldRegistradosInicio.setText("Contraseña");
+			passwordFieldRegistradosInicio.setBorder(new LineBorder(new Color(171, 173, 179), 1, true));
+			passwordFieldRegistradosInicio.setBounds(152, 276, 132, 23);
 		}
-		return txtUsuarioEmpresaInicio;
+		return passwordFieldRegistradosInicio;
 	}
-	private JPasswordField getPasswordFieldParticularesInicio() {
-		if (passwordFieldParticularesInicio == null) {
-			passwordFieldParticularesInicio = new JPasswordField();
-			passwordFieldParticularesInicio.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					passwordFieldParticularesInicio.setText("");
-					passwordFieldParticularesInicio.setForeground(Color.BLACK);
-					passwordFieldParticularesInicio.setEchoChar('*');
-				}
-			});
-			passwordFieldParticularesInicio.setForeground(Color.LIGHT_GRAY);
-			passwordFieldParticularesInicio.setHorizontalAlignment(SwingConstants.CENTER);
-			passwordFieldParticularesInicio.setEchoChar((char) 0);
-			passwordFieldParticularesInicio.setText("Contraseña");
-			passwordFieldParticularesInicio.setBorder(new LineBorder(new Color(171, 173, 179), 1, true));
-			passwordFieldParticularesInicio.setBounds(152, 276, 132, 23);
-		}
-		return passwordFieldParticularesInicio;
-	}
-	private JPasswordField getPasswordFieldEmpresasInicio() {
-		if (passwordFieldEmpresasInicio == null) {
-			passwordFieldEmpresasInicio = new JPasswordField();
-			passwordFieldEmpresasInicio.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					passwordFieldEmpresasInicio.setText("");
-					passwordFieldEmpresasInicio.setForeground(Color.BLACK);
-					passwordFieldEmpresasInicio.setEchoChar('*');
-				}
-			});
-			passwordFieldEmpresasInicio.setForeground(Color.LIGHT_GRAY);
-			passwordFieldEmpresasInicio.setHorizontalAlignment(SwingConstants.CENTER);
-			passwordFieldEmpresasInicio.setEchoChar((char) 0);
-			passwordFieldEmpresasInicio.setText("Contraseña");
-			passwordFieldEmpresasInicio.setBorder(new LineBorder(new Color(171, 173, 179), 1, true));
-			passwordFieldEmpresasInicio.setBounds(178, 272, 133, 23);
-		}
-		return passwordFieldEmpresasInicio;
-	}
-	private JButton getBtEntrarParticularesInicio() {
-		if (btEntrarParticularesInicio == null) {
-			btEntrarParticularesInicio = new JButton("");
-			btEntrarParticularesInicio.addActionListener(new ActionListener() {
+	private JButton getBtEntrarRegistradosInicio() {
+		if (btEntrarRegistradosInicio == null) {
+			btEntrarRegistradosInicio = new JButton("");
+			btEntrarRegistradosInicio.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					esEmpresa=false;
+					company=null;
+					individualCustomer=null;
 					UsersController uc = new UsersController();
-					IndividualCustomer ic=uc.getCustomerData(getTxtUsuarioParticularesInicio().getText(),getPasswordFieldParticularesInicio().getPassword());
-					if(ic.getName()!=null)
-						individualCustomer=ic;
-					if(individualCustomer==null){
-						JOptionPane.showMessageDialog(panelIzquierdaInicio, "El usuario o la contraseña no existen.", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						actualizarTextoRegistro();
-					}
-					if(individualCustomer!=null){
+					IndividualCustomer ic=uc.getCustomerData(getTxtUsuarioRegistradosInicio().getText(),getPasswordFieldRegistradosInicio().getPassword());
+					if(ic.getName()==null){
+						Company co=uc.getCompany(getTxtUsuarioRegistradosInicio().getText(),getPasswordFieldRegistradosInicio().getPassword());
+						if(co.getName()==null){
+							JOptionPane.showMessageDialog(panelIzquierdaInicio, "El usuario o la contraseña no existen.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							actualizarTextoRegistro();
+						}
+						esEmpresa=true;
+						company=co;
 						vaciarCarrito();
 						cargarCategoriaInicial();
 						borrarBotonesNavegacion();
@@ -1172,64 +970,34 @@ public class VentanaPrincipal extends JFrame {
 						CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 					}
-					
+					if(ic.getName()!=null){
+						esEmpresa=false;
+						individualCustomer=ic;
+						vaciarCarrito();
+						cargarCategoriaInicial();
+						borrarBotonesNavegacion();
+						cambiarPanelLogoTienda();
+						CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
+						cardLayout.show(contentPane, "panelTiendaInicio");
+					}
 				}
 			});
-			btEntrarParticularesInicio.setBackground(Color.WHITE);
-			btEntrarParticularesInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/flechaAzul.jpg")));
-			btEntrarParticularesInicio.setBounds(282, 276, 25, 23);
-			btEntrarParticularesInicio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btEntrarRegistradosInicio.setBackground(Color.WHITE);
+			btEntrarRegistradosInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/flechaAzul.jpg")));
+			btEntrarRegistradosInicio.setBounds(282, 276, 25, 23);
+			btEntrarRegistradosInicio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
-		return btEntrarParticularesInicio;
+		return btEntrarRegistradosInicio;
 	}
 	private void actualizarTextoRegistro(){
-		txtUsuarioEmpresaInicio.setForeground(Color.LIGHT_GRAY);
-		txtUsuarioEmpresaInicio.setText("Usuario");
-		txtUsuarioEmpresaInicio.setHorizontalAlignment(SwingConstants.CENTER);
-		passwordFieldEmpresasInicio.setForeground(Color.LIGHT_GRAY);
-		passwordFieldEmpresasInicio.setHorizontalAlignment(SwingConstants.CENTER);
-		passwordFieldEmpresasInicio.setEchoChar((char) 0);
-		passwordFieldEmpresasInicio.setText("Contraseña");
-		txtUsuarioParticularesInicio.setForeground(Color.LIGHT_GRAY);
-		txtUsuarioParticularesInicio.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUsuarioParticularesInicio.setText("Usuario");
-		passwordFieldParticularesInicio.setForeground(Color.LIGHT_GRAY);
-		passwordFieldParticularesInicio.setHorizontalAlignment(SwingConstants.CENTER);
-		passwordFieldParticularesInicio.setEchoChar((char) 0);
-		passwordFieldParticularesInicio.setText("Contraseña");
-	}
-	private JButton getBtEntrarEmpresasInicio() {
-		if (btEntrarEmpresasInicio == null) {
-			btEntrarEmpresasInicio = new JButton("");
-			btEntrarEmpresasInicio.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					esEmpresa=true;
-					UsersController uc = new UsersController();
-					Company c=uc.getCompany(getTxtUsuarioEmpresaInicio().getText(),getPasswordFieldEmpresasInicio().getPassword());
-					if(c.getName()!= null)
-						company=c;
-					if(company==null){
-						JOptionPane.showMessageDialog(panelDerechaInicio, "El usuario o la contraseña no existen.", "Error",
-								JOptionPane.ERROR_MESSAGE);
-						actualizarTextoRegistro();
-					}
-					if(company!=null){
-						vaciarCarrito();
-						cargarCategoriaInicial();
-						borrarBotonesNavegacion();
-						cambiarPanelLogoTienda();
-						CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-						cardLayout.show(contentPane, "panelTiendaInicio");
-					}
-					
-				}
-			});
-			btEntrarEmpresasInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/flechaAzul.jpg")));
-			btEntrarEmpresasInicio.setBackground(Color.WHITE);
-			btEntrarEmpresasInicio.setBounds(308, 272, 25, 23);
-			btEntrarEmpresasInicio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		}
-		return btEntrarEmpresasInicio;
+		
+		txtUsuarioRegistradosInicio.setForeground(Color.LIGHT_GRAY);
+		txtUsuarioRegistradosInicio.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUsuarioRegistradosInicio.setText("Usuario");
+		passwordFieldRegistradosInicio.setForeground(Color.LIGHT_GRAY);
+		passwordFieldRegistradosInicio.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordFieldRegistradosInicio.setEchoChar((char) 0);
+		passwordFieldRegistradosInicio.setText("Contraseña");
 	}
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
@@ -1316,6 +1084,8 @@ public class VentanaPrincipal extends JFrame {
 							txtPostal.setText(individualCustomer.getAddress().getCip_code());
 							txtProvincia.setEditable(false);
 							txtProvincia.setText(individualCustomer.getAddress().getState());
+							getLbContrareembolso().setText("El transportista contactará con usted para entregar el paquete. "
+									+ "Tenga preparados los " + lbTotalTexto.getText() + "\u20AC para abonárselos a él en efectivo.");
 							getLbTextoTransferencia().setText("Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
 									+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"+ new Random().nextInt(10000));
 							 cambiarPanelLogoEnvio();
@@ -1329,6 +1099,8 @@ public class VentanaPrincipal extends JFrame {
 							txtCiudad.setEditable(true);
 							txtPostal.setEditable(true);
 							txtProvincia.setEditable(true);
+							getLbContrareembolso().setText("El transportista contactará con usted para entregar el paquete. "
+									+ "Tenga preparados los " + lbTotalTexto.getText() + "\u20AC para abonárselos a él en efectivo.");
 							getLbTextoTransferencia().setText("Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
 									+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"+ new Random().nextInt(10000));
 							 cambiarPanelLogoEnvio();
@@ -1455,10 +1227,11 @@ public class VentanaPrincipal extends JFrame {
 			panelPago.setBorder(new EtchedBorder(EtchedBorder.RAISED, Color.DARK_GRAY, Color.LIGHT_GRAY));
 			panelPago.setLayout(null);
 			panelPago.add(getLbDatosPago());
-			panelPago.add(getLbMetodo());
-			panelPago.add(getCbMetodo());
 			panelPago.add(getPanelMetodoPago());
 			panelPago.add(getBtComprobar());
+			panelPago.add(getRbTarjeta());
+			panelPago.add(getRbTransferencia());
+			panelPago.add(getRbContrareembolso());
 		}
 		return panelPago;
 	}
@@ -1597,37 +1370,6 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtProvincia;
 	}
-	private JLabel getLbMetodo() {
-		if (lbMetodo == null) {
-			lbMetodo = new JLabel("Método de pago:");
-			lbMetodo.setBounds(324, 44, 103, 14);
-		}
-		return lbMetodo;
-	}
-	private JComboBox<String> getCbMetodo() {
-		if (cbMetodo == null) {
-			cbMetodo = new JComboBox<String>();
-			cbMetodo.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if(cbMetodo.getSelectedItem().toString().equals("Tarjeta")){
-						CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
-						cardLayout.show(panelMetodoPago, "panelTarjeta");
-					}
-					if(cbMetodo.getSelectedItem().toString().equals("Transferencia")){
-						CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
-						cardLayout.show(panelMetodoPago, "panelTransferencia");
-					}
-					if(cbMetodo.getSelectedItem().toString().equals("Contrareembolso")){
-						CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
-						cardLayout.show(panelMetodoPago, "panelContrareembolso");
-					}
-				}
-			});
-			cbMetodo.setModel(new DefaultComboBoxModel<String>(new String[] {"Tarjeta", "Transferencia", "Contrareembolso"}));
-			cbMetodo.setBounds(437, 41, 148, 20);
-		}
-		return cbMetodo;
-	}
 	private JPanel getPanelMetodoPago() {
 		if (panelMetodoPago == null) {
 			panelMetodoPago = new JPanel();
@@ -1652,7 +1394,7 @@ public class VentanaPrincipal extends JFrame {
 						+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
 						}
 						lbDireccionComprobacion.setText("Enviado a: " + txtDireccion.getText() + ", "+txtCiudad.getText());
-						lbMetodoComprobacion.setText("Método de pago: " + getCbMetodo().getSelectedItem().toString());
+						lbMetodoComprobacion.setText("Método de pago: " + getSelectedButtonText(buttonGroup));
 						lbPersonaComprobacion.setText("Facturado a: " + txtNombre.getText() + " "+txtApellidos.getText());
 						lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
 						lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())-Double.parseDouble(lbTotalTexto.getText())*0.79)));
@@ -1698,7 +1440,8 @@ public class VentanaPrincipal extends JFrame {
 			textoError.append("No puede haber campos vacíos." + newline);
 			
 		}
-		if (cbMetodo.getSelectedIndex()==0){
+		
+		if (getSelectedButtonText(buttonGroup).equals("Tarjeta")){
 			if (!txtNombreTitular.getText().matches("^[ A-z]+$")){
 				textoError.append("El nombre del titular solo puede contener letras." + newline);
 			}
@@ -1802,6 +1545,8 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel getPanelContrareembolso() {
 		if (panelContrareembolso == null) {
 			panelContrareembolso = new JPanel();
+			panelContrareembolso.setLayout(null);
+			panelContrareembolso.add(getLbContrareembolso());
 		}
 		return panelContrareembolso;
 	}
@@ -1934,18 +1679,11 @@ public class VentanaPrincipal extends JFrame {
 			btPagar = new JButton("Confirmar y pagar");
 			btPagar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					vaciarCarrito();
-					getPanelLogo().removeAll();
-					getPanelLogo().add(getLbLogo(), BorderLayout.WEST);
-					getPanelLogo().add(getBtEntrar(), BorderLayout.EAST);
-					getPanelLogo().repaint();
-					cargarCategoriaInicial();
-					borrarBotonesNavegacion();
+					actualizarTextoRegistro();
+					resetearEnvio();
 					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelTiendaInicio");
-					cambiarPanelLogoTienda();
-					getTienda().repaint();
-					getTienda().revalidate();
+					cardLayout.show(contentPane, "panelRegistro");
+					
 				}
 			});
 			btPagar.setForeground(Color.WHITE);
@@ -2049,5 +1787,102 @@ public class VentanaPrincipal extends JFrame {
 			lbMetodoComprobacion.setBounds(10, 65, 360, 14);
 		}
 		return lbMetodoComprobacion;
+	}
+	private JLabel getLblAccesoSinRegistro() {
+		if (lblAccesoSinRegistro == null) {
+			lblAccesoSinRegistro = new JLabel("Acceso sin registro");
+			lblAccesoSinRegistro.setForeground(Color.DARK_GRAY);
+			lblAccesoSinRegistro.setFont(new Font("Tahoma", Font.PLAIN, 25));
+			lblAccesoSinRegistro.setBounds(144, 115, 224, 49);
+		}
+		return lblAccesoSinRegistro;
+	}
+	private JButton getBtnEntrar() {
+		if (btnEntrar == null) {
+			btnEntrar = new JButton("Entrar");
+			btnEntrar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					resetearTienda();
+					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
+					cardLayout.show(contentPane, "panelTiendaInicio");
+				}
+			});
+			btnEntrar.setForeground(Color.WHITE);
+			btnEntrar.setBorder(new LineBorder(blue_code, 1, true));
+			btnEntrar.setBackground(new Color(0, 121, 255));
+			btnEntrar.setBounds(172, 269, 148, 29);
+		}
+		return btnEntrar;
+	}
+	private void resetearEnvio(){
+		txtNombre.setText("");
+		txtApellidos.setText("");
+		txtDireccion.setText("");
+		txtCiudad.setText("");
+		txtPostal.setText("");
+		txtProvincia.setText("");
+		txtNombreTitular.setText("");
+		txtNumero.setText("");
+		txtCvc.setText("");
+	}
+	private JRadioButton getRbTarjeta() {
+		if (rbTarjeta == null) {
+			rbTarjeta = new JRadioButton("Tarjeta");
+			rbTarjeta.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					cardLayout.show(panelMetodoPago, "panelTarjeta");
+				}
+			});
+			buttonGroup.add(rbTarjeta);
+			rbTarjeta.setBounds(262, 42, 109, 23);
+		}
+		return rbTarjeta;
+	}
+	private JRadioButton getRbTransferencia() {
+		if (rbTransferencia == null) {
+			rbTransferencia = new JRadioButton("Transferencia");
+			rbTransferencia.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					cardLayout.show(panelMetodoPago, "panelTransferencia");
+				}
+			});
+			buttonGroup.add(rbTransferencia);
+			rbTransferencia.setBounds(384, 42, 109, 23);
+		}
+		return rbTransferencia;
+	}
+	private JRadioButton getRbContrareembolso() {
+		if (rbContrareembolso == null) {
+			rbContrareembolso = new JRadioButton("Contrareembolso");
+			rbContrareembolso.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					cardLayout.show(panelMetodoPago, "panelContrareembolso");
+				}
+			});
+			buttonGroup.add(rbContrareembolso);
+			rbContrareembolso.setBounds(520, 42, 148, 23);
+		}
+		return rbContrareembolso;
+	}
+	public String getSelectedButtonText(ButtonGroup buttonGroup) {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+
+        return null;
+    }
+	private JLabel getLbContrareembolso() {
+		if (lbContrareembolso == null) {
+			lbContrareembolso = new JLabel("");
+			lbContrareembolso.setBounds(20, 34, 719, 35);
+		}
+		return lbContrareembolso;
 	}
 }
