@@ -15,7 +15,6 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
 
-
 import com.myshop.model.customer.Company;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Category;
@@ -217,9 +216,9 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(getTienda(), "panelTiendaInicio");
 		contentPane.add(getEnvio(), "panelEnvio");
 		contentPane.add(getComprobacion(), "panelComprobacion");
-		esEmpresa=false;
-		individualCustomer=null;
-		company=null;
+		esEmpresa = false;
+		individualCustomer = null;
+		company = null;
 		cargarCategoriaInicial();
 		products = new ProductsController().getAllView();
 		Action action = new AbstractAction() {
@@ -271,7 +270,7 @@ public class VentanaPrincipal extends JFrame {
 
 		};
 		new TableCellListener(getTable(), action);
-		
+
 	}
 
 	private boolean comprobarEntero(String text) {
@@ -282,17 +281,18 @@ public class VentanaPrincipal extends JFrame {
 			return false;
 		}
 	}
-	
+
 	private JPanel getTienda() {
 		if (Tienda == null) {
 			Tienda = new JPanel();
 			Tienda.setLayout(new BorderLayout(0, 0));
 			Tienda.add(getPanelSuperior(), BorderLayout.NORTH);
 			Tienda.add(getPanelContenido(), BorderLayout.CENTER);
-			
+
 		}
 		return Tienda;
 	}
+
 	private JPanel getPanelSuperior() {
 		if (panelSuperior == null) {
 			panelSuperior = new JPanel();
@@ -302,6 +302,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelSuperior;
 	}
+
 	private JPanel getPanelContenido() {
 		if (panelContenido == null) {
 			panelContenido = new JPanel();
@@ -311,6 +312,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelContenido;
 	}
+
 	private JPanel getPanelDireccion() {
 		if (panelDireccion == null) {
 			panelDireccion = new JPanel();
@@ -322,6 +324,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDireccion;
 	}
+
 	private JPanel getPanelLogo() {
 		if (panelLogo == null) {
 			panelLogo = new JPanel();
@@ -331,10 +334,11 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelLogo;
 	}
-	private void cambiarPanelLogoTienda(){
+
+	private void cambiarPanelLogoTienda() {
 		getPanelLogo().removeAll();
-		
-		if(esEmpresa){
+
+		if (esEmpresa) {
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
 			JLabel lbLogoBusiness = new JLabel("business");
 			lbLogoBusiness.setBorder(new EmptyBorder(15, 0, 0, 0));
@@ -349,9 +353,9 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			getPanelLogo().add(lbLogoBienvenida,BorderLayout.EAST);
+			getPanelLogo().add(lbLogoBienvenida, BorderLayout.EAST);
 		}
-		if(individualCustomer!=null){
+		if (individualCustomer != null) {
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
 			JLabel lbLogoBienvenida = new JLabel();
 			lbLogoBienvenida.setText("Bienvenido, " + individualCustomer.getName());
@@ -360,17 +364,18 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			getPanelLogo().add(lbLogoBienvenida,BorderLayout.EAST);
+			getPanelLogo().add(lbLogoBienvenida, BorderLayout.EAST);
 		}
-		if(individualCustomer==null && !esEmpresa) {
+		if (individualCustomer == null && !esEmpresa) {
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
 		}
-		
+
 	}
-	private void cambiarPanelLogoEnvio(){
+
+	private void cambiarPanelLogoEnvio() {
 		getPanelLogoEnvio().removeAll();
-		
-		if(individualCustomer!=null){
+
+		if (individualCustomer != null) {
 			panelLogoEnvio.add(getLabel_3(), BorderLayout.WEST);
 			JLabel lbLogoBienvenida = new JLabel();
 			lbLogoBienvenida.setText("Bienvenido, " + individualCustomer.getName());
@@ -379,16 +384,17 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			getPanelLogoEnvio().add(lbLogoBienvenida,BorderLayout.EAST);
+			getPanelLogoEnvio().add(lbLogoBienvenida, BorderLayout.EAST);
 		}
-		if(individualCustomer==null) {
+		if (individualCustomer == null) {
 			panelLogoEnvio.add(getLabel_3(), BorderLayout.WEST);
 		}
-		
+
 	}
-	private void cambiarPanelLogoComprobacion(){
+
+	private void cambiarPanelLogoComprobacion() {
 		getPanelLogoComprobacion().removeAll();
-		if(esEmpresa){
+		if (esEmpresa) {
 			panelLogoComprobacion.add(getLbShopComprobacion(), BorderLayout.WEST);
 			JLabel lbLogoBusiness = new JLabel("business");
 			lbLogoBusiness.setBorder(new EmptyBorder(15, 0, 0, 0));
@@ -403,9 +409,9 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			getPanelLogoComprobacion().add(lbLogoBienvenida,BorderLayout.EAST);
+			getPanelLogoComprobacion().add(lbLogoBienvenida, BorderLayout.EAST);
 		}
-		if(individualCustomer!=null){
+		if (individualCustomer != null) {
 			panelLogoComprobacion.add(getLbShopComprobacion(), BorderLayout.WEST);
 			JLabel lbLogoBienvenida = new JLabel();
 			lbLogoBienvenida.setText("Bienvenido, " + individualCustomer.getName());
@@ -414,25 +420,27 @@ public class VentanaPrincipal extends JFrame {
 			lbLogoBienvenida.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			lbLogoBienvenida.setBackground(Color.DARK_GRAY);
 			lbLogoBienvenida.setForeground(Color.WHITE);
-			getPanelLogoComprobacion().add(lbLogoBienvenida,BorderLayout.EAST);
+			getPanelLogoComprobacion().add(lbLogoBienvenida, BorderLayout.EAST);
 		}
-		if(individualCustomer==null && !esEmpresa) {
+		if (individualCustomer == null && !esEmpresa) {
 			panelLogoComprobacion.add(getLbShopComprobacion(), BorderLayout.WEST);
 		}
-		
+
 	}
-	public void resetearTienda(){
-		esEmpresa=false;
-		individualCustomer=null;
-		company=null;
+
+	public void resetearTienda() {
+		esEmpresa = false;
+		individualCustomer = null;
+		company = null;
 		vaciarCarrito();
 		getPanelLogo().removeAll();
 		getPanelLogo().add(getLbLogo(), BorderLayout.WEST);
 		getPanelLogo().repaint();
 		cargarCategoriaInicial();
 		borrarBotonesNavegacion();
-		
+
 	}
+
 	private JLabel getLbLogo() {
 		if (lbLogo == null) {
 			lbLogo = new JLabel("MyShop");
@@ -443,6 +451,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbLogo;
 	}
+
 	private JLabel getLbUrl() {
 		if (lbUrl == null) {
 			lbUrl = new JLabel("  http://www.myshop.es/tienda");
@@ -451,6 +460,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbUrl;
 	}
+
 	private JButton getBtIzquierda() {
 		if (btIzquierda == null) {
 			btIzquierda = new JButton("");
@@ -460,6 +470,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btIzquierda;
 	}
+
 	private JLabel getLbDerecha() {
 		if (lbDerecha == null) {
 			lbDerecha = new JLabel("");
@@ -467,6 +478,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbDerecha;
 	}
+
 	private JLabel getLbRecargar() {
 		if (lbRecargar == null) {
 			lbRecargar = new JLabel("");
@@ -474,6 +486,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbRecargar;
 	}
+
 	private JPanel getPanelIquierda() {
 		if (panelIquierda == null) {
 			panelIquierda = new JPanel();
@@ -484,6 +497,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelIquierda;
 	}
+
 	private JPanel getPanelDerecha() {
 		if (panelDerecha == null) {
 			panelDerecha = new JPanel();
@@ -496,6 +510,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDerecha;
 	}
+
 	private JPanel getPanelNavegacion() {
 		if (panelNavegacion == null) {
 			panelNavegacion = new JPanel();
@@ -505,6 +520,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelNavegacion;
 	}
+
 	private JScrollPane getScrollPaneProductos() {
 		if (scrollPaneProductos == null) {
 			scrollPaneProductos = new JScrollPane();
@@ -513,6 +529,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return scrollPaneProductos;
 	}
+
 	private JPanel getPanelProductos() {
 		if (panelProductos == null) {
 			panelProductos = new JPanel();
@@ -521,6 +538,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelProductos;
 	}
+
 	private void cargarCategoriaInicial() {
 		getPanelProductos().removeAll();
 		List<Category> catRoot = new ProductsController().getCategorysRoot();
@@ -627,9 +645,11 @@ public class VentanaPrincipal extends JFrame {
 		getPanelNavegacion().repaint();
 		getPanelNavegacion().revalidate();
 	}
-	public String quitarBlancos(String texto){
-		return texto.replaceAll("/ ","");
+
+	public String quitarBlancos(String texto) {
+		return texto.replaceAll("/ ", "");
 	}
+
 	public void borrarBotonesNavegacion() {
 		getPanelNavegacion().removeAll();
 		getPanelNavegacion().add(getBtnInicio());
@@ -650,16 +670,16 @@ public class VentanaPrincipal extends JFrame {
 			labNombre.setForeground(new Color(0, 0, 0));
 			labNombre.setBorder(new EmptyBorder(9, 9, 9, 0));
 			labNombre.setText(p.getName());
-			
+
 			JLabel labPrecio = new JLabel();
 			labPrecio.setForeground(new Color(0, 0, 0));
-			if(esEmpresa==false){
+			if (esEmpresa == false) {
 				labPrecio.setText("Precio: " + Double.toString(p.getPrice()));
 			}
-			if(esEmpresa==true){
+			if (esEmpresa == true) {
 				labPrecio.setText("Precio: " + Double.toString(p.getCompanyPrice()));
 			}
-			
+
 			if (p.getStock() > 0) {
 				JLabel labStock = new JLabel();
 				labStock.setForeground(new Color(0, 0, 0));
@@ -689,8 +709,9 @@ public class VentanaPrincipal extends JFrame {
 										((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
 										actualizarTotal();
 									} else {
-										JOptionPane.showMessageDialog(panelContenido, "No se pueden añadir más artículos.",
-												"Error", JOptionPane.ERROR_MESSAGE);
+										JOptionPane.showMessageDialog(panelContenido,
+												"No se pueden añadir más artículos.", "Error",
+												JOptionPane.ERROR_MESSAGE);
 									}
 									seguir = false;
 
@@ -763,13 +784,14 @@ public class VentanaPrincipal extends JFrame {
 		for (int i = 0; i < filas; i++) {
 			total = total + (double) (table.getValueAt(i, 4));
 		}
-		lbTotalTexto.setText(Double.toString((redondear(total ))));
+		lbTotalTexto.setText(Double.toString((redondear(total))));
 	}
 
 	private double redondear(double cifra) {
 
 		return BigDecimal.valueOf(cifra).setScale(3, RoundingMode.HALF_UP).doubleValue();
 	}
+
 	private JButton getBtnInicio() {
 		if (BtnInicio == null) {
 			BtnInicio = new JButton("Inicio");
@@ -787,6 +809,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return BtnInicio;
 	}
+
 	private JPanel getInicio() {
 		if (Inicio == null) {
 			Inicio = new JPanel();
@@ -796,6 +819,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return Inicio;
 	}
+
 	private JPanel getPanelSuperiorInicio() {
 		if (panelSuperiorInicio == null) {
 			panelSuperiorInicio = new JPanel();
@@ -805,6 +829,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelSuperiorInicio;
 	}
+
 	private JPanel getPanelDireccionInicio() {
 		if (panelDireccionInicio == null) {
 			panelDireccionInicio = new JPanel();
@@ -817,29 +842,36 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDireccionInicio;
 	}
+
 	private JButton getBtIzquierdaInicio() {
 		if (btIzquierdaInicio == null) {
 			btIzquierdaInicio = new JButton("");
-			btIzquierdaInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
+			btIzquierdaInicio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
 			btIzquierdaInicio.setBorder(null);
 			btIzquierdaInicio.setBackground(Color.WHITE);
 		}
 		return btIzquierdaInicio;
 	}
+
 	private JLabel getLbDerechaInicio() {
 		if (lbDerechaInicio == null) {
 			lbDerechaInicio = new JLabel("");
-			lbDerechaInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
+			lbDerechaInicio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
 		}
 		return lbDerechaInicio;
 	}
+
 	private JLabel getLbRecargarInicio() {
 		if (lbRecargarInicio == null) {
 			lbRecargarInicio = new JLabel("");
-			lbRecargarInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
+			lbRecargarInicio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
 		}
 		return lbRecargarInicio;
 	}
+
 	private JLabel getLbUrlInicio() {
 		if (lbUrlInicio == null) {
 			lbUrlInicio = new JLabel("  http://www.myshop.es/login");
@@ -848,6 +880,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbUrlInicio;
 	}
+
 	private JPanel getPanelLogoInicio() {
 		if (panelLogoInicio == null) {
 			panelLogoInicio = new JPanel();
@@ -857,6 +890,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelLogoInicio;
 	}
+
 	private JLabel getLbLogoInicio() {
 		if (lbLogoInicio == null) {
 			lbLogoInicio = new JLabel("MyShop");
@@ -867,6 +901,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbLogoInicio;
 	}
+
 	private JSplitPane getPanelContenidoInicio() {
 		if (panelContenidoInicio == null) {
 			panelContenidoInicio = new JSplitPane();
@@ -877,6 +912,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelContenidoInicio;
 	}
+
 	private JPanel getPanelIzquierdaInicio() {
 		if (panelIzquierdaInicio == null) {
 			panelIzquierdaInicio = new JPanel();
@@ -888,6 +924,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelIzquierdaInicio;
 	}
+
 	private JPanel getPanelDerechaInicio() {
 		if (panelDerechaInicio == null) {
 			panelDerechaInicio = new JPanel();
@@ -897,6 +934,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDerechaInicio;
 	}
+
 	private JLabel getLbParticularesInicio() {
 		if (lbParticularesInicio == null) {
 			lbParticularesInicio = new JLabel("Clientes registrados");
@@ -906,6 +944,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbParticularesInicio;
 	}
+
 	private JTextField getTxtUsuarioRegistradosInicio() {
 		if (txtUsuarioRegistradosInicio == null) {
 			txtUsuarioRegistradosInicio = new JTextField();
@@ -925,6 +964,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtUsuarioRegistradosInicio;
 	}
+
 	private JPasswordField getPasswordFieldRegistradosInicio() {
 		if (passwordFieldRegistradosInicio == null) {
 			passwordFieldRegistradosInicio = new JPasswordField();
@@ -945,52 +985,57 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return passwordFieldRegistradosInicio;
 	}
+
 	private JButton getBtEntrarRegistradosInicio() {
 		if (btEntrarRegistradosInicio == null) {
 			btEntrarRegistradosInicio = new JButton("");
 			btEntrarRegistradosInicio.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					company=null;
-					individualCustomer=null;
+					company = null;
+					individualCustomer = null;
 					UsersController uc = new UsersController();
-					IndividualCustomer ic=uc.getCustomerData(getTxtUsuarioRegistradosInicio().getText(),getPasswordFieldRegistradosInicio().getPassword());
-					if(ic.getName()==null){
-						Company co=uc.getCompany(getTxtUsuarioRegistradosInicio().getText(),getPasswordFieldRegistradosInicio().getPassword());
-						if(co.getName()==null){
-							JOptionPane.showMessageDialog(panelIzquierdaInicio, "El usuario o la contraseña no existen.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+					IndividualCustomer ic = uc.getCustomerData(getTxtUsuarioRegistradosInicio().getText(),
+							getPasswordFieldRegistradosInicio().getPassword());
+					if (ic.getName() == null) {
+						Company co = uc.getCompany(getTxtUsuarioRegistradosInicio().getText(),
+								getPasswordFieldRegistradosInicio().getPassword());
+						if (co.getName() == null) {
+							JOptionPane.showMessageDialog(panelIzquierdaInicio,
+									"El usuario o la contraseña no existen.", "Error", JOptionPane.ERROR_MESSAGE);
 							actualizarTextoRegistro();
 						}
-						esEmpresa=true;
-						company=co;
+						esEmpresa = true;
+						company = co;
 						vaciarCarrito();
 						cargarCategoriaInicial();
 						borrarBotonesNavegacion();
 						cambiarPanelLogoTienda();
-						CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 					}
-					if(ic.getName()!=null){
-						esEmpresa=false;
-						individualCustomer=ic;
+					if (ic.getName() != null) {
+						esEmpresa = false;
+						individualCustomer = ic;
 						vaciarCarrito();
 						cargarCategoriaInicial();
 						borrarBotonesNavegacion();
 						cambiarPanelLogoTienda();
-						CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 					}
 				}
 			});
 			btEntrarRegistradosInicio.setBackground(Color.WHITE);
-			btEntrarRegistradosInicio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/flechaAzul.jpg")));
+			btEntrarRegistradosInicio.setIcon(
+					new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/flechaAzul.jpg")));
 			btEntrarRegistradosInicio.setBounds(282, 276, 25, 23);
 			btEntrarRegistradosInicio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
 		return btEntrarRegistradosInicio;
 	}
-	private void actualizarTextoRegistro(){
-		
+
+	private void actualizarTextoRegistro() {
+
 		txtUsuarioRegistradosInicio.setForeground(Color.LIGHT_GRAY);
 		txtUsuarioRegistradosInicio.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUsuarioRegistradosInicio.setText("Usuario");
@@ -999,15 +1044,18 @@ public class VentanaPrincipal extends JFrame {
 		passwordFieldRegistradosInicio.setEchoChar((char) 0);
 		passwordFieldRegistradosInicio.setText("Contraseña");
 	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(64, 64, 64), new Color(192, 192, 192)));
+			scrollPane
+					.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(64, 64, 64), new Color(192, 192, 192)));
 			scrollPane.setBounds(10, 33, 329, 290);
 			scrollPane.setViewportView(getTable());
 		}
 		return scrollPane;
 	}
+
 	private JTable getTable() {
 		if (table == null) {
 			table = new JTable();
@@ -1038,6 +1086,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return table;
 	}
+
 	private void vaciarCarrito() {
 		DefaultTableModel modeloTabla = (DefaultTableModel) table.getModel();
 		modeloTabla.setRowCount(0);
@@ -1046,6 +1095,7 @@ public class VentanaPrincipal extends JFrame {
 		getTable().revalidate();
 		lbTotalTexto.setText("0");
 	}
+
 	private JLabel getLbTotal() {
 		if (lbTotal == null) {
 			lbTotal = new JLabel("Total:");
@@ -1053,6 +1103,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbTotal;
 	}
+
 	private JLabel getLbTotalTexto() {
 		if (lbTotalTexto == null) {
 			lbTotalTexto = new JLabel("0");
@@ -1067,59 +1118,83 @@ public class VentanaPrincipal extends JFrame {
 			btContinuarTienda.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (table.getRowCount() != 0) {
-						treeMap = new TreeMap<Object, Object>();
-						for (int i = 0; i < table.getRowCount(); i++) {
-							treeMap.put(table.getValueAt(i, 0), table.getValueAt(i, 2));
-						}
-						if(individualCustomer!=null && esEmpresa==false){
-							txtNombre.setEditable(false);
-							txtNombre.setText(individualCustomer.getName());
-							txtApellidos.setEditable(false);
-							txtApellidos.setText(individualCustomer.getSurname());
-							txtDireccion.setEditable(false);
-							txtDireccion.setText(individualCustomer.getAddress().getStreet());
-							txtCiudad.setEditable(false);
-							txtCiudad.setText(individualCustomer.getAddress().getCity());
-							txtPostal.setEditable(false);
-							txtPostal.setText(individualCustomer.getAddress().getCip_code());
-							txtProvincia.setEditable(false);
-							txtProvincia.setText(individualCustomer.getAddress().getState());
-							getLbContrareembolso().setText("El transportista contactará con usted para entregar el paquete. "
-									+ "Tenga preparados los " + lbTotalTexto.getText() + "\u20AC para abonárselos a él en efectivo.");
-							getLbTextoTransferencia().setText("Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
-									+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"+ new Random().nextInt(10000));
-							 cambiarPanelLogoEnvio();
-							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
-							cardLayout.show(contentPane, "panelEnvio");
-						}
-						if(individualCustomer==null && esEmpresa==false){
-							txtNombre.setEditable(true);
-							txtApellidos.setEditable(true);
-							txtDireccion.setEditable(true);
-							txtCiudad.setEditable(true);
-							txtPostal.setEditable(true);
-							txtProvincia.setEditable(true);
-							getLbContrareembolso().setText("El transportista contactará con usted para entregar el paquete. "
-									+ "Tenga preparados los " + lbTotalTexto.getText() + "\u20AC para abonárselos a él en efectivo.");
-							getLbTextoTransferencia().setText("Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
-									+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"+ new Random().nextInt(10000));
-							 cambiarPanelLogoEnvio();
-							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
-							cardLayout.show(contentPane, "panelEnvio");
-						}
-						if(company!=null && esEmpresa==true){
-							getTextAreaCarrito().setText("");
+						if (comprobarStock()) {
+							treeMap = new TreeMap<Object, Object>();
 							for (int i = 0; i < table.getRowCount(); i++) {
-								getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
-							table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 4))*0.79) 
-							+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
+								treeMap.put(table.getValueAt(i, 0), table.getValueAt(i, 2));
 							}
-							lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
-							lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())-Double.parseDouble(lbTotalTexto.getText())*0.79)));
-							lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
-							cambiarPanelLogoComprobacion();
+							if (individualCustomer != null && esEmpresa == false) {
+								txtNombre.setEditable(false);
+								txtNombre.setText(individualCustomer.getName());
+								txtApellidos.setEditable(false);
+								txtApellidos.setText(individualCustomer.getSurname());
+								txtDireccion.setEditable(false);
+								txtDireccion.setText(individualCustomer.getAddress().getStreet());
+								txtCiudad.setEditable(false);
+								txtCiudad.setText(individualCustomer.getAddress().getCity());
+								txtPostal.setEditable(false);
+								txtPostal.setText(individualCustomer.getAddress().getCip_code());
+								txtProvincia.setEditable(false);
+								txtProvincia.setText(individualCustomer.getAddress().getState());
+								getLbContrareembolso()
+										.setText("El transportista contactará con usted para entregar el paquete. "
+												+ "Tenga preparados los " + lbTotalTexto.getText()
+												+ "\u20AC para abonárselos a él en efectivo.");
+								getLbTextoTransferencia().setText(
+										"Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
+												+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"
+												+ new Random().nextInt(10000));
+								cambiarPanelLogoEnvio();
+								CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+								cardLayout.show(contentPane, "panelEnvio");
+							}
+							if (individualCustomer == null && esEmpresa == false) {
+								txtNombre.setEditable(true);
+								txtApellidos.setEditable(true);
+								txtDireccion.setEditable(true);
+								txtCiudad.setEditable(true);
+								txtPostal.setEditable(true);
+								txtProvincia.setEditable(true);
+								getLbContrareembolso()
+										.setText("El transportista contactará con usted para entregar el paquete. "
+												+ "Tenga preparados los " + lbTotalTexto.getText()
+												+ "\u20AC para abonárselos a él en efectivo.");
+								getLbTextoTransferencia().setText(
+										"Debe realizar un ingreso de " + lbTotalTexto.getText() + "\u20AC en la"
+												+ " cuenta 1245-4145-82-7154325135 indicando como concepto REF"
+												+ new Random().nextInt(10000));
+								cambiarPanelLogoEnvio();
+								CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+								cardLayout.show(contentPane, "panelEnvio");
+							}
+							if (company != null && esEmpresa == true) {
+								getTextAreaCarrito().setText("");
+								for (int i = 0; i < table.getRowCount(); i++) {
+									getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: "
+											+ table.getValueAt(i, 3) + tab + "Cantidad: " + table.getValueAt(i, 2) + tab
+											+ "Subtotal: " + redondear(((double) table.getValueAt(i, 4)) * 0.79) + tab
+											+ "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4) + newline);
+								}
+								lbSubtotalTexto.setText(
+										Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
+								lbImpuestosText
+										.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())
+												- Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
+								lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
+								cambiarPanelLogoComprobacion();
+								CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+								cardLayout.show(contentPane, "panelComprobacion");
+							}
+						}
+						if (!comprobarStock()) {
+							JOptionPane.showMessageDialog(panelDerecha,
+									"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
+									JOptionPane.ERROR_MESSAGE);
+							products = new ProductsController().getAllView();
+							cargarCategoriaInicial();
 							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
-							cardLayout.show(contentPane, "panelComprobacion");
+							cardLayout.show(contentPane, "panelTiendaInicio");
+
 						}
 					}
 				}
@@ -1132,6 +1207,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btContinuarTienda;
 	}
+
 	private JPanel getEnvio() {
 		if (Envio == null) {
 			Envio = new JPanel();
@@ -1141,6 +1217,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return Envio;
 	}
+
 	private JPanel getPanelSuperiorEnvio() {
 		if (panelSuperiorEnvio == null) {
 			panelSuperiorEnvio = new JPanel();
@@ -1150,6 +1227,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelSuperiorEnvio;
 	}
+
 	private JPanel getPanelDireccionEnvio() {
 		if (panelDireccionEnvio == null) {
 			panelDireccionEnvio = new JPanel();
@@ -1161,29 +1239,36 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDireccionEnvio;
 	}
+
 	private JButton getBtIzquierdaEnvio() {
 		if (btIzquierdaEnvio == null) {
 			btIzquierdaEnvio = new JButton("");
-			btIzquierdaEnvio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
+			btIzquierdaEnvio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
 			btIzquierdaEnvio.setBorder(null);
 			btIzquierdaEnvio.setBackground(Color.WHITE);
 		}
 		return btIzquierdaEnvio;
 	}
+
 	private JLabel getLbDerechaEnvio() {
 		if (lbDerechaEnvio == null) {
 			lbDerechaEnvio = new JLabel("");
-			lbDerechaEnvio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
+			lbDerechaEnvio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
 		}
 		return lbDerechaEnvio;
 	}
+
 	private JLabel getLbRecargarEnvio() {
 		if (lbRecargarEnvio == null) {
 			lbRecargarEnvio = new JLabel("");
-			lbRecargarEnvio.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
+			lbRecargarEnvio
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
 		}
 		return lbRecargarEnvio;
 	}
+
 	private JLabel getLbUrlEnvio() {
 		if (lbUrlEnvio == null) {
 			lbUrlEnvio = new JLabel("  http://www.myshop.es/envio-pago");
@@ -1192,6 +1277,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbUrlEnvio;
 	}
+
 	private JPanel getPanelLogoEnvio() {
 		if (panelLogoEnvio == null) {
 			panelLogoEnvio = new JPanel();
@@ -1201,6 +1287,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelLogoEnvio;
 	}
+
 	private JLabel getLabel_3() {
 		if (lbShopEnvio == null) {
 			lbShopEnvio = new JLabel("MyShop");
@@ -1211,6 +1298,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbShopEnvio;
 	}
+
 	private JPanel getPanelContenidoEnvio() {
 		if (panelContenidoEnvio == null) {
 			panelContenidoEnvio = new JPanel();
@@ -1221,6 +1309,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelContenidoEnvio;
 	}
+
 	private JPanel getPanelPago() {
 		if (panelPago == null) {
 			panelPago = new JPanel();
@@ -1235,6 +1324,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelPago;
 	}
+
 	private JPanel getPanelDatos() {
 		if (panelDatos == null) {
 			panelDatos = new JPanel();
@@ -1256,6 +1346,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDatos;
 	}
+
 	private JLabel getLbDatosEnvio() {
 		if (lbDatosEnvio == null) {
 			lbDatosEnvio = new JLabel("Datos de envío");
@@ -1265,6 +1356,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbDatosEnvio;
 	}
+
 	private JLabel getLbDatosPago() {
 		if (lbDatosPago == null) {
 			lbDatosPago = new JLabel("Datos de pago");
@@ -1274,6 +1366,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbDatosPago;
 	}
+
 	private JLabel getLbNombre() {
 		if (lbNombre == null) {
 			lbNombre = new JLabel("Nombre:");
@@ -1281,6 +1374,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbNombre;
 	}
+
 	private JLabel getLbApellidos() {
 		if (lbApellidos == null) {
 			lbApellidos = new JLabel("Apellidos:");
@@ -1288,6 +1382,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbApellidos;
 	}
+
 	private JTextField getTxtNombre() {
 		if (txtNombre == null) {
 			txtNombre = new JTextField();
@@ -1297,6 +1392,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtNombre;
 	}
+
 	private JTextField getTxtApellidos() {
 		if (txtApellidos == null) {
 			txtApellidos = new JTextField();
@@ -1306,6 +1402,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtApellidos;
 	}
+
 	private JLabel getLbDireccion() {
 		if (lbDireccion == null) {
 			lbDireccion = new JLabel("Dirección:");
@@ -1313,6 +1410,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbDireccion;
 	}
+
 	private JTextField getTxtDireccion() {
 		if (txtDireccion == null) {
 			txtDireccion = new JTextField();
@@ -1322,6 +1420,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtDireccion;
 	}
+
 	private JLabel getLbCiudad() {
 		if (lbCiudad == null) {
 			lbCiudad = new JLabel("Ciudad:");
@@ -1329,6 +1428,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbCiudad;
 	}
+
 	private JTextField getTxtCiudad() {
 		if (txtCiudad == null) {
 			txtCiudad = new JTextField();
@@ -1338,6 +1438,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtCiudad;
 	}
+
 	private JLabel getLbPostal() {
 		if (lbPostal == null) {
 			lbPostal = new JLabel("Código postal:");
@@ -1345,6 +1446,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbPostal;
 	}
+
 	private JTextField getTxtPostal() {
 		if (txtPostal == null) {
 			txtPostal = new JTextField();
@@ -1354,6 +1456,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtPostal;
 	}
+
 	private JLabel getLbProvincia() {
 		if (lbProvincia == null) {
 			lbProvincia = new JLabel("Provincia:");
@@ -1361,6 +1464,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbProvincia;
 	}
+
 	private JTextField getTxtProvincia() {
 		if (txtProvincia == null) {
 			txtProvincia = new JTextField();
@@ -1370,6 +1474,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtProvincia;
 	}
+
 	private JPanel getPanelMetodoPago() {
 		if (panelMetodoPago == null) {
 			panelMetodoPago = new JPanel();
@@ -1381,27 +1486,43 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelMetodoPago;
 	}
+
 	private JButton getBtComprobar() {
 		if (btComprobar == null) {
 			btComprobar = new JButton("Comprobar compra");
 			btComprobar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if(comprobarDatos()){
+					if (comprobarDatos() && comprobarStock()) {
 						getTextAreaCarrito().setText("");
 						for (int i = 0; i < table.getRowCount(); i++) {
-							getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: " +
-						table.getValueAt(i, 3)+ tab + "Cantidad: " + table.getValueAt(i, 2) + tab + "Subtotal: " + redondear(((double)table.getValueAt(i, 4))*0.79) 
-						+ tab + "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4)+ newline);
+							getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: "
+									+ table.getValueAt(i, 3) + tab + "Cantidad: " + table.getValueAt(i, 2) + tab
+									+ "Subtotal: " + redondear(((double) table.getValueAt(i, 4)) * 0.79) + tab + "IVA: "
+									+ "21%" + tab + "Total: " + table.getValueAt(i, 4) + newline);
 						}
-						lbDireccionComprobacion.setText("Enviado a: " + txtDireccion.getText() + ", "+txtCiudad.getText());
+						lbDireccionComprobacion
+								.setText("Enviado a: " + txtDireccion.getText() + ", " + txtCiudad.getText());
 						lbMetodoComprobacion.setText("Método de pago: " + getSelectedButtonText(buttonGroup));
-						lbPersonaComprobacion.setText("Facturado a: " + txtNombre.getText() + " "+txtApellidos.getText());
-						lbSubtotalTexto.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())*0.79)));
-						lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())-Double.parseDouble(lbTotalTexto.getText())*0.79)));
+						lbPersonaComprobacion
+								.setText("Facturado a: " + txtNombre.getText() + " " + txtApellidos.getText());
+						lbSubtotalTexto
+								.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
+						lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())
+								- Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
 						lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
 						cambiarPanelLogoComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelComprobacion");
+					}
+					if (!comprobarStock()) {
+						JOptionPane.showMessageDialog(panelDerecha,
+								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						products = new ProductsController().getAllView();
+						cargarCategoriaInicial();
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+						cardLayout.show(contentPane, "panelTiendaInicio");
+
 					}
 				}
 			});
@@ -1413,60 +1534,61 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btComprobar;
 	}
-	private boolean comprobarDatos(){
+
+	private boolean comprobarDatos() {
 		StringBuilder textoError = new StringBuilder();
-		if (!txtNombre.getText().matches("^[ A-z]+$")){
+		if (!txtNombre.getText().matches("^[ A-z]+$")) {
 			textoError.append("El nombre solo puede contener letras." + newline);
-			
+
 		}
-		if (!txtApellidos.getText().matches("^[ A-z]+$")){
+		if (!txtApellidos.getText().matches("^[ A-z]+$")) {
 			textoError.append("Los apellidos solo pueden contener letras." + newline);
-			
+
 		}
-		if (!txtCiudad.getText().matches("^[ A-z]+$")){
+		if (!txtCiudad.getText().matches("^[ A-z]+$")) {
 			textoError.append("La ciudad solo puede contener letras." + newline);
-			
-			}
-		if (!txtProvincia.getText().matches("^[ A-z]+$")){
+
+		}
+		if (!txtProvincia.getText().matches("^[ A-z]+$")) {
 			textoError.append("La provincia solo puede contener letras." + newline);
 		}
-		if (!(txtPostal.getText().matches("[0-9]+") && (txtPostal.getText().length() == 5))){
+		if (!(txtPostal.getText().matches("[0-9]+") && (txtPostal.getText().length() == 5))) {
 			textoError.append("El código postal tiene que ser 5 números." + newline);
-			
+
 		}
-		if (txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty()
-				|| txtCiudad.getText().isEmpty() || txtProvincia.getText().isEmpty()
-				|| txtPostal.getText().isEmpty() || txtDireccion.getText().isEmpty()) {
+		if (txtNombre.getText().isEmpty() || txtApellidos.getText().isEmpty() || txtCiudad.getText().isEmpty()
+				|| txtProvincia.getText().isEmpty() || txtPostal.getText().isEmpty()
+				|| txtDireccion.getText().isEmpty()) {
 			textoError.append("No puede haber campos vacíos." + newline);
-			
+
 		}
-		
-		if (getSelectedButtonText(buttonGroup).equals("Tarjeta")){
-			if (!txtNombreTitular.getText().matches("^[ A-z]+$")){
+
+		if (getSelectedButtonText(buttonGroup).equals("Tarjeta")) {
+			if (!txtNombreTitular.getText().matches("^[ A-z]+$")) {
 				textoError.append("El nombre del titular solo puede contener letras." + newline);
 			}
-			if (!(txtNumero.getText().matches("[0-9]+") && (txtNumero.getText().length() == 20))){
+			if (!(txtNumero.getText().matches("[0-9]+") && (txtNumero.getText().length() == 20))) {
 				textoError.append("El número de la tarjeta tienen que ser 20 caracteres numéricos." + newline);
 			}
-			if (!(txtCvc.getText().matches("[0-9]+") && (txtCvc.getText().length() == 3))){
+			if (!(txtCvc.getText().matches("[0-9]+") && (txtCvc.getText().length() == 3))) {
 				textoError.append("El CVC de la tarjeta tienen que ser 3 caracteres numéricos." + newline);
 			}
 			Date fechaTarjeta = (Date) spinnerFecha.getValue();
 			Date fechaHoy = new Date();
-			if (fechaTarjeta.after(fechaHoy)){
+			if (fechaTarjeta.after(fechaHoy)) {
 				textoError.append("La tarjeta no tiene una fecha válida." + newline);
 			}
-			
+
 		}
-		if(textoError.length()>0){
-			JOptionPane.showMessageDialog(Envio, textoError.toString(), "Error",
-					JOptionPane.ERROR_MESSAGE);
+		if (textoError.length() > 0) {
+			JOptionPane.showMessageDialog(Envio, textoError.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
+
 	private JPanel getPanelTarjeta() {
 		if (panelTarjeta == null) {
 			panelTarjeta = new JPanel();
@@ -1482,6 +1604,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelTarjeta;
 	}
+
 	private JLabel getLbNombreTitular() {
 		if (lbNombreTitular == null) {
 			lbNombreTitular = new JLabel("Nombre titular:");
@@ -1489,6 +1612,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbNombreTitular;
 	}
+
 	private JLabel getLbNumero() {
 		if (lbNumero == null) {
 			lbNumero = new JLabel("Nº tarjeta:");
@@ -1496,6 +1620,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbNumero;
 	}
+
 	private JLabel getLbCvc() {
 		if (lbCvc == null) {
 			lbCvc = new JLabel("CVC:");
@@ -1503,6 +1628,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbCvc;
 	}
+
 	private JTextField getTxtNombreTitular() {
 		if (txtNombreTitular == null) {
 			txtNombreTitular = new JTextField();
@@ -1511,6 +1637,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtNombreTitular;
 	}
+
 	private JTextField getTxtNumero() {
 		if (txtNumero == null) {
 			txtNumero = new JTextField();
@@ -1519,6 +1646,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtNumero;
 	}
+
 	private JTextField getTxtCvc() {
 		if (txtCvc == null) {
 			txtCvc = new JTextField();
@@ -1527,6 +1655,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return txtCvc;
 	}
+
 	private JPanel getPanelTransferencia() {
 		if (panelTransferencia == null) {
 			panelTransferencia = new JPanel();
@@ -1535,6 +1664,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelTransferencia;
 	}
+
 	private JLabel getLbTextoTransferencia() {
 		if (lbTextoTransferencia == null) {
 			lbTextoTransferencia = new JLabel("");
@@ -1542,6 +1672,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbTextoTransferencia;
 	}
+
 	private JPanel getPanelContrareembolso() {
 		if (panelContrareembolso == null) {
 			panelContrareembolso = new JPanel();
@@ -1550,6 +1681,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelContrareembolso;
 	}
+
 	private JPanel getComprobacion() {
 		if (Comprobacion == null) {
 			Comprobacion = new JPanel();
@@ -1559,6 +1691,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return Comprobacion;
 	}
+
 	private JPanel getPanelSuperiorComprobacion() {
 		if (panelSuperiorComprobacion == null) {
 			panelSuperiorComprobacion = new JPanel();
@@ -1568,6 +1701,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelSuperiorComprobacion;
 	}
+
 	private JPanel getPanelDireccionComprobacion() {
 		if (panelDireccionComprobacion == null) {
 			panelDireccionComprobacion = new JPanel();
@@ -1579,29 +1713,36 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDireccionComprobacion;
 	}
+
 	private JButton getBtIzquierdaComprobacion() {
 		if (btIzquierdaComprobacion == null) {
 			btIzquierdaComprobacion = new JButton("");
-			btIzquierdaComprobacion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
+			btIzquierdaComprobacion
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/iz.jpg")));
 			btIzquierdaComprobacion.setBorder(null);
 			btIzquierdaComprobacion.setBackground(Color.WHITE);
 		}
 		return btIzquierdaComprobacion;
 	}
+
 	private JLabel getLbDerechaComprobacion() {
 		if (lbDerechaComprobacion == null) {
 			lbDerechaComprobacion = new JLabel("");
-			lbDerechaComprobacion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
+			lbDerechaComprobacion
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/de.jpg")));
 		}
 		return lbDerechaComprobacion;
 	}
+
 	private JLabel getLbRecargarComprobacion() {
 		if (lbRecargarComprobacion == null) {
 			lbRecargarComprobacion = new JLabel("");
-			lbRecargarComprobacion.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
+			lbRecargarComprobacion
+					.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/com/myshop/store/igu/img/re.jpg")));
 		}
 		return lbRecargarComprobacion;
 	}
+
 	private JLabel getLabel_3_1() {
 		if (lbUrlComprobacion == null) {
 			lbUrlComprobacion = new JLabel("  http://www.myshop.es/check");
@@ -1610,6 +1751,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbUrlComprobacion;
 	}
+
 	private JPanel getPanelLogoComprobacion() {
 		if (panelLogoComprobacion == null) {
 			panelLogoComprobacion = new JPanel();
@@ -1619,6 +1761,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelLogoComprobacion;
 	}
+
 	private JLabel getLbShopComprobacion() {
 		if (lbShopComprobacion == null) {
 			lbShopComprobacion = new JLabel("MyShop");
@@ -1629,6 +1772,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbShopComprobacion;
 	}
+
 	private JPanel getPanelContenidoComprobacion() {
 		if (panelContenidoComprobacion == null) {
 			panelContenidoComprobacion = new JPanel();
@@ -1641,6 +1785,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelContenidoComprobacion;
 	}
+
 	private JScrollPane getScrollCarritoComprobacion() {
 		if (scrollCarritoComprobacion == null) {
 			scrollCarritoComprobacion = new JScrollPane();
@@ -1649,6 +1794,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return scrollCarritoComprobacion;
 	}
+
 	private JTextArea getTextAreaCarrito() {
 		if (textAreaCarrito == null) {
 			textAreaCarrito = new JTextArea();
@@ -1660,6 +1806,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return textAreaCarrito;
 	}
+
 	private JPanel getPanelPrecios() {
 		if (panelPrecios == null) {
 			panelPrecios = new JPanel();
@@ -1674,16 +1821,32 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelPrecios;
 	}
+
 	private JButton getBtPagar() {
 		if (btPagar == null) {
 			btPagar = new JButton("Confirmar y pagar");
 			btPagar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					actualizarTextoRegistro();
-					resetearEnvio();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
-					cardLayout.show(contentPane, "panelRegistro");
-					
+					if (comprobarStock()) {
+						JOptionPane.showMessageDialog(panelDerecha,
+								"Su pedido ha sido realizado con éxito.", "Pedido realizado",
+								JOptionPane.OK_OPTION);
+						actualizarTextoRegistro();
+						resetearEnvio();
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+						cardLayout.show(contentPane, "panelRegistro");
+					}
+					if (!comprobarStock()) {
+						JOptionPane.showMessageDialog(panelDerecha,
+								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						products = new ProductsController().getAllView();
+						cargarCategoriaInicial();
+						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+						cardLayout.show(contentPane, "panelTiendaInicio");
+
+					}
+
 				}
 			});
 			btPagar.setForeground(Color.WHITE);
@@ -1693,6 +1856,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btPagar;
 	}
+
 	private JLabel getLbSubtotal() {
 		if (lbSubtotal == null) {
 			lbSubtotal = new JLabel("Subtotal");
@@ -1701,6 +1865,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbSubtotal;
 	}
+
 	private JLabel getLbImpuestos() {
 		if (lbImpuestos == null) {
 			lbImpuestos = new JLabel("Impuestos");
@@ -1709,6 +1874,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbImpuestos;
 	}
+
 	private JLabel getLbTotalComprobacion() {
 		if (lbTotalComprobacion == null) {
 			lbTotalComprobacion = new JLabel("Total");
@@ -1716,6 +1882,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbTotalComprobacion;
 	}
+
 	private JLabel getLbSubtotalTexto() {
 		if (lbSubtotalTexto == null) {
 			lbSubtotalTexto = new JLabel("");
@@ -1724,6 +1891,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbSubtotalTexto;
 	}
+
 	private JLabel getLbImpuestosText() {
 		if (lbImpuestosText == null) {
 			lbImpuestosText = new JLabel("");
@@ -1732,6 +1900,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbImpuestosText;
 	}
+
 	private JLabel getLbTotalComprobacionTexto() {
 		if (lbTotalComprobacionTexto == null) {
 			lbTotalComprobacionTexto = new JLabel("");
@@ -1739,6 +1908,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbTotalComprobacionTexto;
 	}
+
 	private JPanel getPanel_1_1() {
 		if (panelDatosComprobacion == null) {
 			panelDatosComprobacion = new JPanel();
@@ -1750,6 +1920,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return panelDatosComprobacion;
 	}
+
 	private JLabel getLbDireccionComprobacion() {
 		if (lbDireccionComprobacion == null) {
 			lbDireccionComprobacion = new JLabel("");
@@ -1757,6 +1928,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbDireccionComprobacion;
 	}
+
 	private JLabel getLbPersonaComprobacion() {
 		if (lbPersonaComprobacion == null) {
 			lbPersonaComprobacion = new JLabel("");
@@ -1764,6 +1936,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbPersonaComprobacion;
 	}
+
 	private JLabel getLbFecha() {
 		if (lbFecha == null) {
 			lbFecha = new JLabel("Fecha de caducidad:");
@@ -1771,16 +1944,18 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbFecha;
 	}
+
 	private JSpinner getSpinnerFecha() {
 		if (spinnerFecha == null) {
-			SpinnerDateModel spinMod=new SpinnerDateModel();
+			SpinnerDateModel spinMod = new SpinnerDateModel();
 			spinnerFecha = new JSpinner(spinMod);
 			spinnerFecha.setValue(new Date());
-			spinnerFecha.setEditor(new JSpinner.DateEditor(spinnerFecha,"dd/MM/yyyy"));
+			spinnerFecha.setEditor(new JSpinner.DateEditor(spinnerFecha, "dd/MM/yyyy"));
 			spinnerFecha.setBounds(480, 54, 118, 20);
 		}
 		return spinnerFecha;
 	}
+
 	private JLabel getLbMetodoComprobacion() {
 		if (lbMetodoComprobacion == null) {
 			lbMetodoComprobacion = new JLabel("");
@@ -1788,6 +1963,7 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lbMetodoComprobacion;
 	}
+
 	private JLabel getLblAccesoSinRegistro() {
 		if (lblAccesoSinRegistro == null) {
 			lblAccesoSinRegistro = new JLabel("Acceso sin registro");
@@ -1797,13 +1973,14 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return lblAccesoSinRegistro;
 	}
+
 	private JButton getBtnEntrar() {
 		if (btnEntrar == null) {
 			btnEntrar = new JButton("Entrar");
 			btnEntrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					resetearTienda();
-					CardLayout cardLayout = (CardLayout)(contentPane.getLayout());
+					CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 					cardLayout.show(contentPane, "panelTiendaInicio");
 				}
 			});
@@ -1814,7 +1991,8 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btnEntrar;
 	}
-	private void resetearEnvio(){
+
+	private void resetearEnvio() {
 		txtNombre.setText("");
 		txtApellidos.setText("");
 		txtDireccion.setText("");
@@ -1825,12 +2003,13 @@ public class VentanaPrincipal extends JFrame {
 		txtNumero.setText("");
 		txtCvc.setText("");
 	}
+
 	private JRadioButton getRbTarjeta() {
 		if (rbTarjeta == null) {
 			rbTarjeta = new JRadioButton("Tarjeta");
 			rbTarjeta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					CardLayout cardLayout = (CardLayout) (panelMetodoPago.getLayout());
 					cardLayout.show(panelMetodoPago, "panelTarjeta");
 				}
 			});
@@ -1839,12 +2018,13 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return rbTarjeta;
 	}
+
 	private JRadioButton getRbTransferencia() {
 		if (rbTransferencia == null) {
 			rbTransferencia = new JRadioButton("Transferencia");
 			rbTransferencia.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					CardLayout cardLayout = (CardLayout) (panelMetodoPago.getLayout());
 					cardLayout.show(panelMetodoPago, "panelTransferencia");
 				}
 			});
@@ -1853,12 +2033,13 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return rbTransferencia;
 	}
+
 	private JRadioButton getRbContrareembolso() {
 		if (rbContrareembolso == null) {
 			rbContrareembolso = new JRadioButton("Contrareembolso");
 			rbContrareembolso.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					CardLayout cardLayout = (CardLayout)(panelMetodoPago.getLayout());
+					CardLayout cardLayout = (CardLayout) (panelMetodoPago.getLayout());
 					cardLayout.show(panelMetodoPago, "panelContrareembolso");
 				}
 			});
@@ -1867,22 +2048,39 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return rbContrareembolso;
 	}
+
 	public String getSelectedButtonText(ButtonGroup buttonGroup) {
-        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
+		for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+			AbstractButton button = buttons.nextElement();
 
-            if (button.isSelected()) {
-                return button.getText();
-            }
-        }
+			if (button.isSelected()) {
+				return button.getText();
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
+
 	private JLabel getLbContrareembolso() {
 		if (lbContrareembolso == null) {
 			lbContrareembolso = new JLabel("");
 			lbContrareembolso.setBounds(20, 34, 719, 35);
 		}
 		return lbContrareembolso;
+	}
+
+	private boolean comprobarStock() {
+		if (table.getRowCount() != 0) {
+			for (int i = 0; i < table.getRowCount(); i++) {
+				ProductsController pc = new ProductsController();
+				int stock = pc.getStock((Integer) table.getValueAt(i, 0));
+				int cantidad = pc.getStock((Integer) table.getValueAt(i, 2));
+				if (stock >= cantidad) {
+					return true;
+				}
+			}
+
+		}
+		return false;
 	}
 }

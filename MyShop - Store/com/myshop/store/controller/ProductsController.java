@@ -13,6 +13,15 @@ public class ProductsController {
 	
 	 private Sql2o sql2o = new Sql2o("jdbc:mysql://myshop.cvgrlnux4cbv.eu-west-1.rds.amazonaws.com:3306/myshop", "myshop-app", "'m:9AU7n");
 
+	 public Integer getStock(int productID){
+			String complexSql = "SELECT stock FROM myshop.product WHERE product_id = :pID";
+			
+			 try (Connection con = sql2o.open()) {
+				 return con.createQuery(complexSql).addParameter("pID", productID)
+				            .addColumnMapping("product_id","ID").throwOnMappingFailure(false).executeScalar(Integer.class);
+			 }
+		}
+
 	public List<Product> getAll(int category, int subcategory){
 		String complexSql = "SELECT * FROM myshop.product WHERE category_id = :cat AND subcategory_id = :subcat AND stock>0";
 		

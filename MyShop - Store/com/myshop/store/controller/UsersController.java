@@ -19,7 +19,7 @@ public class UsersController {
 	
 	public IndividualCustomer getCustomerData(String username, char[] cs){
 		String complexSql = "SELECT * FROM myshop.user U, myshop.individual_customer IC, myshop.address A, myshop.credit_cards CC WHERE "
-				+ "U.username = :user AND U.password = :pass AND U.user_id = IC.user_id AND IC.customer_id = A.client_id AND IC.customer_id = CC.owner_id";
+				+ "U.username = :user AND U.password = :pass AND U.user_id = IC.user_id AND IC.customer_id = A.customer_id AND IC.customer_id = CC.owner_id";
 				
 		List<Map<String,Object>> map;
 		
