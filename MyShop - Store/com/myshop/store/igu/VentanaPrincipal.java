@@ -220,7 +220,7 @@ public class VentanaPrincipal extends JFrame {
 		individualCustomer = null;
 		company = null;
 		cargarCategoriaInicial();
-		products = new ProductsController().getAllView();
+		products = new ProductsController().getAll();
 		Action action = new AbstractAction() {
 			/**
 			 * 
@@ -338,7 +338,7 @@ public class VentanaPrincipal extends JFrame {
 	private void cambiarPanelLogoTienda() {
 		getPanelLogo().removeAll();
 
-		if (esEmpresa) {
+		if (esEmpresa && company != null) {
 			panelLogo.add(getLbLogo(), BorderLayout.WEST);
 			JLabel lbLogoBusiness = new JLabel("business");
 			lbLogoBusiness.setBorder(new EmptyBorder(15, 0, 0, 0));
@@ -544,14 +544,14 @@ public class VentanaPrincipal extends JFrame {
 		List<Category> catRoot = new ProductsController().getCategorysRoot();
 		for (Category c : catRoot) {
 			JButton boton = new JButton();
-			boton.setText(c.getCategoryName());
+			boton.setText(c.getName());
 			boton.setContentAreaFilled(false);
 			boton.setBackground(new Color(255, 255, 255));
 			boton.setBorder(new EmptyBorder(7, 9, 7, 0));
 			getPanelProductos().add(boton);
 			boton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					cargarCategorias(c.getCategoryName());
+					cargarCategorias(c.getName());
 				}
 			});
 		}
@@ -578,7 +578,7 @@ public class VentanaPrincipal extends JFrame {
 			getPanelProductos().removeAll();
 			for (Category c : cat) {
 				JButton boton = new JButton();
-				boton.setText(c.getCategoryName());
+				boton.setText(c.getName());
 				boton.setContentAreaFilled(false);
 				boton.setBackground(new Color(255, 255, 255));
 				boton.setBorder(new EmptyBorder(7, 9, 7, 0));
@@ -586,11 +586,11 @@ public class VentanaPrincipal extends JFrame {
 				boton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 
-						List<Product> pro = new ProductsController().getProductsByCategory(c.getCategoryName());
+						List<Product> pro = new ProductsController().getProductsByCategory(c.getName());
 						if (pro.isEmpty()) {
-							cargarCategorias(c.getCategoryName());
+							cargarCategorias(c.getName());
 						} else {
-							botonesNavegacion(c.getCategoryName());
+							botonesNavegacion(c.getName());
 							cargarProductos(pro);
 						}
 						adaptarPanel();
@@ -996,10 +996,10 @@ public class VentanaPrincipal extends JFrame {
 					UsersController uc = new UsersController();
 					IndividualCustomer ic = uc.getCustomerData(getTxtUsuarioRegistradosInicio().getText(),
 							getPasswordFieldRegistradosInicio().getPassword());
-					if (ic.getName() == null) {
+					if (ic == null) {
 						Company co = uc.getCompany(getTxtUsuarioRegistradosInicio().getText(),
 								getPasswordFieldRegistradosInicio().getPassword());
-						if (co.getName() == null) {
+						if (co == null) {
 							JOptionPane.showMessageDialog(panelIzquierdaInicio,
 									"El usuario o la contraseña no existen.", "Error", JOptionPane.ERROR_MESSAGE);
 							actualizarTextoRegistro();
@@ -1013,7 +1013,7 @@ public class VentanaPrincipal extends JFrame {
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 					}
-					if (ic.getName() != null) {
+					if (ic != null) {
 						esEmpresa = false;
 						individualCustomer = ic;
 						vaciarCarrito();
@@ -1169,18 +1169,35 @@ public class VentanaPrincipal extends JFrame {
 							}
 							if (company != null && esEmpresa == true) {
 								getTextAreaCarrito().setText("");
+								ProductsController pc = new ProductsController();
+								double totalSinIva=0.0;
+								double impuestos=0.0;
+								double total=0.0;
+								int iva=0;
 								for (int i = 0; i < table.getRowCount(); i++) {
-									getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: "
-											+ table.getValueAt(i, 3) + tab + "Cantidad: " + table.getValueAt(i, 2) + tab
-											+ "Subtotal: " + redondear(((double) table.getValueAt(i, 4)) * 0.79) + tab
-											+ "IVA: " + "21%" + tab + "Total: " + table.getValueAt(i, 4) + newline);
+									iva= pc.getIvaPorRef((int)table.getValueAt(i, 0));
+									int cantidad = (int)table.getValueAt(i, 2);
+									double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
+									double pu = ((double)table.getValueAt(i, 3))-(imp);
+									double st = pu*cantidad;
+									getTextAreaCarrito().append((String) table.getValueAt(i, 1) +
+									tab + "P.U: " + redondear(pu) +
+									tab + "Cantidad: " + cantidad + 
+									tab + "Subtotal: " + redondear(st) +
+									tab + "IVA: " + iva + "%" +
+									tab + "Total: " + redondear(st+(imp*cantidad)) + newline);
+									totalSinIva = totalSinIva + st;
+									impuestos=impuestos+imp;
+									total = total + (st+(imp*cantidad));
+									
 								}
 								lbSubtotalTexto.setText(
-										Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
+										Double.toString(redondear(totalSinIva)));
 								lbImpuestosText
-										.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())
-												- Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
-								lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
+										.setText(Double.toString(redondear(impuestos)));
+								lbTotalComprobacionTexto.setText(Double.toString(redondear(total)));
+								lbPersonaComprobacion
+										.setText("Facturado a: " + company.getName());
 								cambiarPanelLogoComprobacion();
 								CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 								cardLayout.show(contentPane, "panelComprobacion");
@@ -1190,7 +1207,7 @@ public class VentanaPrincipal extends JFrame {
 							JOptionPane.showMessageDialog(panelDerecha,
 									"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 									JOptionPane.ERROR_MESSAGE);
-							products = new ProductsController().getAllView();
+							products = new ProductsController().getAll();
 							cargarCategoriaInicial();
 							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 							cardLayout.show(contentPane, "panelTiendaInicio");
@@ -1478,7 +1495,7 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel getPanelMetodoPago() {
 		if (panelMetodoPago == null) {
 			panelMetodoPago = new JPanel();
-			panelMetodoPago.setBounds(110, 79, 768, 115);
+			panelMetodoPago.setBounds(95, 79, 795, 115);
 			panelMetodoPago.setLayout(new CardLayout(0, 0));
 			panelMetodoPago.add(getPanelTarjeta(), "panelTarjeta");
 			panelMetodoPago.add(getPanelTransferencia(), "panelTransferencia");
@@ -1493,23 +1510,38 @@ public class VentanaPrincipal extends JFrame {
 			btComprobar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (comprobarDatos() && comprobarStock()) {
-						getTextAreaCarrito().setText("");
+						ProductsController pc = new ProductsController();
+						double totalSinIva=0.0;
+						double impuestos=0.0;
+						double total=0.0;
+						int iva=0;
 						for (int i = 0; i < table.getRowCount(); i++) {
-							getTextAreaCarrito().append((String) table.getValueAt(i, 1) + tab + "P.U: "
-									+ table.getValueAt(i, 3) + tab + "Cantidad: " + table.getValueAt(i, 2) + tab
-									+ "Subtotal: " + redondear(((double) table.getValueAt(i, 4)) * 0.79) + tab + "IVA: "
-									+ "21%" + tab + "Total: " + table.getValueAt(i, 4) + newline);
+							iva= pc.getIvaPorRef((int)table.getValueAt(i, 0));
+							int cantidad = (int)table.getValueAt(i, 2);
+							double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
+							double pu = ((double)table.getValueAt(i, 3))-(imp);
+							double st = pu*cantidad;
+							getTextAreaCarrito().append((String) table.getValueAt(i, 1) +
+							tab + "P.U: " + redondear(pu) +
+							tab + "Cantidad: " + cantidad + 
+							tab + "Subtotal: " + redondear(st) +
+							tab + "IVA: " + iva + "%" +
+							tab + "Total: " + redondear(st+(imp*cantidad)) + newline);
+							totalSinIva = totalSinIva + st;
+							impuestos=impuestos+imp;
+							total = total + (st+(imp*cantidad));
+						
 						}
+						lbSubtotalTexto.setText(
+								Double.toString(redondear(totalSinIva)));
+						lbImpuestosText
+								.setText(Double.toString(redondear(impuestos)));
+						lbTotalComprobacionTexto.setText(Double.toString(redondear(total)));
 						lbDireccionComprobacion
 								.setText("Enviado a: " + txtDireccion.getText() + ", " + txtCiudad.getText());
 						lbMetodoComprobacion.setText("Método de pago: " + getSelectedButtonText(buttonGroup));
 						lbPersonaComprobacion
 								.setText("Facturado a: " + txtNombre.getText() + " " + txtApellidos.getText());
-						lbSubtotalTexto
-								.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
-						lbImpuestosText.setText(Double.toString(redondear(Double.parseDouble(lbTotalTexto.getText())
-								- Double.parseDouble(lbTotalTexto.getText()) * 0.79)));
-						lbTotalComprobacionTexto.setText(lbTotalTexto.getText());
 						cambiarPanelLogoComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelComprobacion");
@@ -1518,7 +1550,7 @@ public class VentanaPrincipal extends JFrame {
 						JOptionPane.showMessageDialog(panelDerecha,
 								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 								JOptionPane.ERROR_MESSAGE);
-						products = new ProductsController().getAllView();
+						products = new ProductsController().getAll();
 						cargarCategoriaInicial();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
@@ -1840,7 +1872,7 @@ public class VentanaPrincipal extends JFrame {
 						JOptionPane.showMessageDialog(panelDerecha,
 								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 								JOptionPane.ERROR_MESSAGE);
-						products = new ProductsController().getAllView();
+						products = new ProductsController().getAll();
 						cargarCategoriaInicial();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
@@ -2064,7 +2096,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbContrareembolso() {
 		if (lbContrareembolso == null) {
 			lbContrareembolso = new JLabel("");
-			lbContrareembolso.setBounds(20, 34, 719, 35);
+			lbContrareembolso.setBounds(10, 34, 775, 35);
 		}
 		return lbContrareembolso;
 	}

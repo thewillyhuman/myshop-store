@@ -29,8 +29,9 @@ public class UsersController {
 			            .executeAndFetchTable().asList();
 		 }
 		 
-		 IndividualCustomer ic = new IndividualCustomer();
+		 IndividualCustomer ic = null;
 		 for(Map<String,Object> m : map){
+			 ic = new IndividualCustomer((int)m.get("customer_id"));
 			 ic.setName((String)m.get("name"));
 			 ic.setSurname((String) m.get("surname"));
 			 Address a = new Address();
@@ -62,9 +63,9 @@ public class UsersController {
 			            .executeAndFetchTable().asList();
 		 }
 		 
-		 Company c = new Company();
+		 Company c = null;
 		 for(Map<String,Object> m : map){
-			 c.setID((int) m.get("company_id"));
+			 c = new Company((int)m.get("company_id"));
 			 c.setName((String) m.get("name"));
 			 User u = new User((int)m.get("user_id"), (String)m.get("username"),(String)m.get("password"));
 			 c.setUser(u);
