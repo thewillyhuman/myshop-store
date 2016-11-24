@@ -21,6 +21,7 @@ import com.myshop.model.customer.CreditCards;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Category;
 import com.myshop.model.product.Product;
+import com.myshop.store.controller.PaymentsController;
 import com.myshop.store.controller.ProductsController;
 import com.myshop.store.controller.UsersController;
 
@@ -37,6 +38,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -1868,7 +1870,7 @@ public class VentanaPrincipal extends JFrame {
 			btPagar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (comprobarStock()) {
-						//pagarPedido();
+						pagarPedido();
 						JOptionPane.showMessageDialog(panelDerecha, "Su pedido ha sido realizado con éxito.",
 								"Pedido realizado", JOptionPane.OK_OPTION);
 						actualizarTextoRegistro();
@@ -1899,7 +1901,15 @@ public class VentanaPrincipal extends JFrame {
 	}
 	
 // mirar para pillar lista de productos y lista de cantidades. Mirar para añadir al individualCustomer una CreditCard
-/*	private void pagarPedido() {
+	private void pagarPedido() {
+		List<Product> productos = new ArrayList<Product>();
+		List<Integer> cantidades = new ArrayList<Integer>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			Product p = new Product();
+			p.setID((int) table.getValueAt(i, 0));
+			productos.add(p);
+			cantidades.add((Integer) table.getValueAt(i, 2));
+		}
 		PaymentsController pc = new PaymentsController();
 		if (esEmpresa) {
 			pc.payCompanyTransfer(company, productos, cantidades);
@@ -1915,7 +1925,7 @@ public class VentanaPrincipal extends JFrame {
 			}
 		}
 
-	}*/
+	}
 
 	private JLabel getLbSubtotal() {
 		if (lbSubtotal == null) {
