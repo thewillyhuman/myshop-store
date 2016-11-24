@@ -19,6 +19,7 @@ import com.myshop.model.customer.Company;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Category;
 import com.myshop.model.product.Product;
+import com.myshop.store.controller.PaymentsController;
 import com.myshop.store.controller.ProductsController;
 import com.myshop.store.controller.UsersController;
 
@@ -1600,15 +1601,15 @@ public class VentanaPrincipal extends JFrame {
 				textoError.append("El nombre del titular solo puede contener letras." + newline);
 			}
 			if (!(txtNumero.getText().matches("[0-9]+") && (txtNumero.getText().length() == 20))) {
-				textoError.append("El número de la tarjeta tienen que ser 20 caracteres numéricos." + newline);
+				textoError.append("El n��mero de la tarjeta tienen que ser 20 caracteres num��ricos." + newline);
 			}
 			if (!(txtCvc.getText().matches("[0-9]+") && (txtCvc.getText().length() == 3))) {
-				textoError.append("El CVC de la tarjeta tienen que ser 3 caracteres numéricos." + newline);
+				textoError.append("El CVC de la tarjeta tienen que ser 3 caracteres num��ricos." + newline);
 			}
 			Date fechaTarjeta = (Date) spinnerFecha.getValue();
 			Date fechaHoy = new Date();
 			if (fechaTarjeta.after(fechaHoy)) {
-				textoError.append("La tarjeta no tiene una fecha válida." + newline);
+				textoError.append("La tarjeta no tiene una fecha v��lida." + newline);
 			}
 
 		}
