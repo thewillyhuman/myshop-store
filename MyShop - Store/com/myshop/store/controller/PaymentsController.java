@@ -61,34 +61,34 @@ public class PaymentsController {
 	}
 
 	public void payBankTransfer(IndividualCustomer ic, Address a, List<Product> productos, List<Integer> cantidades) {
-
-		try (Connection con = sql2o.open()) {
-			int customerID = 0;
-			if (ic.getID() == 0) {
-			customerID = con.createQuery(insertCustomer).executeUpdate().getKey(int.class);
-			con.createQuery(insertIndividual).addParameter("id", customerID).addParameter("name", ic.getName())
-					.addParameter("surname", ic.getSurname()).executeUpdate();
-			con.createQuery(insertAddress).addParameter("id", customerID).addParameter("street", a.getStreet())
-					.addParameter("city", a.getCity()).addParameter("state", a.getState())
-					.addParameter("cip", a.getCip_code()).executeUpdate();
-			}
-			else{
-				customerID = ic.getID();
-			}
-			int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", false)
-					.executeUpdate().getKey(int.class);
-			int orderID = con.createQuery(insertOrder).addParameter("idState", 1).addParameter("date", new Date())
-					.addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
-					.getKey(int.class);
-			for (int i = 0; i < productos.size(); i++) {
-				int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
-						.addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate()
-						.getKey(int.class);
-				con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID())
-						.addParameter("orderId", orderitemID).executeUpdate();
-			}
-		}
-	}
+        try (Connection con = sql2o.open()) {
+            int customerID = 0;
+            if (ic.getID() == 0) {
+            customerID = con.createQuery(insertCustomer).executeUpdate().getKey(int.class);
+            con.createQuery(insertIndividual).addParameter("id", customerID).addParameter("name", ic.getName())
+                    .addParameter("surname", ic.getSurname()).executeUpdate();
+            con.createQuery(insertAddress).addParameter("id", customerID).addParameter("street", a.getStreet())
+                    .addParameter("city", a.getCity()).addParameter("state", a.getState())
+                    .addParameter("cip", a.getCip_code()).executeUpdate();
+            }
+            else{
+                customerID = ic.getID();
+            }
+            int paymentID = con.createQuery(insertPayment).addParameter("id", 2).addParameter("boolean", false)
+                    .executeUpdate().getKey(int.class);
+            int orderID = con.createQuery(insertOrder).addParameter("idState", 1).addParameter("date", new Date())
+                    .addParameter("idCustomer", customerID).addParameter("idPayment", paymentID).executeUpdate()
+                    .getKey(int.class);
+            for (int i = 0; i < productos.size(); i++) {
+                int orderitemID = con.createQuery(insertItem).addParameter("productID", productos.get(i).getID())
+                        .addParameter("orderID", orderID).addParameter("quantity", cantidades.get(i)).executeUpdate()
+                        .getKey(int.class);
+                con.createQuery(actualizarProducto).addParameter("id", productos.get(i).getID())
+                        .addParameter("orderId", orderitemID).executeUpdate();
+            }
+        }
+    }
+	
 
 	// Modificar la lógica para poner la order a estado a empaquetar. Hacer algo
 	// para pagar el contrareembolso aparte.

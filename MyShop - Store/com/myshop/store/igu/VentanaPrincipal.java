@@ -39,6 +39,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -1936,6 +1937,7 @@ public class VentanaPrincipal extends JFrame {
 			btPagar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (comprobarStock()) {
+						pagarPedido();
 						JOptionPane.showMessageDialog(panelDerecha,
 								"Su pedido ha sido realizado con éxito.", "Pedido realizado",
 								JOptionPane.OK_OPTION);
@@ -1964,6 +1966,30 @@ public class VentanaPrincipal extends JFrame {
 		}
 		return btPagar;
 	}
+	private void pagarPedido() {
+        List<Product> productos = new ArrayList<Product>();
+        List<Integer> cantidades = new ArrayList<Integer>();
+        for (int i = 0; i < table.getRowCount(); i++) {
+            Product p = new Product();
+            p.setID((int) table.getValueAt(i, 0));
+            productos.add(p);
+            cantidades.add((Integer) table.getValueAt(i, 2));
+        }
+        PaymentsController pc = new PaymentsController();
+        if (esEmpresa) {
+            pc.payCompanyTransfer(company, productos, cantidades);
+        } else {
+            if (rbTarjeta.isSelected()) {
+                pc.payCreditCard(individualCustomer, individualCustomer.getAddress(), individualCustomer.getCreditCard(), productos, cantidades);
+            }
+            if (rbTransferencia.isSelected()) {
+                pc.payBankTransfer(individualCustomer, individualCustomer.getAddress(), productos, cantidades);
+            }
+            if (rbContrareembolso.isSelected()) {
+                pc.payContrarreembolso(individualCustomer, individualCustomer.getAddress(), productos, cantidades);
+            }
+        }
+    }
 
 	private JLabel getLbSubtotal() {
 		if (lbSubtotal == null) {
@@ -2089,6 +2115,7 @@ public class VentanaPrincipal extends JFrame {
 			btnEntrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					resetearTienda();
+					individualCustomer = new IndividualCustomer(0).setName("Anónimo");
 					CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 					cardLayout.show(contentPane, "panelTiendaInicio");
 				}
