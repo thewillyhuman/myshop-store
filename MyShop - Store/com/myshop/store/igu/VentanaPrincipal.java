@@ -29,8 +29,11 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -48,9 +51,12 @@ import javax.swing.JScrollPane;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JPasswordField;
 import javax.swing.JSplitPane;
@@ -61,8 +67,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.SystemColor;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -163,7 +171,6 @@ public class VentanaPrincipal extends JFrame {
 	private JPanel panelContenidoComprobacion;
 	private JScrollPane scrollCarritoComprobacion;
 	private Map<Object, Object> treeMap;
-	private JTextArea textAreaCarrito;
 	private JPanel panelPrecios;
 	private JButton btPagar;
 	private JLabel lbSubtotal;
@@ -185,6 +192,14 @@ public class VentanaPrincipal extends JFrame {
 	private JRadioButton rbContrareembolso;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JLabel lbContrareembolso;
+	private JTable tableComprobacion;
+	private JLabel lbMetodosEnvio;
+	private JRadioButton rdbtn24;
+	private JRadioButton rdbtn48;
+	private JRadioButton rdbtn5;
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private JLabel lbCarrito;
+	private JLabel lbTipoEnvio;
 
 	/**
 	 * Launch the application.
@@ -508,6 +523,7 @@ public class VentanaPrincipal extends JFrame {
 			panelDerecha.add(getLbTotal());
 			panelDerecha.add(getLbTotalTexto());
 			panelDerecha.add(getBtContinuarTienda());
+			panelDerecha.add(getLbCarrito());
 		}
 		return panelDerecha;
 	}
@@ -660,39 +676,87 @@ public class VentanaPrincipal extends JFrame {
 
 	public void cargarProductos(List<Product> listaPro) {
 		getPanelProductos().removeAll();
+		JPanel panelTitulo = new JPanel();
+		panelTitulo.setLayout(new GridLayout(1, 4));
+		panelTitulo.setBackground(new Color(255, 255, 255));
+		panelTitulo.setForeground(new Color(0, 0, 0));
+		JLabel labNombreTitulo = new JLabel();
+		labNombreTitulo.setForeground(new Color(0, 0, 0));
+		labNombreTitulo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		labNombreTitulo.setText("Nombre");
+		labNombreTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel labPrecioTitulo = new JLabel();
+		labPrecioTitulo.setForeground(new Color(0, 0, 0));
+		labPrecioTitulo.setBorder(new EmptyBorder(9, 9, 9, 0));
+		labPrecioTitulo.setText("Precio");
+		labPrecioTitulo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		labPrecioTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel labStockTitulo = new JLabel();
+		labStockTitulo.setForeground(new Color(0, 0, 0));
+		labStockTitulo.setBorder(new EmptyBorder(9, 9, 9, 0));
+		labStockTitulo.setText("Stock");
+		labStockTitulo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		labStockTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel labAddTitulo = new JLabel();
+		labAddTitulo.setForeground(new Color(0, 0, 0));
+		labAddTitulo.setBorder(new EmptyBorder(9, 9, 9, 0));
+		labAddTitulo.setText("");
+		labAddTitulo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		panelTitulo.add(labNombreTitulo);
+		panelTitulo.add(labPrecioTitulo);
+		panelTitulo.add(labStockTitulo);
+		panelTitulo.add(labAddTitulo);
+		getPanelProductos().add(panelTitulo);
+		
 		for (Product p : listaPro) {
 			JPanel pan = new JPanel();
-			pan.setBorder(new LineBorder(Color.DARK_GRAY, 1));
 			pan.setLayout(new GridLayout(1, 4));
+			pan.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+
+			
 			pan.setBackground(new Color(255, 255, 255));
 			pan.setForeground(new Color(0, 0, 0));
 
 			JLabel labNombre = new JLabel();
 			labNombre.setForeground(new Color(0, 0, 0));
-			labNombre.setBorder(new EmptyBorder(9, 9, 9, 0));
+			labNombre.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			//labNombre.setBorder(new EmptyBorder(9, 9, 9, 0));
 			labNombre.setText(p.getName());
+			labNombre.setHorizontalAlignment(SwingConstants.CENTER);
 
 			JLabel labPrecio = new JLabel();
 			labPrecio.setForeground(new Color(0, 0, 0));
 			if (esEmpresa == false) {
-				labPrecio.setText("Precio: " + Double.toString(p.getPrice()));
+				labPrecio.setText(Double.toString(p.getPrice()));
 			}
 			if (esEmpresa == true) {
-				labPrecio.setText("Precio: " + Double.toString(p.getCompanyPrice()));
+				labPrecio.setText(Double.toString(p.getCompanyPrice()));
 			}
-
+			labPrecio.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			labPrecio.setHorizontalAlignment(SwingConstants.CENTER);
 			if (p.getStock() > 0) {
 				JLabel labStock = new JLabel();
 				labStock.setForeground(new Color(0, 0, 0));
-				labStock.setText("Stock: " + String.valueOf(p.getStock()));
+				labStock.setText(String.valueOf(p.getStock()));
+				labStock.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				labStock.setHorizontalAlignment(SwingConstants.CENTER);
+				JPanel panAdd = new JPanel();
+				panAdd.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				panAdd.setBackground(Color.WHITE);
+				panAdd.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+				JLabel labx = new JLabel();
+				labx.setText("x");
+				JSpinner spinnerCant = new JSpinner();
+				spinnerCant.setModel(new SpinnerNumberModel(1, 1, p.getStock(), 1));
+				( (DefaultEditor) spinnerCant.getEditor()).getTextField().setColumns(3);
+				( (DefaultEditor) spinnerCant.getEditor()).getTextField().setEditable(false);
 				JButton botAdd = new JButton();
 				botAdd.setFocusPainted(false);
-				botAdd.setContentAreaFilled(false);
 				botAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-				botAdd.setBackground(new Color(255, 255, 255));
-				botAdd.setBorder(new EmptyBorder(0, 0, 0, 0));
 				botAdd.setText("Añadir");
-				botAdd.setForeground(blue_code);
+				botAdd.setBorder(new LineBorder(blue_code, 1, true));
+				botAdd.setForeground(Color.WHITE);
+				botAdd.setBackground(blue_code);
 				botAdd.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						int cod;
@@ -702,16 +766,16 @@ public class VentanaPrincipal extends JFrame {
 							for (int i = 0; i < row; i++) {
 								cod = (int) table.getValueAt(i, 0);
 								if (p.getID() == cod) {
-									if (p.getStock() > Integer.parseInt(table.getValueAt(i, 2).toString())) {
-										Object cant = (Integer) table.getValueAt(i, 2) + 1;
+									if (p.getStock() >= (Integer.valueOf( table.getValueAt(i, 2).toString()) + Integer.valueOf(spinnerCant.getValue().toString()))) {
+										Object cant = Integer.valueOf(table.getValueAt(i, 2).toString()) + Integer.valueOf(spinnerCant.getValue().toString());
 										((DefaultTableModel) getTable().getModel()).setValueAt(cant, i, 2);
 										Object pre = (double) redondear(
-												((Integer) table.getValueAt(i, 2) * (double) table.getValueAt(i, 3)));
+												(Integer.valueOf(table.getValueAt(i, 2).toString()) * (double) table.getValueAt(i, 3)));
 										((DefaultTableModel) getTable().getModel()).setValueAt(pre, i, 4);
 										actualizarTotal();
 									} else {
 										JOptionPane.showMessageDialog(panelContenido,
-												"No se pueden añadir más artículos.", "Error",
+												"No se pueden añadir tantos artículos.", "Error",
 												JOptionPane.ERROR_MESSAGE);
 									}
 									seguir = false;
@@ -721,13 +785,13 @@ public class VentanaPrincipal extends JFrame {
 									Object[] nuevaFila = new Object[5];
 									nuevaFila[0] = p.getID();
 									nuevaFila[1] = p.getName();
-									nuevaFila[2] = 1;
+									nuevaFila[2] = spinnerCant.getValue();
 									if (esEmpresa == false) {
 										nuevaFila[3] = p.getPrice();
-										nuevaFila[4] = p.getPrice();
+										nuevaFila[4] = redondear((int)spinnerCant.getValue()*p.getPrice());
 									} else {
 										nuevaFila[3] = p.getCompanyPrice();
-										nuevaFila[4] = p.getCompanyPrice();
+										nuevaFila[4] = redondear((int)spinnerCant.getValue()*p.getCompanyPrice());
 									}
 									((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
 									actualizarTotal();
@@ -738,13 +802,13 @@ public class VentanaPrincipal extends JFrame {
 							Object[] nuevaFila = new Object[5];
 							nuevaFila[0] = p.getID();
 							nuevaFila[1] = p.getName();
-							nuevaFila[2] = 1;
+							nuevaFila[2] = spinnerCant.getValue();
 							if (esEmpresa == false) {
 								nuevaFila[3] = p.getPrice();
-								nuevaFila[4] = p.getPrice();
+								nuevaFila[4] = redondear((int)spinnerCant.getValue()*p.getPrice());
 							} else {
 								nuevaFila[3] = p.getCompanyPrice();
-								nuevaFila[4] = p.getCompanyPrice();
+								nuevaFila[4] = redondear((int)spinnerCant.getValue()*p.getCompanyPrice());
 							}
 
 							((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
@@ -752,25 +816,31 @@ public class VentanaPrincipal extends JFrame {
 						}
 					}
 				});
+				panAdd.add(spinnerCant);
+				panAdd.add(labx);
+				panAdd.add(botAdd);
 				pan.add(labNombre);
 				pan.add(labPrecio);
 				pan.add(labStock);
-				pan.add(botAdd);
+				pan.add(panAdd);
 			} else {
 				JLabel labStock = new JLabel();
 				labStock.setForeground(new Color(0, 0, 0));
 				labStock.setForeground(Color.RED);
 				labStock.setText("Sin stock");
-				JButton botAddVacio = new JButton();
-				botAddVacio.setFocusPainted(false);
-				botAddVacio.setContentAreaFilled(false);
-				botAddVacio.setBackground(new Color(255, 255, 255));
-				botAddVacio.setBorder(new EmptyBorder(0, 0, 0, 0));
-				botAddVacio.setText("");
+				labStock.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				labStock.setHorizontalAlignment(SwingConstants.CENTER);
+				JPanel panAdd = new JPanel();
+				panAdd.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				panAdd.setBackground(Color.WHITE);
+				panAdd.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+				JLabel labVacia = new JLabel("");
+				labVacia.setBorder(new EmptyBorder(10, 0, 10, 0));
+				panAdd.add(labVacia);
 				pan.add(labNombre);
 				pan.add(labPrecio);
 				pan.add(labStock);
-				pan.add(botAddVacio);
+				pan.add(panAdd);
 			}
 
 			getPanelProductos().add(pan);
@@ -1096,6 +1166,13 @@ public class VentanaPrincipal extends JFrame {
 		getTable().revalidate();
 		lbTotalTexto.setText("0");
 	}
+	private void vaciarComprobacion() {
+		DefaultTableModel modeloTabla = (DefaultTableModel) tableComprobacion.getModel();
+		modeloTabla.setRowCount(0);
+		getTable().removeAll();
+		getTable().repaint();
+		getTable().revalidate();
+	}
 
 	private JLabel getLbTotal() {
 		if (lbTotal == null) {
@@ -1115,7 +1192,7 @@ public class VentanaPrincipal extends JFrame {
 
 	private JButton getBtContinuarTienda() {
 		if (btContinuarTienda == null) {
-			btContinuarTienda = new JButton("Continuar");
+			btContinuarTienda = new JButton("Comprar");
 			btContinuarTienda.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (table.getRowCount() != 0) {
@@ -1169,7 +1246,7 @@ public class VentanaPrincipal extends JFrame {
 								cardLayout.show(contentPane, "panelEnvio");
 							}
 							if (company != null && esEmpresa == true) {
-								getTextAreaCarrito().setText("");
+								vaciarComprobacion();
 								ProductsController pc = new ProductsController();
 								double totalSinIva=0.0;
 								double impuestos=0.0;
@@ -1181,12 +1258,14 @@ public class VentanaPrincipal extends JFrame {
 									double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
 									double pu = ((double)table.getValueAt(i, 3))-(imp);
 									double st = pu*cantidad;
-									getTextAreaCarrito().append((String) table.getValueAt(i, 1) +
-									tab + "P.U: " + redondear(pu) +
-									tab + "Cantidad: " + cantidad + 
-									tab + "Subtotal: " + redondear(st) +
-									tab + "IVA: " + iva + "%" +
-									tab + "Total: " + redondear(st+(imp*cantidad)) + newline);
+									Object[] nuevaFila = new Object[6];
+									nuevaFila[0] = table.getValueAt(i, 1);
+									nuevaFila[1] = redondear(pu);
+									nuevaFila[2] = cantidad;
+									nuevaFila[3] = redondear(st);
+									nuevaFila[4] = iva;
+									nuevaFila[5] = redondear(st+(imp*cantidad));
+									((DefaultTableModel) getTableComprobacion().getModel()).addRow(nuevaFila);
 									totalSinIva = totalSinIva + st;
 									impuestos=impuestos+imp;
 									total = total + (st+(imp*cantidad));
@@ -1195,7 +1274,7 @@ public class VentanaPrincipal extends JFrame {
 								lbSubtotalTexto.setText(
 										Double.toString(redondear(totalSinIva)));
 								lbImpuestosText
-										.setText(Double.toString(redondear(impuestos)));
+										.setText(Double.toString(redondear(total-totalSinIva)));
 								lbTotalComprobacionTexto.setText(Double.toString(redondear(total)));
 								lbPersonaComprobacion
 										.setText("Facturado a: " + company.getName());
@@ -1361,6 +1440,10 @@ public class VentanaPrincipal extends JFrame {
 			panelDatos.add(getTxtPostal());
 			panelDatos.add(getLbProvincia());
 			panelDatos.add(getTxtProvincia());
+			panelDatos.add(getLbMetodosEnvio());
+			panelDatos.add(getRdbtn24());
+			panelDatos.add(getRdbtn48());
+			panelDatos.add(getRdbtn5());
 		}
 		return panelDatos;
 	}
@@ -1388,7 +1471,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbNombre() {
 		if (lbNombre == null) {
 			lbNombre = new JLabel("Nombre:");
-			lbNombre.setBounds(168, 44, 77, 14);
+			lbNombre.setBounds(89, 44, 77, 14);
 		}
 		return lbNombre;
 	}
@@ -1396,7 +1479,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbApellidos() {
 		if (lbApellidos == null) {
 			lbApellidos = new JLabel("Apellidos:");
-			lbApellidos.setBounds(351, 44, 77, 14);
+			lbApellidos.setBounds(268, 44, 77, 14);
 		}
 		return lbApellidos;
 	}
@@ -1405,7 +1488,7 @@ public class VentanaPrincipal extends JFrame {
 		if (txtNombre == null) {
 			txtNombre = new JTextField();
 			txtNombre.setText("");
-			txtNombre.setBounds(169, 69, 137, 20);
+			txtNombre.setBounds(89, 69, 137, 20);
 			txtNombre.setColumns(10);
 		}
 		return txtNombre;
@@ -1416,7 +1499,7 @@ public class VentanaPrincipal extends JFrame {
 			txtApellidos = new JTextField();
 			txtApellidos.setText("");
 			txtApellidos.setColumns(10);
-			txtApellidos.setBounds(351, 69, 199, 20);
+			txtApellidos.setBounds(268, 69, 199, 20);
 		}
 		return txtApellidos;
 	}
@@ -1424,7 +1507,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbDireccion() {
 		if (lbDireccion == null) {
 			lbDireccion = new JLabel("Dirección:");
-			lbDireccion.setBounds(168, 97, 77, 14);
+			lbDireccion.setBounds(511, 44, 77, 14);
 		}
 		return lbDireccion;
 	}
@@ -1434,7 +1517,7 @@ public class VentanaPrincipal extends JFrame {
 			txtDireccion = new JTextField();
 			txtDireccion.setText("");
 			txtDireccion.setColumns(10);
-			txtDireccion.setBounds(166, 122, 384, 20);
+			txtDireccion.setBounds(511, 69, 384, 20);
 		}
 		return txtDireccion;
 	}
@@ -1442,7 +1525,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbCiudad() {
 		if (lbCiudad == null) {
 			lbCiudad = new JLabel("Ciudad:");
-			lbCiudad.setBounds(613, 100, 77, 14);
+			lbCiudad.setBounds(268, 100, 77, 14);
 		}
 		return lbCiudad;
 	}
@@ -1452,7 +1535,7 @@ public class VentanaPrincipal extends JFrame {
 			txtCiudad = new JTextField();
 			txtCiudad.setText("");
 			txtCiudad.setColumns(10);
-			txtCiudad.setBounds(613, 122, 148, 20);
+			txtCiudad.setBounds(268, 125, 199, 20);
 		}
 		return txtCiudad;
 	}
@@ -1460,7 +1543,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbPostal() {
 		if (lbPostal == null) {
 			lbPostal = new JLabel("Código postal:");
-			lbPostal.setBounds(168, 153, 86, 14);
+			lbPostal.setBounds(89, 100, 86, 14);
 		}
 		return lbPostal;
 	}
@@ -1470,7 +1553,7 @@ public class VentanaPrincipal extends JFrame {
 			txtPostal = new JTextField();
 			txtPostal.setText("");
 			txtPostal.setColumns(10);
-			txtPostal.setBounds(168, 178, 86, 20);
+			txtPostal.setBounds(89, 125, 137, 20);
 		}
 		return txtPostal;
 	}
@@ -1478,7 +1561,7 @@ public class VentanaPrincipal extends JFrame {
 	private JLabel getLbProvincia() {
 		if (lbProvincia == null) {
 			lbProvincia = new JLabel("Provincia:");
-			lbProvincia.setBounds(351, 153, 77, 14);
+			lbProvincia.setBounds(511, 100, 77, 14);
 		}
 		return lbProvincia;
 	}
@@ -1488,7 +1571,7 @@ public class VentanaPrincipal extends JFrame {
 			txtProvincia = new JTextField();
 			txtProvincia.setText("");
 			txtProvincia.setColumns(10);
-			txtProvincia.setBounds(351, 179, 148, 20);
+			txtProvincia.setBounds(511, 125, 158, 20);
 		}
 		return txtProvincia;
 	}
@@ -1522,12 +1605,14 @@ public class VentanaPrincipal extends JFrame {
 							double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
 							double pu = ((double)table.getValueAt(i, 3))-(imp);
 							double st = pu*cantidad;
-							getTextAreaCarrito().append((String) table.getValueAt(i, 1) +
-							tab + "P.U: " + redondear(pu) +
-							tab + "Cantidad: " + cantidad + 
-							tab + "Subtotal: " + redondear(st) +
-							tab + "IVA: " + iva + "%" +
-							tab + "Total: " + redondear(st+(imp*cantidad)) + newline);
+							Object[] nuevaFila = new Object[6];
+							nuevaFila[0] = table.getValueAt(i, 1);
+							nuevaFila[1] = redondear(pu);
+							nuevaFila[2] = cantidad;
+							nuevaFila[3] = redondear(st);
+							nuevaFila[4] = iva;
+							nuevaFila[5] = redondear(st+(imp*cantidad));
+							((DefaultTableModel) getTableComprobacion().getModel()).addRow(nuevaFila);
 							totalSinIva = totalSinIva + st;
 							impuestos=impuestos+imp;
 							total = total + (st+(imp*cantidad));
@@ -1536,13 +1621,15 @@ public class VentanaPrincipal extends JFrame {
 						lbSubtotalTexto.setText(
 								Double.toString(redondear(totalSinIva)));
 						lbImpuestosText
-								.setText(Double.toString(redondear(impuestos)));
+								.setText(Double.toString(redondear(total-totalSinIva)));
 						lbTotalComprobacionTexto.setText(Double.toString(redondear(total)));
 						lbDireccionComprobacion
 								.setText("Enviado a: " + txtDireccion.getText() + ", " + txtCiudad.getText());
 						lbMetodoComprobacion.setText("Método de pago: " + getSelectedButtonText(buttonGroup));
 						lbPersonaComprobacion
 								.setText("Facturado a: " + txtNombre.getText() + " " + txtApellidos.getText());
+						lbTipoEnvio
+						.setText("Tipo de envío: " + getSelectedButtonText(buttonGroup_1));
 						cambiarPanelLogoComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelComprobacion");
@@ -1822,22 +1909,10 @@ public class VentanaPrincipal extends JFrame {
 	private JScrollPane getScrollCarritoComprobacion() {
 		if (scrollCarritoComprobacion == null) {
 			scrollCarritoComprobacion = new JScrollPane();
-			scrollCarritoComprobacion.setBounds(45, 21, 892, 301);
-			scrollCarritoComprobacion.setViewportView(getTextAreaCarrito());
+			scrollCarritoComprobacion.setBounds(68, 21, 854, 300);
+			scrollCarritoComprobacion.setViewportView(getTableComprobacion());
 		}
 		return scrollCarritoComprobacion;
-	}
-
-	private JTextArea getTextAreaCarrito() {
-		if (textAreaCarrito == null) {
-			textAreaCarrito = new JTextArea();
-			textAreaCarrito.setBorder(new EtchedBorder(EtchedBorder.RAISED, Color.DARK_GRAY, Color.LIGHT_GRAY));
-			textAreaCarrito.setBackground(SystemColor.control);
-			textAreaCarrito.setForeground(Color.DARK_GRAY);
-			textAreaCarrito.setFont(new Font("Monospaced", Font.PLAIN, 15));
-			textAreaCarrito.setEditable(false);
-		}
-		return textAreaCarrito;
 	}
 
 	private JPanel getPanelPrecios() {
@@ -1950,6 +2025,7 @@ public class VentanaPrincipal extends JFrame {
 			panelDatosComprobacion.add(getLbDireccionComprobacion());
 			panelDatosComprobacion.add(getLbPersonaComprobacion());
 			panelDatosComprobacion.add(getLbMetodoComprobacion());
+			panelDatosComprobacion.add(getLbTipoEnvio());
 		}
 		return panelDatosComprobacion;
 	}
@@ -2040,6 +2116,7 @@ public class VentanaPrincipal extends JFrame {
 	private JRadioButton getRbTarjeta() {
 		if (rbTarjeta == null) {
 			rbTarjeta = new JRadioButton("Tarjeta");
+			rbTarjeta.setSelected(true);
 			rbTarjeta.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					CardLayout cardLayout = (CardLayout) (panelMetodoPago.getLayout());
@@ -2115,5 +2192,89 @@ public class VentanaPrincipal extends JFrame {
 
 		}
 		return false;
+	}
+	private JTable getTableComprobacion() {
+		if (tableComprobacion == null) {
+			tableComprobacion = new JTable();
+			tableComprobacion.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Nombre", "P.U.", "Cantidad", "Subtotal", "IVA", "Total"
+				}
+			) {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+				Class[] columnTypes = new Class[] {
+					String.class, Double.class, Integer.class, Double.class, Integer.class, Double.class
+				};
+				public Class getColumnClass(int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+				boolean[] columnEditables = new boolean[] {
+					false, false, false, false, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+			tableComprobacion.getColumnModel().getColumn(0).setResizable(false);
+			tableComprobacion.getColumnModel().getColumn(1).setResizable(false);
+			tableComprobacion.getColumnModel().getColumn(2).setResizable(false);
+			tableComprobacion.getColumnModel().getColumn(3).setResizable(false);
+			tableComprobacion.getColumnModel().getColumn(4).setResizable(false);
+			tableComprobacion.getColumnModel().getColumn(5).setResizable(false);
+		}
+		return tableComprobacion;
+	}
+	private JLabel getLbMetodosEnvio() {
+		if (lbMetodosEnvio == null) {
+			lbMetodosEnvio = new JLabel("Tipo de envío");
+			lbMetodosEnvio.setForeground(Color.DARK_GRAY);
+			lbMetodosEnvio.setFont(new Font("Tahoma", Font.BOLD, 14));
+			lbMetodosEnvio.setBounds(50, 156, 148, 22);
+		}
+		return lbMetodosEnvio;
+	}
+	private JRadioButton getRdbtn24() {
+		if (rdbtn24 == null) {
+			rdbtn24 = new JRadioButton("Entrega al día siguiente (24h)");
+			buttonGroup_1.add(rdbtn24);
+			rdbtn24.setBounds(138, 203, 225, 23);
+		}
+		return rdbtn24;
+	}
+	private JRadioButton getRdbtn48() {
+		if (rdbtn48 == null) {
+			rdbtn48 = new JRadioButton("Entrega urgente (48h)");
+			buttonGroup_1.add(rdbtn48);
+			rdbtn48.setBounds(397, 203, 175, 23);
+		}
+		return rdbtn48;
+	}
+	private JRadioButton getRdbtn5() {
+		if (rdbtn5 == null) {
+			rdbtn5 = new JRadioButton("Entrega ordinaria (5-7 días)");
+			rdbtn5.setSelected(true);
+			buttonGroup_1.add(rdbtn5);
+			rdbtn5.setBounds(596, 203, 199, 23);
+		}
+		return rdbtn5;
+	}
+	private JLabel getLbCarrito() {
+		if (lbCarrito == null) {
+			lbCarrito = new JLabel("Cesta de la compra:");
+			lbCarrito.setBounds(10, 11, 193, 14);
+		}
+		return lbCarrito;
+	}
+	private JLabel getLbTipoEnvio() {
+		if (lbTipoEnvio == null) {
+			lbTipoEnvio = new JLabel("");
+			lbTipoEnvio.setBounds(10, 90, 360, 14);
+		}
+		return lbTipoEnvio;
 	}
 }
