@@ -249,7 +249,7 @@ public class VentanaPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				TableCellListener tcl = (TableCellListener) e.getSource();
 				if (comprobarEntero(tcl.getNewValue().toString())) {
-					int referencia = (int) table.getValueAt(tcl.getRow(), 0);
+					int referencia = Integer.valueOf(table.getValueAt(tcl.getRow(), 0).toString());
 					int stock = 0;
 					double precio = 0;
 					for (Product p : products) {
@@ -582,6 +582,7 @@ public class VentanaPrincipal extends JFrame {
 		getPanelProductos().repaint();
 		getScrollPaneProductos().setViewportView(getPanelProductos());
 		getScrollPaneProductos().repaint();
+		getScrollPaneProductos().getVerticalScrollBar().setValue(0);
 	}
 
 	public void cargarCategorias(String nombreCat) {
@@ -768,7 +769,7 @@ public class VentanaPrincipal extends JFrame {
 						boolean seguir = true;
 						if ((row > 0) && (seguir)) {
 							for (int i = 0; i < row; i++) {
-								cod = (int) table.getValueAt(i, 0);
+								cod = Integer.valueOf(table.getValueAt(i, 0).toString());
 								if (p.getID() == cod) {
 									if (p.getStock() >= (Integer.valueOf( table.getValueAt(i, 2).toString()) + Integer.valueOf(spinnerCant.getValue().toString()))) {
 										Object cant = Integer.valueOf(table.getValueAt(i, 2).toString()) + Integer.valueOf(spinnerCant.getValue().toString());
@@ -1261,8 +1262,8 @@ public class VentanaPrincipal extends JFrame {
 								double total=0.0;
 								int iva=0;
 								for (int i = 0; i < table.getRowCount(); i++) {
-									iva= pc.getIvaPorRef((int)table.getValueAt(i, 0));
-									int cantidad = (int)table.getValueAt(i, 2);
+									iva= pc.getIvaPorRef(Integer.valueOf(table.getValueAt(i, 0).toString()));
+									int cantidad = Integer.valueOf(table.getValueAt(i, 2).toString());
 									double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
 									double pu = ((double)table.getValueAt(i, 3))-(imp);
 									double st = pu*cantidad;
@@ -1291,12 +1292,13 @@ public class VentanaPrincipal extends JFrame {
 								cardLayout.show(contentPane, "panelComprobacion");
 							}
 						}
-						if (!comprobarStock()) {
+						else if (!comprobarStock()) {
 							JOptionPane.showMessageDialog(panelDerecha,
 									"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 									JOptionPane.ERROR_MESSAGE);
 							products = new ProductsController().getAll();
 							cargarCategoriaInicial();
+							borrarBotonesNavegacion();
 							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 							cardLayout.show(contentPane, "panelTiendaInicio");
 
@@ -1611,8 +1613,8 @@ public class VentanaPrincipal extends JFrame {
 						double total=0.0;
 						int iva=0;
 						for (int i = 0; i < table.getRowCount(); i++) {
-							iva= pc.getIvaPorRef((int)table.getValueAt(i, 0));
-							int cantidad = (int)table.getValueAt(i, 2);
+							iva= pc.getIvaPorRef(Integer.valueOf(table.getValueAt(i, 0).toString()));
+							int cantidad = Integer.valueOf(table.getValueAt(i, 2).toString());
 							double imp = ((double)table.getValueAt(i, 3)*(iva/100.0f));
 							double pu = ((double)table.getValueAt(i, 3))-(imp);
 							double st = pu*cantidad;
@@ -1645,12 +1647,13 @@ public class VentanaPrincipal extends JFrame {
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelComprobacion");
 					}
-					if (!comprobarStock()) {
+					else if (!comprobarStock()) {
 						JOptionPane.showMessageDialog(panelDerecha,
 								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						products = new ProductsController().getAll();
 						cargarCategoriaInicial();
+						borrarBotonesNavegacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 
@@ -1953,17 +1956,20 @@ public class VentanaPrincipal extends JFrame {
 								JOptionPane.OK_OPTION);
 						actualizarTextoRegistro();
 						resetearTienda();
+						individualCustomer=new IndividualCustomer(0);
 						resetearEnvio();
 						resetearComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelRegistro");
 					}
-					if (!comprobarStock()) {
+					else if (!comprobarStock()) {
 						JOptionPane.showMessageDialog(panelDerecha,
 								"Hay un problema con el stock. Por favor, revise su pedido.", "Error",
 								JOptionPane.ERROR_MESSAGE);
 						products = new ProductsController().getAll();
 						cargarCategoriaInicial();
+						borrarBotonesNavegacion();
+						resetearComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelTiendaInicio");
 
@@ -1983,9 +1989,9 @@ public class VentanaPrincipal extends JFrame {
         List<Integer> cantidades = new ArrayList<Integer>();
         for (int i = 0; i < table.getRowCount(); i++) {
             Product p = new Product();
-            p.setID((int) table.getValueAt(i, 0));
+            p.setID(Integer.valueOf(table.getValueAt(i, 0).toString()));
             productos.add(p);
-            cantidades.add((Integer) table.getValueAt(i, 2));
+            cantidades.add(Integer.valueOf(table.getValueAt(i, 2).toString()));
         }
         PaymentsController pc = new PaymentsController();
         if (esEmpresa) {
@@ -2165,7 +2171,7 @@ public class VentanaPrincipal extends JFrame {
 		rdbtn5.setSelected(true);
 	}
 	private void resetearComprobacion() {
-		tableComprobacion.removeAll();
+		vaciarComprobacion();
 		getLbDireccionComprobacion().setText("");
 		getLbPersonaComprobacion().setText("");
 		getLbMetodoComprobacion().setText("");
@@ -2244,13 +2250,13 @@ public class VentanaPrincipal extends JFrame {
 				ProductsController pc = new ProductsController();
 				int stock = pc.getStock(Integer.valueOf(table.getValueAt(i, 0).toString()));
 				int cantidad = Integer.valueOf(table.getValueAt(i, 2).toString());
-				if (stock >= cantidad) {
-					return true;
+				if (stock < cantidad) {
+					return false;
 				}
 			}
 
 		}
-		return false;
+		return true;
 	}
 	private JTable getTableComprobacion() {
 		if (tableComprobacion == null) {
