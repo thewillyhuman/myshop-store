@@ -15,7 +15,9 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.border.LineBorder;
 
+import com.myshop.model.customer.Address;
 import com.myshop.model.customer.Company;
+import com.myshop.model.customer.CreditCards;
 import com.myshop.model.customer.IndividualCustomer;
 import com.myshop.model.product.Category;
 import com.myshop.model.product.Product;
@@ -113,7 +115,7 @@ public class VentanaPrincipal extends JFrame {
 	private JPasswordField passwordFieldRegistradosInicio;
 	private JButton btEntrarRegistradosInicio;
 	private boolean esEmpresa;
-	private IndividualCustomer individualCustomer;
+	private IndividualCustomer individualCustomer=new IndividualCustomer(0);
 	private Company company;
 	private JScrollPane scrollPane;
 	private JTable table;
@@ -760,6 +762,7 @@ public class VentanaPrincipal extends JFrame {
 				botAdd.setBackground(blue_code);
 				botAdd.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
 						int cod;
 						int row = getTable().getRowCount();
 						boolean seguir = true;
@@ -815,6 +818,7 @@ public class VentanaPrincipal extends JFrame {
 							((DefaultTableModel) getTable().getModel()).addRow(nuevaFila);
 							actualizarTotal();
 						}
+						spinnerCant.setValue(1);
 					}
 				});
 				panAdd.add(spinnerCant);
@@ -1069,6 +1073,7 @@ public class VentanaPrincipal extends JFrame {
 					IndividualCustomer ic = uc.getCustomerData(getTxtUsuarioRegistradosInicio().getText(),
 							getPasswordFieldRegistradosInicio().getPassword());
 					if (ic == null) {
+						
 						Company co = uc.getCompany(getTxtUsuarioRegistradosInicio().getText(),
 								getPasswordFieldRegistradosInicio().getPassword());
 						if (co == null) {
@@ -1076,16 +1081,18 @@ public class VentanaPrincipal extends JFrame {
 									"El usuario o la contraseña no existen.", "Error", JOptionPane.ERROR_MESSAGE);
 							actualizarTextoRegistro();
 						}
-						esEmpresa = true;
-						company = co;
-						vaciarCarrito();
-						cargarCategoriaInicial();
-						borrarBotonesNavegacion();
-						cambiarPanelLogoTienda();
-						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
-						cardLayout.show(contentPane, "panelTiendaInicio");
+						if (co != null) {
+							esEmpresa = true;
+							company = co;
+							vaciarCarrito();
+							cargarCategoriaInicial();
+							borrarBotonesNavegacion();
+							cambiarPanelLogoTienda();
+							CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
+							cardLayout.show(contentPane, "panelTiendaInicio");
+						}
 					}
-					if (ic != null) {
+					if (ic != null && ic.getID() != 0) {
 						esEmpresa = false;
 						individualCustomer = ic;
 						vaciarCarrito();
@@ -1202,7 +1209,7 @@ public class VentanaPrincipal extends JFrame {
 							for (int i = 0; i < table.getRowCount(); i++) {
 								treeMap.put(table.getValueAt(i, 0), table.getValueAt(i, 2));
 							}
-							if (individualCustomer != null && esEmpresa == false) {
+							if (individualCustomer != null && individualCustomer.getID() != 0 && esEmpresa == false) {
 								txtNombre.setEditable(false);
 								txtNombre.setText(individualCustomer.getName());
 								txtApellidos.setEditable(false);
@@ -1227,7 +1234,7 @@ public class VentanaPrincipal extends JFrame {
 								CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 								cardLayout.show(contentPane, "panelEnvio");
 							}
-							if (individualCustomer == null && esEmpresa == false) {
+							if (individualCustomer != null && individualCustomer.getID() == 0 && esEmpresa == false) {
 								txtNombre.setEditable(true);
 								txtApellidos.setEditable(true);
 								txtDireccion.setEditable(true);
@@ -1595,6 +1602,9 @@ public class VentanaPrincipal extends JFrame {
 			btComprobar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (comprobarDatos() && comprobarStock()) {
+						if (individualCustomer != null && individualCustomer.getID() == 0) {
+                            rellenarCustomer();
+                        }
 						ProductsController pc = new ProductsController();
 						double totalSinIva=0.0;
 						double impuestos=0.0;
@@ -1942,7 +1952,9 @@ public class VentanaPrincipal extends JFrame {
 								"Su pedido ha sido realizado con éxito.", "Pedido realizado",
 								JOptionPane.OK_OPTION);
 						actualizarTextoRegistro();
+						resetearTienda();
 						resetearEnvio();
+						resetearComprobacion();
 						CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 						cardLayout.show(contentPane, "panelRegistro");
 					}
@@ -1991,6 +2003,16 @@ public class VentanaPrincipal extends JFrame {
         }
     }
 
+	 private void rellenarCustomer() {
+	        individualCustomer.setName(txtNombre.getText()).setSurname(txtApellidos.getText())
+	                .setAddress(new Address().setCip_code(txtPostal.getText()).setCity(txtCiudad.getText())
+	                        .setState(txtProvincia.getText()).setStreet(txtDireccion.getText()));
+	        if(rbTarjeta.isSelected()){
+	            CreditCards cc = new CreditCards().setCreditCardExDate((Date) spinnerFecha.getValue())
+	                    .setCreditCardNumber(1234547982);
+	            individualCustomer.setCreditCard(cc);
+	        }
+	    }
 	private JLabel getLbSubtotal() {
 		if (lbSubtotal == null) {
 			lbSubtotal = new JLabel("Subtotal");
@@ -2052,6 +2074,7 @@ public class VentanaPrincipal extends JFrame {
 			panelDatosComprobacion.add(getLbPersonaComprobacion());
 			panelDatosComprobacion.add(getLbMetodoComprobacion());
 			panelDatosComprobacion.add(getLbTipoEnvio());
+			
 		}
 		return panelDatosComprobacion;
 	}
@@ -2114,7 +2137,7 @@ public class VentanaPrincipal extends JFrame {
 			btnEntrar = new JButton("Entrar");
 			btnEntrar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					resetearTienda();
+					
 					individualCustomer = new IndividualCustomer(0).setName("Anónimo");
 					CardLayout cardLayout = (CardLayout) (contentPane.getLayout());
 					cardLayout.show(contentPane, "panelTiendaInicio");
@@ -2138,6 +2161,15 @@ public class VentanaPrincipal extends JFrame {
 		txtNombreTitular.setText("");
 		txtNumero.setText("");
 		txtCvc.setText("");
+		rbTarjeta.setSelected(true);
+		rdbtn5.setSelected(true);
+	}
+	private void resetearComprobacion() {
+		tableComprobacion.removeAll();
+		getLbDireccionComprobacion().setText("");
+		getLbPersonaComprobacion().setText("");
+		getLbMetodoComprobacion().setText("");
+		getLbTipoEnvio().setText("");
 	}
 
 	private JRadioButton getRbTarjeta() {
@@ -2210,8 +2242,8 @@ public class VentanaPrincipal extends JFrame {
 		if (table.getRowCount() != 0) {
 			for (int i = 0; i < table.getRowCount(); i++) {
 				ProductsController pc = new ProductsController();
-				int stock = pc.getStock((Integer) table.getValueAt(i, 0));
-				int cantidad = pc.getStock((Integer) table.getValueAt(i, 2));
+				int stock = pc.getStock(Integer.valueOf(table.getValueAt(i, 0).toString()));
+				int cantidad = Integer.valueOf(table.getValueAt(i, 2).toString());
 				if (stock >= cantidad) {
 					return true;
 				}
